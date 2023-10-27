@@ -5,7 +5,7 @@ function Navbar() {
 
   return (
     <nav className="fixed w-full z-20 justify-between items-center">
-      <div className="flex flex-wrap items-center justify-between mx-auto p-5">
+      <div className="flex flex-wrap items-center justify-between mx-auto pt-5 pl-10 pr-10">
         <a href="/">
           <img src="/src/assets/notflix-premium-logo.svg" alt="Logo"></img>
         </a>
