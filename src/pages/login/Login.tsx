@@ -1,13 +1,13 @@
+import Navbar from "../../components/Navbar"
 function Login() {
 
     return (
       <>
-        <p className="text-red-700">
-          Login
-        </p>
+        <Navbar />
+        <h1>Log In</h1>
       </>
     )
-  }
+  };
   
   export default Login
   
