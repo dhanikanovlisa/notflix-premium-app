@@ -1,6 +1,6 @@
 version: "3.7"
 services:
-  web:
+  notflix-premium:
     image: notflix-premium-app:latest
     volumes:
       - '.:/app'
