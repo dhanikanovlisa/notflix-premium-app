@@ -2,6 +2,7 @@ version: "3.7"
 services:
   notflix-premium:
     image: notflix-premium-app:latest
+    build: .
     volumes:
       - '.:/app'
       - '/app/node_modules'
