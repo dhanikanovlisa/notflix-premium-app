@@ -4,7 +4,7 @@ interface FieldProps {
     htmlFor: string;
     required: boolean;
     placeholder: string;
-    icon?: React.ReactNode; // Change icon prop type to React.ReactNode
+    icon?: React.ReactNode; 
   }
   
   function Field({ type, label,htmlFor, required, placeholder, icon }: FieldProps) {
