@@ -4,6 +4,7 @@ import Navbar from "../../components/navbar/Navbar";
 import Modal from "../../components/modal/Modal";
 import UploadFile from "../../components/uploadFIle/UploadFile";
 import Dropdown from "../../components/dropdown/Dropdown";
+import CheckBox from "../../components/checkbox/Checkbox";
 
 function EditProfile() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -51,6 +52,11 @@ function EditProfile() {
                 htmlFor= "durationFilm"
                 required= {false}
                 options= {["1", "2"]}
+            />
+            <CheckBox
+              id= "genre"
+              label= "Genre"
+              htmlFor= "genre"
             />
             <div className="button-container space-x-5">
               <button
