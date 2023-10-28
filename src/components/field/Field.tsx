@@ -4,10 +4,11 @@ interface FieldProps {
     htmlFor: string;
     required: boolean;
     placeholder: string;
+    errorMessage: string;
     icon?: React.ReactNode; 
   }
   
-  function Field({ type, label,htmlFor, required, placeholder, icon }: FieldProps) {
+  function Field({ type, label,htmlFor, required, placeholder, errorMessage, icon }: FieldProps) {
     return (
       <div className="">
         <label
@@ -27,6 +28,8 @@ interface FieldProps {
             required={required}
           />
         </div>
+        <div className="text-red text-xs">{errorMessage}</div>
+        
       </div>
     );
   }

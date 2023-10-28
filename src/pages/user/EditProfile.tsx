@@ -3,6 +3,7 @@ import Field from "../../components/field/Field";
 import Navbar from "../../components/navbar/Navbar";
 import Modal from "../../components/modal/Modal";
 import UploadFile from "../../components/uploadFIle/UploadFile";
+import Dropdown from "../../components/dropdown/Dropdown";
 
 function EditProfile() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,10 +31,26 @@ function EditProfile() {
               htmlFor="username"
               required={false}
               placeholder="Username"
+              errorMessage="Username is required"
             />
             <UploadFile
               type="image/*"
               description="Upload your profile picture"
+              fileName=""
+            />
+            <Field
+              type="date"
+              label="Release Date"
+              htmlFor="release date"
+              required={false}
+              placeholder=""
+              errorMessage=""
+            />
+            <Dropdown 
+                label= "Duration"
+                htmlFor= "durationFilm"
+                required= {false}
+                options= {["1", "2"]}
             />
             <div className="button-container space-x-5">
               <button
