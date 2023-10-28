@@ -74,7 +74,6 @@ function EditProfile() {
 
       {isModalOpen && (
         <Modal
-          id="popup-modal"
           title="Are you sure?"
           message="Are you sure you want to cancel?"
           onCancel={handleModalCancel}

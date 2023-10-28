@@ -11,7 +11,7 @@ interface CardProps {
   status: Status;
 }
 
-function Card({ image, title, description, status }: CardProps) {
+function CardSubmission({ image, title, description, status }: CardProps) {
   return (
     <div className="w-52 h-full red-glow p-6 rounded-md justify-center items-center">
       <div className="mb-6">
@@ -30,4 +30,4 @@ function Card({ image, title, description, status }: CardProps) {
   );
 }
 
-export default Card;
+export default CardSubmission;

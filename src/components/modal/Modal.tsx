@@ -1,12 +1,11 @@
 interface ModalProps {
-  id: string;
   title: string;
   message: string;
   onConfirm?: () => void;
   onCancel?: () => void;
 }
 
-function Modal({ id, title, message, onConfirm, onCancel }: ModalProps) {
+function Modal({title, message, onConfirm, onCancel }: ModalProps) {
   return (
     <div
       tabIndex={-1}
