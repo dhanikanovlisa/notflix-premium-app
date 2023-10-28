@@ -1,6 +1,7 @@
 import Navbar from "../../components/navbar/Navbar";
 import CardApproval from "../../components/cardApproval/CardApproval";
 import CardSubmission from "../../components/cardSubmission/CardSubmission";
+import CardFilm from "../../components/cardFilm/CardFilm";
 
 function Submission() {
   return (
@@ -23,6 +24,10 @@ function Submission() {
             description="XX:XX:XX XX:XX:XX"
             onAccept={() => console.log("Accept")}
             onReject={() => console.log("Reject")}
+          />
+          <CardFilm 
+          image="/src/assets/placeholder-image.webp"
+          title="Request 1"
           />
         </div>
       </div>
