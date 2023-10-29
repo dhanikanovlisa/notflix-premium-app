@@ -28,7 +28,7 @@ interface FieldProps {
             required={required}
           />
         </div>
-        <div className="text-red text-xs">{errorMessage}</div>
+        <div className="text-red text-xs mt-1">{errorMessage}</div>
         
       </div>
     );
