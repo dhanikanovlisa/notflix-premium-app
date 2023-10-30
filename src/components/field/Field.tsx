@@ -3,8 +3,9 @@ interface FieldProps {
     label: string;
     htmlFor: string;
     required: boolean;
-    placeholder: string;
+    placeholder?: string;
     errorMessage: string;
+    half?: boolean;
     icon?: React.ReactNode; 
   }
   
