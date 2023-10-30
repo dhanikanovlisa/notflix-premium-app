@@ -1,6 +1,11 @@
 import Navbar from "../../components/navbar/Navbar"
 import Field from "../../components/field/Field"
+import { useEffect } from "react"
 function Login() {
+
+  useEffect(() => {
+    document.title = "Log In"
+  })
     return (
       <>
         <Navbar />
