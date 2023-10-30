@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/login/Login";
-import Profile from "./pages/user/Profile";
+import Profile from "./pages/profile/Profile";
 import Submission from "./pages/submission/Submission";
-import EditProfile from "./pages/user/EditProfile";
+import EditProfile from "./pages/profile/EditProfile";
 import Register from "./pages/register/Register";
 import ManageFilm from "./pages/film/ManageFilm";
 import EditFilm from "./pages/film/EditFilm";

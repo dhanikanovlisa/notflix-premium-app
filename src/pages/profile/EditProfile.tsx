@@ -72,6 +72,7 @@ function EditProfile() {
             />
             <UploadFile
               type="image/*"
+              htmlFor="profilePicture"
               description="Upload your profile picture"
               fileName=""
             />
