@@ -1,17 +1,19 @@
 interface CheckBoxProps {
   id: string;
   label: string;
+  value: string;
   htmlFor: string;
 }
 
-function CheckBox({ id, label, htmlFor }: CheckBoxProps) {
+function CheckBox({ id, label, value, htmlFor }: CheckBoxProps) {
   return (
-    <div className="flex items-center mb-4">
+    <div className="flex items-center">
       <input
         id={id}
         type="checkbox"
+        value = {value}
         className="relative peer shrink-0
-        appearance-none w-5 h-5 border-2 rounded-sm bg-white
+        appearance-none w-5 h-5 border-2 rounded-sm bg-transparent
         
         checked:bg-red-600 checked:border-none"
       />

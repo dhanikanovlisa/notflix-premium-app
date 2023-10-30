@@ -4,7 +4,7 @@ interface FieldProps {
     htmlFor: string;
     required: boolean;
     placeholder?: string;
-    errorMessage: string;
+    errorMessage?: string;
     half?: boolean;
     icon?: React.ReactNode; 
   }
