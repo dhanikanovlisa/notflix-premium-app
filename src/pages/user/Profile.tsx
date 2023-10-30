@@ -1,6 +1,11 @@
 import Navbar from "../../components/navbar/Navbar";
 
 function Profile() {
+
+  function editProfile(){
+    window.location.href = "/edit-profile"
+  }
+  
   return (
     <>
       <Navbar />
@@ -34,6 +39,9 @@ function Profile() {
               <h3>Phone Number</h3>
               <p>phone</p>
             </div>
+            <button className="font-bold button-white" onClick={editProfile}>
+              Edit Profile
+            </button>
           </div>
         </div>
       </div>

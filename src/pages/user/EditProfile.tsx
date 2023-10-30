@@ -20,11 +20,11 @@ function EditProfile() {
   return (
     <>
       <Navbar />
-      <div className="pt-28 pl-10">
+      <div className="pt-28 pl-10 pb-10">
         <div>
           <h1>Profile Settings</h1>
         </div>
-        <div className="flex flex-row gap-12 pt-8">
+        <div className="flex flex-row gap-12 pt-2">
           <div className="space-y-4">
             <Field
               type="text"
@@ -32,32 +32,50 @@ function EditProfile() {
               htmlFor="username"
               required={false}
               placeholder="Username"
-              errorMessage="Username is required"
+              errorMessage=""
+            />
+            <div className="flex gap-2">
+              <Field
+                type="text"
+                label="First Name"
+                htmlFor="firstName"
+                required={false}
+                placeholder="John"
+                errorMessage=""
+                half = {true}
+              />
+              <Field
+                type="text"
+                label="Last Name"
+                htmlFor="Doe"
+                required={false}
+                placeholder="Doe"
+                errorMessage=""
+                half = {true}
+              />
+            </div>
+            <Field
+              type="email"
+              label="Email"
+              htmlFor="email"
+              required={false}
+              placeholder="johndoe@gmail.com"
+              errorMessage=""
+            />
+            <Field
+              type="text"
+              label="Phone Number"
+              htmlFor="phoneNumber"
+              required={false}
+              placeholder="2414712741"
+              errorMessage=""
             />
             <UploadFile
               type="image/*"
               description="Upload your profile picture"
               fileName=""
             />
-            <Field
-              type="date"
-              label="Release Date"
-              htmlFor="release date"
-              required={false}
-              placeholder=""
-              errorMessage=""
-            />
-            <Dropdown 
-                label= "Duration"
-                htmlFor= "durationFilm"
-                required= {false}
-                options= {["1", "2"]}
-            />
-            <CheckBox
-              id= "genre"
-              label= "Genre"
-              htmlFor= "genre"
-            />
+
             <div className="button-container space-x-5">
               <button
                 className="text-button button-red font-bold"
@@ -66,7 +84,9 @@ function EditProfile() {
               >
                 Cancel
               </button>
-              <button className="text-button button-white font-bold">Save</button>
+              <button className="text-button button-white font-bold">
+                Save
+              </button>
             </div>
           </div>
         </div>
