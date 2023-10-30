@@ -1,14 +1,15 @@
 interface UploadFileProps {
   type: string;
+  htmlFor: string;
   description: string;
   fileName?: string;
 }
-function UploadFile({ type, description, fileName }: UploadFileProps) {
+function UploadFile({ type, htmlFor, description, fileName }: UploadFileProps) {
   return (
     <div className="flex items-center justify-center w-96">
       <div className="w-full">
         <label
-          htmlFor="uploadfile"
+          htmlFor={htmlFor}
           className="flex flex-col items-center justify-center w-full h-64 border-2 border-red-950 border-dashed rounded-lg cursor-pointer bg-red-600"
         >
           <div className="flex flex-col items-center justify-center pt-5 pb-6">
@@ -32,7 +33,7 @@ function UploadFile({ type, description, fileName }: UploadFileProps) {
             </p>
             <p className="text-xs text-whit">{description}</p>
           </div>
-          <input id="uploadfile" type="file" accept={type} className="hidden" />
+          <input id={htmlFor} type="file" accept={type} className="hidden" />
         </label>
         <p className="text-sm">File Name: {fileName}</p>
       </div>

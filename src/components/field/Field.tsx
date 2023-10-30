@@ -3,8 +3,9 @@ interface FieldProps {
     label: string;
     htmlFor: string;
     required: boolean;
-    placeholder: string;
-    errorMessage: string;
+    placeholder?: string;
+    errorMessage?: string;
+    half?: boolean;
     icon?: React.ReactNode; 
   }
   
@@ -18,8 +19,8 @@ interface FieldProps {
           {label}
           {required ? <span className="pl-1 text-red-700 font-bold">*</span> : null}
         </label>
-        <div className=""> {/* Add a container for the icon */}
-          {icon && <div className="mr-2">{icon}</div>} {/* Render the icon if it's provided */}
+        <div className=""> 
+          {icon && <div className="mr-2">{icon}</div>} 
           <input
             className={`"bg-white appearance-none rounded-md w-64 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-red-500 " ${half && "w-full"}`}
             id={htmlFor}

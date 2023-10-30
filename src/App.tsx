@@ -4,6 +4,9 @@ import Profile from "./pages/user/Profile";
 import Submission from "./pages/submission/Submission";
 import EditProfile from "./pages/user/EditProfile";
 import Register from "./pages/register/Register";
+import ManageFilm from "./pages/film/ManageFilm";
+import EditFilm from "./pages/film/EditFilm";
+import DetailFilm from "./pages/film/DetailFilm";
 
 function App() {
   return (
@@ -16,6 +19,11 @@ function App() {
 
         {/**Submission */}
         <Route path="/submission" element={<Submission />}/>
+
+        {/**Manage Film */}
+        <Route path="/manage-film" element={<ManageFilm />}></Route>
+        <Route path="/edit-film" element={<EditFilm />}></Route>
+        <Route path="/detail-film" element={<DetailFilm />}></Route>
 
          {/* Profile*/}
         <Route path="/profile" element= {<Profile />}/>

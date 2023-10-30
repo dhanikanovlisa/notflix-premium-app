@@ -10,6 +10,9 @@ function Navbar() {
           <img src="/src/assets/notflix-premium-logo.svg" alt="Logo"></img>
         </a>
         <div className="flex flex-row space-x-9 items-center">
+        <a href="/manage-film">
+            <p className="">Manage Film</p>
+          </a>
           <a href="/submission">
             <p className="">Submission</p>
           </a>
