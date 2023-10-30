@@ -41,7 +41,7 @@ function Register() {
                 required
                 placeholder="John" 
                 errorMessage=""
-                half="first"
+                half={true}
               />
               <Field 
                 type="text"
@@ -50,19 +50,21 @@ function Register() {
                 required
                 placeholder="Doe" 
                 errorMessage=""
-                half="second"
+                half= {true}
               />
             </div>
             <Field 
               type="password"
               label="Password" 
               htmlFor="password"
+              errorMessage=""
               required
             />
             <Field 
               type="password"
               label="Confirm Password" 
               htmlFor="confirm-password"
+              errorMessage=""
               required
             />
             <div className='w-ful flex justify-center mt-4 mb-2'><button className="button-red red-glow button-text" type="submit" name="login">Login</button></div>
