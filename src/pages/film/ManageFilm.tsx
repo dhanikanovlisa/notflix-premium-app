@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect} from "react";
 import Navbar from "../../components/navbar/Navbar";
 import CardFilm from "../../components/cardFilm/CardFilm";
 
@@ -6,6 +6,26 @@ function ManageFilm() {
   useEffect(() => {
     document.title = "Manage Film";
   });
+
+  const url = import.meta.env.VITE_REST_URL;
+  const fetchFilm = async () => {
+    try {
+      const response = await fetch(`${url}/films`);
+      if (!response.ok) {
+        throw new Error('Something went wrong');
+      }
+  
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error('Error fetching film', error);
+    }
+  };
+  
+  useEffect(() => {
+    fetchFilm();
+  }, []);
+  
 
   function loopCardFilm() {
     const cards = [];
