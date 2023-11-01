@@ -1,6 +1,8 @@
 import Navbar from "../../components/navbar/Navbar"
+import Toast from "../../components/toast/Toast"
 import Field from "../../components/field/Field"
 import { useEffect, useState } from "react"
+
 
 function Login() {
 
@@ -14,6 +16,7 @@ function Login() {
 
   const [usernameErrorMsg, setUsernameErrorMsg] = useState<string>("");
   const [passwordErrorMsg, setPasswordErrorMsg] = useState<string>("");
+  const [showToast, setShowToast] = useState<boolean>(false);
 
   useEffect(() => {
     setUsernameErrorMsg("");
@@ -50,7 +53,10 @@ function Login() {
       
       const data = await res.json();
       if (res.ok && data.code == 1){
-        alert("Login successful");
+        setShowToast(true);
+        setTimeout(() => {
+          setShowToast(false);
+        }, 1700);
       } else {
         setPasswordErrorMsg(data.message);
         return;
@@ -64,6 +70,7 @@ function Login() {
 
     return (
       <>
+        <Toast type="check" message="Login success, redirecting to Home..." show={showToast}/>
         <Navbar />
         <div className="flex justify-center min-h-screen items-center">
           <div className="flex-row items-center">
