@@ -9,11 +9,7 @@ interface FieldProps {
     icon?: React.ReactNode; 
   }
   
-  function Field({ type, label,htmlFor, required, placeholder, errorMessage, icon, half, onChangeHandler }: FieldProps) {
-  //   const [value, setValue] = useState("");
-  //   const onChangeHandler = event => {
-  //     setInputValue(event.target.value);
-  //  };
+  function Field({ type, label,htmlFor, required, placeholder, errorMessage, icon, half, onChangeHandler }: FieldProps) { 
     return (
       <div className={`${half && "w-1/2"}`}>
         <label
