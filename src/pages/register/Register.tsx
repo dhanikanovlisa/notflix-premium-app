@@ -94,8 +94,7 @@ function Register() {
       try {
         const res = await fetch(`${url}/check/username/${username}`);
         const data = await res.json();
-        console.log(data);
-        if (data.message == "Username already exists"){
+        if (res.ok && data.code == 1){
           setIsUsernameValid(false);
           setUsernameErrorMsg(data.message);
           return;
@@ -107,8 +106,7 @@ function Register() {
       try {
         const res = await fetch(`${url}/check/email/${email}`);
         const data = await res.json();
-        console.log(data);
-        if (data.message == "This email is already registered"){
+        if (res.ok && data.code == 1){
           setIsEmailValid(false);
           setEmailErrorMsg(data.message);
           return;
@@ -133,7 +131,7 @@ function Register() {
           })
         });
 
-        if (res.ok){
+        if (res.status == 201){
           alert("Registration success");
           window.location.href = "/login";
         }
