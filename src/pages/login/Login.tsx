@@ -16,7 +16,8 @@ function Login() {
 
   const [usernameErrorMsg, setUsernameErrorMsg] = useState<string>("");
   const [passwordErrorMsg, setPasswordErrorMsg] = useState<string>("");
-  const [showToast, setShowToast] = useState<boolean>(false);
+  const toastUseState = useState<boolean>(false);
+  const [showToast, setShowToast] = toastUseState;
 
   useEffect(() => {
     setUsernameErrorMsg("");
@@ -54,9 +55,6 @@ function Login() {
       const data = await res.json();
       if (res.ok && data.code == 1){
         setShowToast(true);
-        setTimeout(() => {
-          setShowToast(false);
-        }, 1700);
       } else {
         setPasswordErrorMsg(data.message);
         return;
@@ -70,7 +68,7 @@ function Login() {
 
     return (
       <>
-        <Toast type="check" message="Login success, redirecting to Home..." show={showToast}/>
+        <Toast type="check" message="Login success, redirecting to Home..." showUseState={toastUseState}/>
         <Navbar />
         <div className="flex justify-center min-h-screen items-center">
           <div className="flex-row items-center">
