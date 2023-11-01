@@ -116,6 +116,31 @@ function Register() {
       } catch (error) {
         console.error('Error fetching email', error);
       }
+
+      try {
+        const res = await fetch(`${url}/auth/register`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            username: username,
+            email: email,
+            phone: phone,
+            password: password,
+            firstName: firstName,
+            lastName: lastName
+          })
+        });
+
+        if (res.ok){
+          alert("Registration success");
+          window.location.href = "/login";
+        }
+      } catch (error) {
+        console.error('Error registering', error);
+      }
+
     }
 
     return (
