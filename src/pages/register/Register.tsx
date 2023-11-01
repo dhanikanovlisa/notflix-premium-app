@@ -24,12 +24,12 @@ function Register() {
     const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
     const [isPhoneValid, setIsPhoneValid] = useState<boolean>(false);
     const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
-    const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState<boolean>(false);
     const [isFirstNameValid, setIsFirstNameValid] = useState<boolean>(false);
     const [isLastNameValid, setIsLastNameValid] = useState<boolean>(false);
 
     const [usernameErrorMsg, setUsernameErrorMsg] = useState<string>("");
     const [emailErrorMsg, setEmailErrorMsg] = useState<string>("");
+    const [confirmPasswordErrorMsg, setConfirmPasswordErrorMsg] = useState<string>("");
     
     useEffect(() => {
       if (username=="" || usernameRegex.test(username)){
@@ -64,8 +64,8 @@ function Register() {
     }, [password]);
 
     useEffect(() => {
-      confirmPassword=="" || confirmPassword==password? setIsConfirmPasswordValid(true):setIsConfirmPasswordValid(false);
-    }, [confirmPassword, password]);
+      setConfirmPasswordErrorMsg("");
+    }, [confirmPassword]);
 
     useEffect(() => {
       firstName=="" || nameRegex.test(firstName)? setIsFirstNameValid(true):setIsFirstNameValid(false);
@@ -75,11 +75,54 @@ function Register() {
       lastName=="" || nameRegex.test(lastName)? setIsLastNameValid(true):setIsLastNameValid(false);
     }, [lastName]);
 
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      if (!isUsernameValid || !isEmailValid || !isPhoneValid || !isPasswordValid || !isFirstNameValid || !isLastNameValid){
+        alert("Please fill the form correctly");
+        return;
+      }
+
+      if (password != confirmPassword){
+        setConfirmPasswordErrorMsg("Password doesn't match");
+        return;
+      } else {
+        setConfirmPasswordErrorMsg("");
+      }
+
+      const url = import.meta.env.VITE_REST_URL;
+
+      try {
+        const res = await fetch(`${url}/check/username/${username}`);
+        const data = await res.json();
+        console.log(data);
+        if (data.message == "Username already exists"){
+          setIsUsernameValid(false);
+          setUsernameErrorMsg(data.message);
+          return;
+        } 
+      } catch (error) {
+        console.error('Error fetching username', error);
+      }
+
+      try {
+        const res = await fetch(`${url}/check/email/${email}`);
+        const data = await res.json();
+        console.log(data);
+        if (data.message == "This email is already registered"){
+          setIsEmailValid(false);
+          setEmailErrorMsg(data.message);
+          return;
+        } 
+      } catch (error) {
+        console.error('Error fetching email', error);
+      }
+    }
+
     return (
       <>
         <Navbar />
         <div className="flex justify-center min-h-screen items-center pt-12">
-          <div className="flex-row items-center w-64">
+          <form className="flex-row items-center w-64">
             <h1 className="text-center">Sign Up</h1>
             <Field 
               type="text"
@@ -87,7 +130,7 @@ function Register() {
               htmlFor="username"
               required
               placeholder="john_doe" 
-              errorMessage={isUsernameValid? "":"Username format is incorrect"}
+              errorMessage={usernameErrorMsg}
               onChangeHandler={event => setUsername(event.target.value)}
             />
             <Field 
@@ -96,7 +139,7 @@ function Register() {
               htmlFor="email"
               required
               placeholder="john_doe@email.com" 
-              errorMessage={isEmailValid? "":"Email format is incorrect"}
+              errorMessage={emailErrorMsg}
               onChangeHandler={event => setEmail(event.target.value)}
             />
             <Field 
@@ -142,13 +185,13 @@ function Register() {
               type="password"
               label="Confirm Password" 
               htmlFor="confirm-password"
-              errorMessage={isConfirmPasswordValid? "":"Password does not match"}
+              errorMessage={confirmPasswordErrorMsg}
               required
               onChangeHandler={event => setConfirmPassword(event.target.value)}
             />
-            <div className='w-ful flex justify-center mt-4 mb-2'><button className="button-red red-glow button-text" type="submit" name="login">Login</button></div>
+            <div className='w-ful flex justify-center mt-4 mb-2'><button className="button-red red-glow button-text" type="submit" name="login" onClick={handleSubmit}>Login</button></div>
             <div className="small-text text-center">Already have an account? <a href="/login">Login</a></div>
-          </div>
+          </form>
         </div>
       </>
     )
