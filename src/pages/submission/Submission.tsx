@@ -1,7 +1,7 @@
 import Navbar from "../../components/navbar/Navbar";
-import CardApproval from "../../components/cardApproval/CardApproval";
-import CardSubmission from "../../components/cardSubmission/CardSubmission";
-import CardFilm from "../../components/cardFilm/CardFilm";
+import CardApproval from "../../components/card/CardApproval";
+import CardSubmission from "../../components/card/CardSubmission";
+import CardFilm from "../../components/card/CardFilm";
 
 function Submission() {
   return (

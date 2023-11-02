@@ -1,6 +1,6 @@
 import { useEffect} from "react";
 import Navbar from "../../components/navbar/Navbar";
-import CardFilm from "../../components/cardFilm/CardFilm";
+import CardFilm from "../../components/card/CardFilm";
 
 function ManageFilm() {
   useEffect(() => {
