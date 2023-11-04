@@ -1,17 +1,19 @@
 interface FieldProps {
-    type: string;
-    label: string;
-    htmlFor: string;
-    required: boolean;
-    placeholder?: string;
-    errorMessage?: string;
-    half?: boolean;
-    icon?: React.ReactNode;
-    value?: string;
-    onChangeHandler?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  }
+  type: string;
+  label: string;
+  htmlFor: string;
+  required: boolean;
+  placeholder?: string;
+  errorMessage?: string;
+  half?: boolean;
+  icon?: React.ReactNode;
+  value?: string;
+  onChangeHandler?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyUp?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+}
+
   
-  function Field({ type, label,htmlFor, required, placeholder, value, errorMessage, icon, half, onChangeHandler }: FieldProps) { 
+  function Field({ type, label,htmlFor, required, placeholder, value, errorMessage, icon, half, onChangeHandler, onKeyUp}: FieldProps) { 
     return (
       <div className={`${half && "w-1/2"}`}>
         <label
@@ -31,6 +33,7 @@ interface FieldProps {
             value={value}
             required={required}
             onChange={onChangeHandler}
+            onKeyUp={onKeyUp}
           />
         </div>
         <div className="text-red text-xs mt-1">{errorMessage}</div>
