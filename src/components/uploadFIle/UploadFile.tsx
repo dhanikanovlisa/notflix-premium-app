@@ -3,8 +3,10 @@ interface UploadFileProps {
   htmlFor: string;
   description: string;
   fileName?: string;
+  value?: any;
+  onChangeHandler?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
-function UploadFile({ type, htmlFor, description, fileName }: UploadFileProps) {
+function UploadFile({ type, htmlFor, description, fileName, onChangeHandler }: UploadFileProps) {
   return (
     <div className="flex items-center justify-center w-96">
       <div className="w-full">
@@ -33,7 +35,8 @@ function UploadFile({ type, htmlFor, description, fileName }: UploadFileProps) {
             </p>
             <p className="text-xs text-whit">{description}</p>
           </div>
-          <input id={htmlFor} type="file" accept={type} className="hidden" />
+          <input id={htmlFor} type="file" accept={type} className="hidden"
+          onChange={onChangeHandler} />
         </label>
         <p className="text-sm">File Name: {fileName}</p>
       </div>

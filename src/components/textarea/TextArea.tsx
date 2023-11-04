@@ -1,9 +1,12 @@
+
 interface TextAreaProps {
   label: string;
   rows: number;
   required: boolean;
   htmlFor: string;
   placeholder?: string;
+  value?: string;
+  onChangeHandler?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
 function TextArea({
@@ -12,6 +15,8 @@ function TextArea({
   required,
   htmlFor,
   placeholder,
+  value,
+  onChangeHandler
 }: TextAreaProps) {
   return (
     <div>
@@ -30,6 +35,8 @@ function TextArea({
         className="block w-full h-32 p-4 text-base text-gray-900 bg-gray-50 rounded-lg border  "
         placeholder={placeholder}
         required={required}
+        value = {value}
+        onChange={onChangeHandler}
       ></textarea>
     </div>
   );

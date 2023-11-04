@@ -3,11 +3,67 @@ import Field from "../../components/field/Field";
 import Navbar from "../../components/navbar/Navbar";
 import Modal from "../../components/modal/Modal";
 import UploadFile from "../../components/uploadFIle/UploadFile";
-import Dropdown from "../../components/dropdown/Dropdown";
-import CheckBox from "../../components/checkbox/Checkbox";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { User } from "../../interfaces/interfaces";
+import Toast from "../../components/toast/Toast";
 
 function EditProfile() {
+  const { id } = useParams();
+  const url = import.meta.env.VITE_REST_URL;
+  const [profile, setProfile] = useState<User | undefined>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showToastTrue, setShowToastTrue] = useState(false);
+  const [showToastError, setShowToastError] = useState(false);
+
+  const [username, setUsername] = useState("");
+  const [first_name, setFirstName] = useState("");
+  const [last_name, setLastName] = useState("");
+  const [phone_number, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
+  const [photo_profile, setPhotoProfile] = useState<string | undefined>("");
+
+
+  async function getProfile() {
+    const response = await fetch(`${url}/profile/${id}`);
+    const data = await response.json();
+    if (!response.ok) {
+      if (response.status === 404) {
+        setProfile(undefined);
+        window.location.href = "/not-found";
+        return;
+      }
+    }
+    const mappedProfile = data.data;
+    setProfile(mappedProfile);
+  }
+
+  async function saveProfile() {
+    const response = await fetch(`${url}/profile/edit/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({username, last_name, first_name, email, phone_number, photo_profile}),
+    });
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        setShowToastError(true);
+        setProfile(undefined);
+        return;
+      }
+    }
+    setShowToastTrue(true);
+    setTimeout(() => {
+      window.location.href = "/profile/" + id;
+    }, 2000)
+
+  }
+
+  useEffect(() => {
+    getProfile();
+  }, []);
 
   const handleModalCancel = () => {
     setIsModalOpen(false);
@@ -15,10 +71,13 @@ function EditProfile() {
 
   const handleModalConfirm = () => {
     setIsModalOpen(false);
+    window.location.href = "/profile/" + id;
   };
 
   return (
     <>
+     <Toast type="check" message="Sucesfully updated profile" showUseState={showToastTrue}/>
+        <Toast type="cross" message="Failed to update profile" showUseState={showToastError}/>
       <Navbar />
       <div className="pt-28 pl-10 pb-10">
         <div>
@@ -31,8 +90,10 @@ function EditProfile() {
               label="Username"
               htmlFor="username"
               required={false}
-              placeholder="Username"
+              placeholder={profile?.username}
               errorMessage=""
+              value={username}
+              onChangeHandler={event => setUsername(event.target.value)}
             />
             <div className="flex gap-2">
               <Field
@@ -40,18 +101,22 @@ function EditProfile() {
                 label="First Name"
                 htmlFor="firstName"
                 required={false}
-                placeholder="John"
+                placeholder={profile?.first_name}
                 errorMessage=""
                 half = {true}
+                value={first_name}
+              onChangeHandler={event => setFirstName(event.target.value)}
               />
               <Field
                 type="text"
                 label="Last Name"
                 htmlFor="Doe"
                 required={false}
-                placeholder="Doe"
+                placeholder={profile?.last_name}
                 errorMessage=""
                 half = {true}
+                value={last_name}
+              onChangeHandler={event => setLastName(event.target.value)}
               />
             </div>
             <Field
@@ -59,22 +124,27 @@ function EditProfile() {
               label="Email"
               htmlFor="email"
               required={false}
-              placeholder="johndoe@gmail.com"
+              placeholder={profile?.email}
               errorMessage=""
+              value = {email}
+              onChangeHandler={event => setEmail(event.target.value)}
             />
             <Field
               type="text"
               label="Phone Number"
               htmlFor="phoneNumber"
               required={false}
-              placeholder="2414712741"
+              placeholder={profile?.phone_number}
               errorMessage=""
+              value = {phone_number}
+              onChangeHandler={event => setPhoneNumber(event.target.value)}
             />
             <UploadFile
               type="image/*"
               htmlFor="profilePicture"
               description="Upload your profile picture"
-              fileName=""
+              fileName={photo_profile}
+              onChangeHandler={event => setPhotoProfile(event.target.files?.[0].name)}
             />
 
             <div className="button-container space-x-5">
@@ -85,7 +155,8 @@ function EditProfile() {
               >
                 Cancel
               </button>
-              <button className="text-button button-white font-bold">
+              <button className="text-button button-white font-bold"
+              onClick={saveProfile}>
                 Save
               </button>
             </div>

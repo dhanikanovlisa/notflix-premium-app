@@ -1,58 +1,156 @@
 import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useState } from "react";
+import { Film } from "../../interfaces/interfaces";
 import Navbar from "../../components/navbar/Navbar";
+import Modal from "../../components/modal/Modal";
+import Toast from "../../components/toast/Toast";
+
 function DetailFilm() {
+  const url = import.meta.env.VITE_REST_URL;
+  const { id } = useParams();
+  const [film, setFilm] = useState<Film | undefined>();
+  const [filmGenre, setFilmGenre] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showToastTrue, setShowToastTrue] = useState(false);
+  const [showToastError, setShowToastError] = useState(false);
+
+  async function getFilmById() {
+    const response = await fetch(`${url}/films/film/${Number(id)}`);
+    if (!response.ok) {
+      if (response.status === 404) {
+        setFilm(undefined);
+        window.location.href = "/not-found";
+        return;
+      }
+    }
+
+    const data = await response.json();
+    const mappedData = {
+      film_id: data.data.film_id,
+      title: data.data.title,
+      description: data.data.description,
+      film_path: data.data.film_path,
+      film_poster: data.data.film_poster,
+      film_header: data.data.film_header,
+      date_release: new Date(data.data.date_release),
+      duration: data.data.duration,
+      id_user: data.data.id_user,
+    };
+    setFilm(mappedData);
+    setFilmGenre(data.genre);
+  }
+
+  async function deleteFilm() {
+    try {
+      const response = await fetch(`${url}/films/delete/${Number(id)}`, {
+        method: "DELETE",
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Failed to delete film. Status: ${response.status}`);
+      }
+  
+      setIsModalOpen(false);
+      setShowToastTrue(true);
+      setTimeout(() => {
+        window.location.href = "/manage-film";
+      }, 2000)
+    } catch (error) {
+      setIsModalOpen(false);
+      setShowToastError(true);
+      console.error("Error deleting film:", error);
+    }
+  }
+
   useEffect(() => {
-    document.title = "Film"; //isi nama filmnya nanti
-  });
+    getFilmById();
+  }, [id]);
+
+  function goToEdit(){
+    window.location.href = `/edit-film/${Number(id)}`;
+  }
+
+  const handleModalCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleModalConfirm = () => {
+    deleteFilm();
+  };
 
   return (
     <>
-      <Navbar />
-      <div className="pt-28 pl-10 pr-28">
-        <h2>Film Name</h2>
-        <div className="flex flex-row gap-10 pt-5">
-        <div className="">
-          <div className="w-48 h-full">
-            <div className="w-48 h-60 red-glow rounded-md overflow-hidden">
-              <img
-                src="/src/assets/placeholder-image.webp"
-                alt="Placeholder"
-                className="w-full h-full object-cover"
-              />
+      {film && (
+        <>
+        <Toast type="check" message="Sucesfully deleted film" showUseState={showToastTrue}/>
+        <Toast type="cross" message="Failed deleted film" showUseState={showToastError}/>
+          <Navbar />
+          <div className="pt-28 pl-10 pr-28">
+            <h2>{film.title}</h2>
+            <div className="flex flex-row gap-10 pt-5">
+              <div className="">
+                <div className="w-48 h-full">
+                  <div className="w-48 h-60 red-glow rounded-md overflow-hidden">
+                    <img
+                      src={`/src/assets/storage/poster/${film.film_poster}`}
+                      alt="Placeholder"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="w-1/3 space-y-2 pb-2">
+                <div className="">
+                  <div>
+                    <h3>Descirption</h3>
+                    <p>{film.description}</p>
+                  </div>
+                  <div>
+                    <h3>Genre</h3>
+                    <p>
+                    {[...(filmGenre)].join(", ")}
+                    </p>
+                  </div>
+                  <div>
+                    <h3>Release Year</h3>
+                    <p>
+                      {film.date_release.getDate()}-
+                      {film.date_release.getMonth() + 1}-
+                      {film.date_release.getFullYear()}
+                    </p>
+                  </div>
+                  <div>
+                    <h3>Duration</h3>
+                    <p>{film.duration} minutes</p>
+                  </div>
+                </div>
+                <div className="flex flex-row justify-between">
+                  <button
+                    className="button-red font-bold text-button"
+                    onClick={() => setIsModalOpen(true)}
+                  >
+                    Delete
+                  </button>
+                  <button className="button-white font-bold text-button"
+                  onClick={goToEdit}>
+                    Edit
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="w-1/3 space-y-2 pb-2">
-          <div className="">
-            <div>
-              <h3>Descirption</h3>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Adipisci laudantium sunt eveniet, officiis sit sint voluptas
-                eius rem necessitatibus, ullam blanditiis. Dolores obcaecati
-                fugiat magni officia quos exercitationem magnam cumque.
-              </p>
-            </div>
-            <div>
-              <h3>Genre</h3>
-              <p>Action</p>
-            </div>
-            <div>
-              <h3>Release Year</h3>
-              <p>2023-12-12</p>
-            </div>
-            <div>
-              <h3>Duration</h3>
-              <p>123 minutes</p>
-            </div>
-          </div>
-          <div className="flex flex-row justify-between">
-            <button className="button-red font-bold text-button">Delete</button>
-            <button className="button-white font-bold text-button">Edit</button>
-          </div>
-        </div>
-        </div>
-      </div>
+          {isModalOpen && (
+            <Modal
+              title="Are you sure?"
+              message="Are you sure you want to cancel?"
+              confirmText="Delete"
+              onCancel={handleModalCancel}
+              onConfirm={handleModalConfirm}
+            />
+          )}
+        </>
+      )}
     </>
   );
 }

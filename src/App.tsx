@@ -7,6 +7,7 @@ import Register from "./pages/register/Register";
 import ManageFilm from "./pages/film/ManageFilm";
 import EditFilm from "./pages/film/EditFilm";
 import DetailFilm from "./pages/film/DetailFilm";
+import PageNotFound from "./pages/notFound/PageNotFound";
 
 function App() {
   return (
@@ -22,12 +23,15 @@ function App() {
 
         {/**Manage Film */}
         <Route path="/manage-film" element={<ManageFilm />}></Route>
-        <Route path="/edit-film" element={<EditFilm />}></Route>
-        <Route path="/detail-film" element={<DetailFilm />}></Route>
+        <Route path="/edit-film/:id" element={<EditFilm />}></Route>
+        <Route path="/manage-film/:id" element={<DetailFilm />}></Route>
 
          {/* Profile*/}
-        <Route path="/profile" element= {<Profile />}/>
-        <Route path="/edit-profile" element= {<EditProfile />}/>
+        <Route path="/profile/:id" element= {<Profile />}/>
+        <Route path="/edit-profile/:id" element= {<EditProfile />}/>
+
+        {/**Not Found */}
+        <Route path="/not-found" element = {<PageNotFound />}></Route>
       </Routes>
     </BrowserRouter>
   )

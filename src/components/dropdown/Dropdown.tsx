@@ -2,10 +2,11 @@ interface DropdownProps {
   label: string;
   htmlFor: string;
   required: boolean;
-  options: string[];
+  options: string[] | number[];
+  onChangeHandler?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
-function Dropdown({ label, htmlFor, required, options }: DropdownProps) {
+function Dropdown({ label, htmlFor, required, options, onChangeHandler }: DropdownProps) {
   return (
     <div className="flex flex-col space-y-1">
       <label
@@ -23,6 +24,7 @@ function Dropdown({ label, htmlFor, required, options }: DropdownProps) {
           id={htmlFor}
           name={htmlFor}
           style={{ color: 'black' }} 
+          onChange={onChangeHandler}
         >
           {options.map((option, index) => (
             <option
