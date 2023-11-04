@@ -8,6 +8,7 @@ import ManageFilm from "./pages/film/ManageFilm";
 import EditFilm from "./pages/film/EditFilm";
 import DetailFilm from "./pages/film/DetailFilm";
 import PageNotFound from "./pages/notFound/PageNotFound";
+import CreateSubmission from "./pages/submission/CreateSubmission";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
 
         {/**Submission */}
         <Route path="/submission" element={<Submission />}/>
+        <Route path="/create" element={<CreateSubmission />}/>
 
         {/**Manage Film */}
         <Route path="/manage-film" element={<ManageFilm />}></Route>
