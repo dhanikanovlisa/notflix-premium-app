@@ -12,6 +12,10 @@ const [isModalOpen, setIsModalOpen] = useState(false);
 const [showToastTrue, setShowToastTrue] = useState(false);
 const [showToastError, setShowToastError] = useState(false);
 
+const [film_path, setFilmPath] = useState<File>();
+const [film_poster, setPosterPath] = useState<File>();
+const [film_header, setHeaderPath] = useState<File>();
+
   const hoursArray: string[] = Array.from({ length: 24 }, (_, index) =>
     (index + 1).toString()
   );
@@ -86,21 +90,33 @@ const [showToastError, setShowToastError] = useState(false);
                 options={minutesArray}
               />
             </div>
-            <div className="flex flex-row gap-10 pb-5">
+            <div className="flex flex-row gap-10 pb-5 sm:flex-col md:flex-col lg:flex-row xl:flex-row">
               <UploadFile
                 type="image/*"
                 htmlFor="poster"
                 description="Upload Film Poster (max 800KB)"
+                file={film_poster}
+                onChangeHandler={(event) =>
+                  setPosterPath(event.target.files?.[0])
+                }
               />
               <UploadFile
                 type="image/*"
                 htmlFor="header"
                 description="Upload Film Header (max 800KB)"
+                file={film_header}
+                onChangeHandler={(event) =>
+                  setHeaderPath(event.target.files?.[0])
+                }
               />
               <UploadFile
                 type="video/*"
                 htmlFor="video"
                 description="Upload Film Poster (max 9 MB)"
+                file={film_path}
+                onChangeHandler={(event) =>
+                  setFilmPath(event.target.files?.[0])
+                }
               />
             </div>
           </div>

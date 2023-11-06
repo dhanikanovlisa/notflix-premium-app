@@ -21,7 +21,7 @@ function EditProfile() {
   const [last_name, setLastName] = useState("");
   const [phone_number, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
-  const [photo_profile, setPhotoProfile] = useState<string | undefined>("");
+  const [photo_profile, setPhotoProfile] = useState<File>();
 
   const [isUsernameValid, setIsUsernameValid] = useState<boolean>(false);
   const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
@@ -225,10 +225,10 @@ function EditProfile() {
               type="image/*"
               htmlFor="profilePicture"
               description="Upload your profile picture"
-              fileName={photo_profile}
-              onChangeHandler={(event) =>
-                setPhotoProfile(event.target.files?.[0].name)
-              }
+              file={photo_profile}
+                onChangeHandler={(event) =>
+                  setPhotoProfile(event.target.files?.[0])
+                }
             />
 
             <div className="button-container space-x-5">

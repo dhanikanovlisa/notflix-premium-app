@@ -2,11 +2,27 @@ interface UploadFileProps {
   type: string;
   htmlFor: string;
   description: string;
-  fileName?: string;
-  value?: any;
+  file?: File;
   onChangeHandler?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
-function UploadFile({ type, htmlFor, description, fileName, onChangeHandler }: UploadFileProps) {
+
+function UploadFile({ type, htmlFor, description, file, onChangeHandler }: UploadFileProps) {
+  let maxSizeInBytes;
+
+  if (type.startsWith('image')) {
+    maxSizeInBytes = 800000;
+  } else if (type.startsWith('video')) {
+    maxSizeInBytes = 9000000;
+  } else {
+    maxSizeInBytes = 0;
+  }
+
+  let errorMessage = "";
+
+  if (file && file.size > maxSizeInBytes) {
+    errorMessage = `File size must be less than ${maxSizeInBytes / 1000000} MB`;
+  }
+
   return (
     <div className="flex items-center justify-center w-96">
       <div className="w-full">
@@ -16,7 +32,7 @@ function UploadFile({ type, htmlFor, description, fileName, onChangeHandler }: U
         >
           <div className="flex flex-col items-center justify-center pt-5 pb-6">
             <svg
-              className="w-8 h-8 mb-4 text-whit"
+              className="w-8 h-8 mb-4 text-white"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -30,15 +46,15 @@ function UploadFile({ type, htmlFor, description, fileName, onChangeHandler }: U
                 d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
               />
             </svg>
-            <p className="mb-2 text-sm text-whit">
+            <p className="mb-2 text-sm text-white">
               <span className="font-semibold">Click to upload</span>
             </p>
-            <p className="text-xs text-whit">{description}</p>
+            <p className="text-xs text-white">{description}</p>
           </div>
-          <input id={htmlFor} type="file" accept={type} className="hidden"
-          onChange={onChangeHandler} />
+          <input id={htmlFor} type="file" accept={type} className="hidden" onChange={onChangeHandler} />
         </label>
-        <p className="text-sm">File Name: {fileName}</p>
+        <p className="text-sm">File Name: {file?.name}</p>
+        <div className="text-red text-xs mt-1">{errorMessage}</div>
       </div>
     </div>
   );

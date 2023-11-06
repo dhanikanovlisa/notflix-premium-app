@@ -46,16 +46,16 @@ function DetailFilm() {
       const response = await fetch(`${url}/films/delete/${Number(id)}`, {
         method: "DELETE",
       });
-  
+
       if (!response.ok) {
         throw new Error(`Failed to delete film. Status: ${response.status}`);
       }
-  
+
       setIsModalOpen(false);
       setShowToastTrue(true);
       setTimeout(() => {
         window.location.href = "/manage-film";
-      }, 2000)
+      }, 2000);
     } catch (error) {
       setIsModalOpen(false);
       setShowToastError(true);
@@ -67,7 +67,7 @@ function DetailFilm() {
     getFilmById();
   }, [id]);
 
-  function goToEdit(){
+  function goToEdit() {
     window.location.href = `/edit-film/${Number(id)}`;
   }
 
@@ -83,34 +83,38 @@ function DetailFilm() {
     <>
       {film && (
         <>
-        <Toast type="check" message="Sucesfully deleted film" showUseState={showToastTrue}/>
-        <Toast type="cross" message="Failed deleted film" showUseState={showToastError}/>
+          <Toast
+            type="check"
+            message="Sucesfully deleted film"
+            showUseState={showToastTrue}
+          />
+          <Toast
+            type="cross"
+            message="Failed deleted film"
+            showUseState={showToastError}
+          />
           <Navbar />
-          <div className="pt-28 pl-10 pr-28">
-            <h2>{film.title}</h2>
-            <div className="flex flex-row gap-10 pt-5">
-              <div className="">
-                <div className="w-48 h-full">
-                  <div className="w-48 h-60 red-glow rounded-md overflow-hidden">
-                    <img
-                      src={`/src/assets/storage/poster/${film.film_poster}`}
-                      alt="Placeholder"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+          <div className="pt-28 pl-5 sm:pl-10 pr-5 sm:pr-10 lg:pr-28">
+            <h2 className="">{film.title}</h2>
+            <div className="flex flex-col sm:flex-col md:flex-col lg:flex-row xl:flex-row gap-10 pt-5">
+              <div className="sm:w-full md:w-full lg:w-48 xl:w-48">
+                <div className="w-48 h-60 red-glow rounded-md overflow-hidden sm:justify-center">
+                  <img
+                    src={`/src/assets/storage/poster/${film.film_poster}`}
+                    alt="Placeholder"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               </div>
-              <div className="w-1/3 space-y-2 pb-2">
+              <div className="w-full sm:w-full md:w-full lg:w-5/12 xl:w- space-y-2 pb-2">
                 <div className="">
                   <div>
-                    <h3>Descirption</h3>
+                    <h3>Description</h3>
                     <p>{film.description}</p>
                   </div>
                   <div>
                     <h3>Genre</h3>
-                    <p>
-                    {[...(filmGenre)].join(", ")}
-                    </p>
+                    <p>{[...filmGenre].join(", ")}</p>
                   </div>
                   <div>
                     <h3>Release Year</h3>
@@ -132,8 +136,10 @@ function DetailFilm() {
                   >
                     Delete
                   </button>
-                  <button className="button-white font-bold text-button"
-                  onClick={goToEdit}>
+                  <button
+                    className="button-white font-bold text-button"
+                    onClick={goToEdit}
+                  >
                     Edit
                   </button>
                 </div>

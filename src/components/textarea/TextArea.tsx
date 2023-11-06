@@ -19,7 +19,7 @@ function TextArea({
   onChangeHandler
 }: TextAreaProps) {
   return (
-    <div>
+    <div className="w-1/3">
       <label
         className="md:flex md:items-center mb-1 font-bold"
         htmlFor={htmlFor}
@@ -32,7 +32,7 @@ function TextArea({
       <textarea
         id={htmlFor}
         rows={rows}
-        className="block w-full h-32 p-4 text-base text-gray-900 bg-gray-50 rounded-lg border  "
+        className="block w-64 h-32 p-4 text-base text-gray-900 bg-gray-50 rounded-lg border  "
         placeholder={placeholder}
         required={required}
         value = {value}

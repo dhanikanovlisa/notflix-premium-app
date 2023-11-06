@@ -22,9 +22,9 @@ function EditFilm() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [film_path, setFilmPath] = useState<string | undefined>("");
-  const [film_poster, setPosterPath] = useState<string | undefined>("");
-  const [film_header, setHeaderPath] = useState<string | undefined>("");
+  const [film_path, setFilmPath] = useState<File>();
+  const [film_poster, setPosterPath] = useState<File>();
+  const [film_header, setHeaderPath] = useState<File>();
   const [date_release, setReleaseDate] = useState("");
   const [hour, setHour] = useState(0);
   const [minute, setMinute] = useState(0);
@@ -41,7 +41,6 @@ function EditFilm() {
   hoursArray.unshift("");
   minutesArray.unshift("");
 
-
   const handleModalCancel = () => {
     setIsModalOpen(false);
   };
@@ -55,27 +54,35 @@ function EditFilm() {
     document.title = "Edit Film";
   });
 
-  async function getFilm() {
-    const response = await fetch(`${url}/films/film/${id}`);
-    const data = await response.json();
-    if (!response.ok) {
-      console.log(data.message);
-      return;
+
+  useEffect(() => {
+    const fetchData = async() => {
+      const response = await fetch(`${url}/films/film/${id}`);
+      const data = await response.json();
+      if (!response.ok) {
+        console.log(data.message);
+        return;
+      }
+      const mappedData = {
+        film_id: data.data.film_id,
+        title: data.data.title,
+        description: data.data.description,
+        film_path: data.data.film_path,
+        film_poster: data.data.film_poster,
+        film_header: data.data.film_header,
+        date_release: new Date(data.data.date_release),
+        duration: data.data.duration,
+        id_user: data.data.id_user,
+      };
+      setFilm(mappedData);
     }
-    const mappedData = {
-      film_id: data.data.film_id,
-      title: data.data.title,
-      description: data.data.description,
-      film_path: data.data.film_path,
-      film_poster: data.data.film_poster,
-      film_header: data.data.film_header,
-      date_release: new Date(data.data.date_release),
-      duration: data.data.duration,
-      id_user: data.data.id_user,
-    };
-    setFilm(mappedData);
-  }
-  async function getGenre() {
+  
+    fetchData();
+  }, [id]);
+  
+  useEffect(() => {
+
+  const fetchData = async () => {
     const response = await fetch(`${url}/genres`);
     const data = await response.json();
     if (!response.ok) {
@@ -86,6 +93,8 @@ function EditFilm() {
     const mappedGenre = data.data;
     setGenre(mappedGenre);
   }
+    fetchData();
+  }, []);
 
   async function updateFilm() {
     const response = await fetch(`${url}/films/edit/${id}`, {
@@ -102,7 +111,7 @@ function EditFilm() {
         date_release,
         duration,
         id_user,
-        genres
+        genres,
       }),
     });
 
@@ -119,32 +128,31 @@ function EditFilm() {
     }, 2000);
   }
 
-  useEffect(() => {
-    getFilm();
-  },[id]);
 
-  useEffect(() => {
-    getGenre();
-  }, [])
 
   function labelCheckbox() {
     const checkboxes = genre.map((genreObj) => (
-      <CheckBox
+      <div
         key={genreObj.genre_id}
-        id={genreObj.genre_id?.toString() ?? ""}
-        label={genreObj.genre_name}
-        htmlFor={genreObj.genre_id?.toString() ?? ""}
-        value={genreObj.genre_name}
-        onChangeHandler={(isChecked) => {
-          if (isChecked) {
-            setGenres((prevGenres) => [...prevGenres, genreObj.genre_id!]);
-          } else {
-            setGenres((prevGenres) =>
-              prevGenres.filter((id) => id !== genreObj.genre_id)
-            );
-          }
-        }}
-      />
+        className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4"
+      >
+        <CheckBox
+          key={genreObj.genre_id}
+          id={genreObj.genre_id?.toString() ?? ""}
+          label={genreObj.genre_name}
+          htmlFor={genreObj.genre_id?.toString() ?? ""}
+          value={genreObj.genre_name}
+          onChangeHandler={(isChecked) => {
+            if (isChecked) {
+              setGenres((prevGenres) => [...prevGenres, genreObj.genre_id!]);
+            } else {
+              setGenres((prevGenres) =>
+                prevGenres.filter((id) => id !== genreObj.genre_id)
+              );
+            }
+          }}
+        />
+      </div>
     ));
 
     return checkboxes;
@@ -163,12 +171,12 @@ function EditFilm() {
         showUseState={showToastError}
       />
       <Navbar />
-      <div className="pt-28 pl-10 w-11/12 h-full">
-        <h1>Edit Film</h1>
-        <div>
-          <div className="space-y-5">
-            <div className="flex flex-row gap-20">
-              <div className="w-2/6">
+      <div className="pt-28 pl-5 sm:pl-10 pr-5 sm:pr-10 lg:pr-28">
+        <h1 className="text-center sm:text-left">Edit Film</h1>
+        <div className="flex sm:flex-col lg:flex-row">
+          <div className="w-full">
+            <div className="flex gap-5 sm:flex-col md:flex-col lg:flex-row xl:flex-row">
+              <div className="w-1/3">
                 <Field
                   type="text"
                   label="Film Name"
@@ -191,70 +199,85 @@ function EditFilm() {
                   }
                 />
               </div>
-              <div className="h-full w-2/6">
-                <h3>Genre</h3>
-                <div className="flex flex-wrap gap-4">{labelCheckbox()}</div>
+              <div className="w-5/12">
+                <h3 className="text-center sm:text-left">Genre</h3>
+                <div className="flex flex-wrap gap-10">{labelCheckbox()}</div>
               </div>
             </div>
-            <Field
-              type="date"
-              label="Release Date"
-              htmlFor="releaseDate"
-              required={false}
-              value={date_release}
-              onChangeHandler={(event) => setReleaseDate(event.target.value)}
-            />
-            <div className="flex flex-row gap-10">
-              <Dropdown
-                label="Hour"
-                htmlFor="hour"
+            <div className="pb-10">
+              <Field
+                type="date"
+                label="Release Date"
+                htmlFor="releaseDate"
                 required={false}
-                options={hoursArray}
-                onChangeHandler={event => setHour(Number(event.target.value))}
+                value={date_release}
+                onChangeHandler={(event) => setReleaseDate(event.target.value)}
               />
-              <Dropdown
-                label="Minute"
-                htmlFor="minute"
-                required={false}
-                options={minutesArray}
-                onChangeHandler={event => setMinute(Number(event.target.value))}
-
-              />
+              <div className="flex flex-row gap-10">
+                <Dropdown
+                  label="Hour"
+                  htmlFor="hour"
+                  required={false}
+                  options={hoursArray}
+                  onChangeHandler={(event) =>
+                    setHour(Number(event.target.value))
+                  }
+                />
+                <Dropdown
+                  label="Minute"
+                  htmlFor="minute"
+                  required={false}
+                  options={minutesArray}
+                  onChangeHandler={(event) =>
+                    setMinute(Number(event.target.value))
+                  }
+                />
+              </div>
             </div>
-            <div className="flex flex-row gap-10 pb-5">
+            <div className="flex flex-row gap-10 pb-5 sm:flex-col md:flex-col lg:flex-row xl:flex-row">
               <UploadFile
                 type="image/*"
                 htmlFor="poster"
                 description="Upload Film Poster (max 800KB)"
-                fileName={film_poster}
+                file={film_poster}
                 onChangeHandler={(event) =>
-                  setPosterPath(event.target.files?.[0].name)
+                  setPosterPath(event.target.files?.[0])
                 }
               />
               <UploadFile
                 type="image/*"
                 htmlFor="header"
                 description="Upload Film Header (max 800KB)"
-                fileName={film_header}
+                file={film_header}
                 onChangeHandler={(event) =>
-                  setHeaderPath(event.target.files?.[0].name)
+                  setHeaderPath(event.target.files?.[0])
                 }
               />
               <UploadFile
                 type="video/*"
                 htmlFor="video"
                 description="Upload Film Poster (max 9 MB)"
-                fileName={film_path}
+                file={film_path}
                 onChangeHandler={(event) =>
-                  setFilmPath(event.target.files?.[0].name)
+                  setFilmPath(event.target.files?.[0])
                 }
               />
             </div>
           </div>
         </div>
-        <div className="flex flex-wrap justify-between pb-5">
-          <button className="button-red font-bold text-button" onClick={() => setIsModalOpen(true)}>Cancel</button>
-          <button className="button-white font-bold text-button" onClick={updateFilm}>Save</button>
+        <div className="flex flex-wrap justify-center sm:justify-between md:justify-between pb-5">
+          <button
+            className="button-red font-bold text-button"
+            onClick={() => setIsModalOpen(true)}
+          >
+            Cancel
+          </button>
+          <button
+            className="button-white font-bold text-button"
+            onClick={updateFilm}
+          >
+            Save
+          </button>
         </div>
       </div>
       {isModalOpen && (
