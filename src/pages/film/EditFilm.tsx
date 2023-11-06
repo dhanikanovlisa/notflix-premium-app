@@ -19,6 +19,7 @@ function EditFilm() {
   const [showToastTrue, setShowToastTrue] = useState(false);
   const [showToastError, setShowToastError] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [msg, setMsg] = useState("");
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -97,6 +98,12 @@ function EditFilm() {
   }, []);
 
   async function updateFilm() {
+    const filmName = film_path?.name;
+    const posterName = film_poster?.name;
+    const headerName = film_header?.name;
+    const filmPathSize = film_path?.size;
+    const posterPathSize = film_poster?.size;
+    const headerPathSize = film_header?.size;
     const response = await fetch(`${url}/films/edit/${id}`, {
       method: "PUT",
       headers: {
@@ -105,9 +112,12 @@ function EditFilm() {
       body: JSON.stringify({
         title,
         description,
-        film_path,
-        film_poster,
-        film_header,
+        film_path: filmName,
+        film_poster: posterName,
+        film_header: headerName,
+        film_path_size: filmPathSize,
+        film_poster_size: posterPathSize,
+        film_header_size: headerPathSize,
         date_release,
         duration,
         id_user,
@@ -118,7 +128,11 @@ function EditFilm() {
     if (!response.ok) {
       if (response.status === 404) {
         setShowToastError(true);
-        setFilm(undefined);
+        return;
+      } else if (response.status === 400) {
+        const errorMsg = await response.json();
+        setShowToastError(true);
+        setMsg(errorMsg?.error);
         return;
       }
     }
@@ -167,7 +181,7 @@ function EditFilm() {
       />
       <Toast
         type="cross"
-        message="Failed to update film"
+        message={msg}
         showUseState={showToastError}
       />
       <Navbar />

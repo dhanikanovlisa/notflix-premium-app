@@ -15,6 +15,7 @@ function EditProfile() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showToastTrue, setShowToastTrue] = useState(false);
   const [showToastError, setShowToastError] = useState(false);
+  const [msg, setMsg] = useState("");
 
   const [username, setUsername] = useState("");
   const [first_name, setFirstName] = useState("");
@@ -100,6 +101,8 @@ function EditProfile() {
     }
 
     try {
+      const profileName = photo_profile?.name;
+      const profileSize = photo_profile?.size;
       const response = await fetch(`${url}/profile/edit/${id}`, {
         method: "PUT",
         headers: {
@@ -111,14 +114,20 @@ function EditProfile() {
           first_name,
           email,
           phone_number,
-          photo_profile,
+          profileName,
+          profileSize
         }),
       });
 
       if (!response.ok) {
         if (response.status === 404) {
           setShowToastError(true);
-          setProfile(undefined);
+          setMsg("Profile not found");
+          return;
+        } else if (response.status === 400){
+          const errorMsg = await response.json();
+          setShowToastError(true);
+          setMsg(errorMsg?.error);
           return;
         }
       }
@@ -154,7 +163,7 @@ function EditProfile() {
       />
       <Toast
         type="cross"
-        message="Failed to update profile"
+        message={msg}
         showUseState={showToastError}
       />
       <Navbar />
