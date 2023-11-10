@@ -16,8 +16,8 @@ function Login() {
 
   const [usernameErrorMsg, setUsernameErrorMsg] = useState<string>("");
   const [passwordErrorMsg, setPasswordErrorMsg] = useState<string>("");
-  const toastUseState = useState<boolean>(false);
-  const [showToast, setShowToast] = toastUseState;
+  const [showToast, setShowToast] = useState(false);
+
 
   useEffect(() => {
     setUsernameErrorMsg("");
@@ -27,7 +27,7 @@ function Login() {
     setPasswordErrorMsg("");
   }, [password]);
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async(e: React.ChangeEvent<any>) => {
     e.preventDefault();
 
     const url = import.meta.env.VITE_REST_URL;
@@ -68,10 +68,10 @@ function Login() {
 
     return (
       <>
-        <Toast type="check" message="Login success, redirecting to Home..." showUseState={toastUseState}/>
+        <Toast showUseState={[showToast, setShowToast]} message="Login successful" type={""} />
         <Navbar />
         <div className="flex justify-center min-h-screen items-center">
-          <div className="flex-row items-center">
+          <div className="flex-row items-center w-64">
             <h1 className="text-center">Log In</h1>
             <Field 
               type="text"
@@ -91,7 +91,7 @@ function Login() {
               onChangeHandler={event => setPassword(event.target.value)}
             />
             <div className='w-ful flex justify-center mt-4 mb-2'><button className="button-red red-glow button-text" type="submit" name="login" onClick={handleSubmit}>Login</button></div>
-            <div className="small-text">Already have an account? <a href="/registration">Register</a></div>
+            <div className="small-text text-center">Already have an account? <a href="/registration">Register</a></div>
           </div>
         </div>
       </>

@@ -26,7 +26,7 @@ function Field({
   onKeyUp,
 }: FieldProps) {
   return (
-    <div className="w-1/3">
+    <div className={`${half && "w-1/2"}`}>
       <label
         className="md:flex md:items-center mb-1 font-bold"
         htmlFor={htmlFor}
