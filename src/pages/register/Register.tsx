@@ -212,7 +212,7 @@ function Register() {
               required
               onChangeHandler={event => setConfirmPassword(event.target.value)}
             />
-            <div className='w-ful flex justify-center mt-4 mb-2'><button className="button-red red-glow button-text" type="submit" name="login" onClick={handleSubmit}>Login</button></div>
+            <div className='w-ful flex justify-center mt-4 mb-2'><button className="button-red red-glow button-text" type="submit" name="register" onClick={handleSubmit}>Register</button></div>
             <div className="small-text text-center">Already have an account? <a href="/login">Login</a></div>
           </form>
         </div>
