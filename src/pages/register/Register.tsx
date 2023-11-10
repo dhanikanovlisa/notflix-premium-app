@@ -75,7 +75,7 @@ function Register() {
       lastName=="" || nameRegex.test(lastName)? setIsLastNameValid(true):setIsLastNameValid(false);
     }, [lastName]);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.ChangeEvent<any>) => {
       e.preventDefault();
       if (!isUsernameValid || !isEmailValid || !isPhoneValid || !isPasswordValid || !isFirstNameValid || !isLastNameValid){
         alert("Please fill the form correctly");
