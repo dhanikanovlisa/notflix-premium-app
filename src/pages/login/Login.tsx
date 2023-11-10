@@ -56,6 +56,8 @@ function Login() {
       const data = await res.json();
       if (res.ok && data.code == 1){
         setShowToastSuccess(true);
+        localStorage.setItem("token", data.token);
+        window.location.href = "/";
       } else {
         setShowToastError(true);
         setPasswordErrorMsg(data.message);
