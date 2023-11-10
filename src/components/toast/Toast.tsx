@@ -1,18 +1,20 @@
 import styles from "./Toast.module.css";
-import { useEffect, Dispatch, SetStateAction } from "react";
+import { useState, useEffect } from "react";
 
 interface ToastProps {
   message: string;
   type: string;
-  showUseState:  (any | Dispatch<SetStateAction<any>>)[];
+  showUseState: boolean;
 }
 
 function Toast({ message, type, showUseState }: ToastProps) {
+  const [showToast, setShowToast] = useState(showUseState);
 
   useEffect(() => {
-    if (showUseState[0]) {
+    setShowToast(showUseState);
+    if (showUseState) {
       const timeoutId = setTimeout(() => {
-        showUseState[1](false);
+        setShowToast(false);
       }, 1700);
 
       return () => clearTimeout(timeoutId);
@@ -20,7 +22,7 @@ function Toast({ message, type, showUseState }: ToastProps) {
   }, [showUseState]);
 
   return (
-    <div className={showUseState[0] ? styles.toast_show : styles.toast}>
+    <div className={showToast ? styles.toast_show : styles.toast}>
       <img className={styles.toast_img} src={`/src/assets/${type}.png`} alt={type} />
       <div className={type === "cross" ? styles.cross : styles.check}>{message}</div>
     </div>

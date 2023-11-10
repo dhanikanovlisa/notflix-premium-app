@@ -16,7 +16,8 @@ function Login() {
 
   const [usernameErrorMsg, setUsernameErrorMsg] = useState<string>("");
   const [passwordErrorMsg, setPasswordErrorMsg] = useState<string>("");
-  const [showToast, setShowToast] = useState(false);
+  const [showToastSuccess, setShowToastSuccess] = useState(false);
+  const [showToastError, setShowToastError] = useState(false);
 
 
   useEffect(() => {
@@ -54,8 +55,9 @@ function Login() {
       
       const data = await res.json();
       if (res.ok && data.code == 1){
-        setShowToast(true);
+        setShowToastSuccess(true);
       } else {
+        setShowToastError(true);
         setPasswordErrorMsg(data.message);
         return;
       }
@@ -68,7 +70,8 @@ function Login() {
 
     return (
       <>
-        <Toast showUseState={[showToast, setShowToast]} message="Login successful" type={""} />
+        <Toast showUseState={showToastSuccess} message="Login successful" type="check" />
+        <Toast showUseState={showToastError} message="Login failed" type="cross" />
         <Navbar />
         <div className="flex justify-center min-h-screen items-center">
           <div className="flex-row items-center w-64">
