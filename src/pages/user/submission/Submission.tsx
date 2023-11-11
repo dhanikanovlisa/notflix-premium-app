@@ -1,5 +1,5 @@
-import Navbar from "../../components/navbar/Navbar";
-import CardSubmission from "../../components/card/CardSubmission";
+import Navbar from "../../../components/navbar/Navbar";
+import CardSubmission from "../../../components/card/CardSubmission";
 
 function Submission() {
   function handleCreate(){

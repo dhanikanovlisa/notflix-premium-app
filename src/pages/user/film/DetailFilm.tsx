@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
-import { Film } from "../../interfaces/interfaces";
-import Navbar from "../../components/navbar/Navbar";
-import Modal from "../../components/modal/Modal";
-import Toast from "../../components/toast/Toast";
+import { Film } from "../../../interfaces/interfaces";
+import Navbar from "../../../components/navbar/Navbar";
+import Modal from "../../../components/modal/Modal";
+import Toast from "../../../components/toast/Toast";
 
 function DetailFilm() {
   const url = import.meta.env.VITE_REST_URL;

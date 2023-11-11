@@ -1,10 +1,12 @@
 import { useEffect } from "react";
-import Navbar from "../../components/navbar/Navbar";
-import CardFilm from "../../components/card/CardFilm";
+import Navbar from "../../../components/navbar/Navbar";
+import CardFilm from "../../../components/card/CardFilm";
 import { useState } from "react";
-import { Film } from "../../interfaces/interfaces";
+import { Film } from "../../../interfaces/interfaces";
+import { useParams } from "react-router-dom";
 
 function ManageFilm() {
+  const { id } = useParams();
   const [filmData, setFilmData] = useState<Film[]>([]);
 
   useEffect(() => {
@@ -15,7 +17,7 @@ function ManageFilm() {
 
   const fetchFilm = async () => {
     try {
-      const response = await fetch(`${url}/films/user/2`);
+      const response = await fetch(`${url}/films/user/${id}`);
       if (!response.ok) {
         throw new Error('Something went wrong');
       }

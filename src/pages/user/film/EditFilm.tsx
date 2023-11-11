@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Film, Genre } from "../../interfaces/interfaces";
-import Navbar from "../../components/navbar/Navbar";
-import Field from "../../components/field/Field";
-import Dropdown from "../../components/dropdown/Dropdown";
-import UploadFile from "../../components/uploadFIle/UploadFile";
-import CheckBox from "../../components/checkbox/Checkbox";
-import TextArea from "../../components/textarea/TextArea";
-import Toast from "../../components/toast/Toast";
-import Modal from "../../components/modal/Modal";
+import { Film, Genre } from "../../../interfaces/interfaces";
+import Navbar from "../../../components/navbar/Navbar";
+import Field from "../../../components/field/Field";
+import Dropdown from "../../../components/dropdown/Dropdown";
+import UploadFile from "../../../components/uploadFIle/UploadFile";
+import CheckBox from "../../../components/checkbox/Checkbox";
+import TextArea from "../../../components/textarea/TextArea";
+import Toast from "../../../components/toast/Toast";
+import Modal from "../../../components/modal/Modal";
 
 function EditFilm() {
   const url = import.meta.env.VITE_REST_URL;

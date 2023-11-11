@@ -1,11 +1,11 @@
 import { useState } from "react";
-import Navbar from "../../components/navbar/Navbar";
-import Field from "../../components/field/Field";
-import Dropdown from "../../components/dropdown/Dropdown";
-import TextArea from "../../components/textarea/TextArea";
-import UploadFile from "../../components/uploadFIle/UploadFile";
-import Modal from "../../components/modal/Modal";
-import Toast from "../../components/toast/Toast";
+import Navbar from "../../../components/navbar/Navbar";
+import Field from "../../../components/field/Field";
+import Dropdown from "../../../components/dropdown/Dropdown";
+import TextArea from "../../../components/textarea/TextArea";
+import UploadFile from "../../../components/uploadFIle/UploadFile";
+import Modal from "../../../components/modal/Modal";
+import Toast from "../../../components/toast/Toast";
 
 function CreateSubmission() {
 const [isModalOpen, setIsModalOpen] = useState(false);

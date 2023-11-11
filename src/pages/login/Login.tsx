@@ -57,8 +57,14 @@ function Login() {
       if (res.ok && data.code == 1){
         setShowToastSuccess(true);
         localStorage.setItem("token", data.token);
+        localStorage.setItem("admin", data.is_admin);
+        localStorage.setItem("id", data.id);
         setTimeout(() => {
-          window.location.href = "/";
+          if(data.is_admin){
+            window.location.href = "/film-request";
+          } else {
+            window.location.href = "/submission";
+          }
         }, 1600);
       } else {
         setShowToastError(true);
