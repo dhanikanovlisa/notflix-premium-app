@@ -1,14 +1,20 @@
 import CardApproval from "../../../components/card/CardApproval";
 import Navbar from "../../../components/navbar/Navbar";
+import { useEffect } from "react";
 function Subscription() {
-    return (
-        <>
-        <Navbar />
-        <div className="pt-28 pl-10">
-          <CardApproval title="Tes" description="Tes" />
-        </div>
-      </>
-    )
+  useEffect(() => {
+    if (localStorage.getItem("admin") !== "true") {
+      window.location.href = "/404";
+    }
+  });
+  return (
+    <>
+      <Navbar />
+      <div className="pt-28 pl-10">
+        <CardApproval title="Tes" description="Tes" />
+      </div>
+    </>
+  );
 }
 
 export default Subscription;

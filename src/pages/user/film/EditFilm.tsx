@@ -53,6 +53,9 @@ function EditFilm() {
 
   useEffect(() => {
     document.title = "Edit Film";
+    if(localStorage.getItem("admin") !== "false"){
+      window.location.href = "/404"
+  }
   });
 
 

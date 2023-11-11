@@ -11,6 +11,9 @@ function ManageFilm() {
 
   useEffect(() => {
     document.title = "Manage Film";
+    if(localStorage.getItem("admin") !== "false"){
+      window.location.href = "/404"
+  }
   });
 
   const url = import.meta.env.VITE_REST_URL;

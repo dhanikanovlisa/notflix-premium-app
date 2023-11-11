@@ -1,7 +1,14 @@
+import { useEffect } from "react";
 import CardApproval from "../../../components/card/CardApproval";
 import Navbar from "../../../components/navbar/Navbar";
 
 function AdmissionFilm() {
+
+    useEffect(() => {
+        if(localStorage.getItem("admin") !== "true"){
+            window.location.href = "/404"
+        }
+    })
     return (
         <>
         <Navbar />

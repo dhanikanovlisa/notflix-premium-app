@@ -65,6 +65,9 @@ function DetailFilm() {
 
   useEffect(() => {
     getFilmById();
+    if(localStorage.getItem("admin") !== "false"){
+      window.location.href = "/404"
+  }
   }, [id]);
 
   function goToEdit() {
