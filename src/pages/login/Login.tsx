@@ -57,7 +57,9 @@ function Login() {
       if (res.ok && data.code == 1){
         setShowToastSuccess(true);
         localStorage.setItem("token", data.token);
-        window.location.href = "/";
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1600);
       } else {
         setShowToastError(true);
         setPasswordErrorMsg(data.message);

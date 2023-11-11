@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react'
-
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useEffect} from 'react'
+import { useNavigate } from 'react-router-dom'
 
 type ProtectedRouteProps = {
   type?: string
