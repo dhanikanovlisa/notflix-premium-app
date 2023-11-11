@@ -54,7 +54,7 @@ function Login() {
       });
       
       const data = await res.json();
-      if (res.ok && data.code == 1){
+      if (res.ok && res.status==200){
         setShowToastSuccess(true);
         localStorage.setItem("token", data.token);
         localStorage.setItem("admin", data.is_admin);
