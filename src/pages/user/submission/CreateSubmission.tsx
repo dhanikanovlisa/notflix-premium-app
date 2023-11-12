@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../../../components/navbar/Navbar";
 import Field from "../../../components/field/Field";
 import Dropdown from "../../../components/dropdown/Dropdown";
@@ -8,13 +8,14 @@ import Modal from "../../../components/modal/Modal";
 import Toast from "../../../components/toast/Toast";
 
 function CreateSubmission() {
-const [isModalOpen, setIsModalOpen] = useState(false);
-const [showToastTrue, setShowToastTrue] = useState(false);
-const [showToastError, setShowToastError] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showToastTrue, setShowToastTrue] = useState(false);
+  const [showToastError, setShowToastError] = useState(false);
+  const [user_id, setId] = useState<number>(0);
 
-const [film_path, setFilmPath] = useState<File>();
-const [film_poster, setPosterPath] = useState<File>();
-const [film_header, setHeaderPath] = useState<File>();
+  const [film_path, setFilmPath] = useState<File>();
+  const [film_poster, setPosterPath] = useState<File>();
+  const [film_header, setHeaderPath] = useState<File>();
 
   const hoursArray: string[] = Array.from({ length: 24 }, (_, index) =>
     (index + 1).toString()
@@ -32,11 +33,15 @@ const [film_header, setHeaderPath] = useState<File>();
 
   const handleModalConfirm = () => {
     setIsModalOpen(false);
-    window.location.href = "/submission";
+    window.location.href = "/submission/" + user_id;
   };
+
+  useEffect(() => {
+    setId(Number(localStorage.getItem("id")));
+  }, [user_id])
   return (
     <>
-    <Toast
+      <Toast
         type="check"
         message="Sucesfully updated film"
         showUseState={showToastTrue}
@@ -128,11 +133,7 @@ const [film_header, setHeaderPath] = useState<File>();
           >
             Cancel
           </button>
-          <button
-            className="button-white font-bold text-button"
-          >
-            Submit
-          </button>
+          <button className="button-white font-bold text-button">Submit</button>
         </div>
       </div>
       {isModalOpen && (

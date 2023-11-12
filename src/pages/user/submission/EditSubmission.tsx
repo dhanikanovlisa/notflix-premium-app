@@ -1,21 +1,18 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Film, Genre } from "../../../interfaces/interfaces";
 import Navbar from "../../../components/navbar/Navbar";
-import Field from "../../../components/field/Field";
-import Dropdown from "../../../components/dropdown/Dropdown";
-import UploadFile from "../../../components/uploadFIle/UploadFile";
-import CheckBox from "../../../components/checkbox/Checkbox";
-import TextArea from "../../../components/textarea/TextArea";
 import Toast from "../../../components/toast/Toast";
 import Modal from "../../../components/modal/Modal";
+import Field from "../../../components/field/Field";
+import TextArea from "../../../components/textarea/TextArea";
+import UploadFile from "../../../components/uploadFIle/UploadFile";
+import Dropdown from "../../../components/dropdown/Dropdown";
+import { useState, useEffect } from "react";
+import { FilmRequest } from "../../../interfaces/interfaces";
 
-function EditFilm() {
+function EditSubmission() {
   const url = import.meta.env.VITE_REST_URL;
   const { id } = useParams();
-  const id_user = localStorage.getItem("user_id");
-  const [genre, setGenre] = useState<Genre[]>([]);
-  const [film, setFilm] = useState<Film | undefined>();
+  const [requestFilm, setRequestFilm] = useState<FilmRequest | undefined>();
   const [showToastTrue, setShowToastTrue] = useState(false);
   const [showToastError, setShowToastError] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -29,7 +26,6 @@ function EditFilm() {
   const [date_release, setReleaseDate] = useState("");
   const [hour, setHour] = useState(0);
   const [minute, setMinute] = useState(0);
-  const [genres, setGenres] = useState<number[]>([]);
   const duration = hour * 60 + minute;
 
   const hoursArray: string[] = Array.from({ length: 24 }, (_, index) =>
@@ -48,133 +44,42 @@ function EditFilm() {
 
   const handleModalConfirm = () => {
     setIsModalOpen(false);
-    window.location.href = "/manage-film/" + id;
+    window.location.href = "/submission/detail" + id;
   };
 
-  useEffect(() => {
-    document.title = "Edit Film";
-    if(localStorage.getItem("admin") !== "false"){
-      window.location.href = "/404"
-  }
-  });
-
-
-  useEffect(() => {
-    const fetchData = async() => {
-      const response = await fetch(`${url}/films/film/${id}`);
-      const data = await response.json();
-      if (!response.ok) {
-        console.log(data.message);
-        return;
-      }
-      const mappedData = {
-        film_id: data.data.film_id,
-        title: data.data.title,
-        description: data.data.description,
-        film_path: data.data.film_path,
-        film_poster: data.data.film_poster,
-        film_header: data.data.film_header,
-        date_release: new Date(data.data.date_release),
-        duration: data.data.duration,
-        id_user: data.data.id_user,
-      };
-      setFilm(mappedData);
-    }
-  
-    fetchData();
-  }, [id]);
-  
-  useEffect(() => {
-
-  const fetchData = async () => {
-    const response = await fetch(`${url}/genres`);
-    const data = await response.json();
-    if (!response.ok) {
-      console.log(data.message);
-      return;
-    }
-
-    const mappedGenre = data.data;
-    setGenre(mappedGenre);
-  }
-    fetchData();
-  }, []);
-
-  async function updateFilm() {
-    const filmName = film_path?.name;
-    const posterName = film_poster?.name;
-    const headerName = film_header?.name;
-    const filmPathSize = film_path?.size;
-    const posterPathSize = film_poster?.size;
-    const headerPathSize = film_header?.size;
-    const response = await fetch(`${url}/films/edit/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.getItem('token') || '',
-      },
-      body: JSON.stringify({
-        title,
-        description,
-        film_path: filmName,
-        film_poster: posterName,
-        film_header: headerName,
-        film_path_size: filmPathSize,
-        film_poster_size: posterPathSize,
-        film_header_size: headerPathSize,
-        date_release,
-        duration,
-        id_user,
-        genres,
-      }),
-    });
-
+  async function getFilmRequest() {
+    const response = await fetch(
+      `${url}/films/requestFilm/detail/${Number(id)}`
+    );
     if (!response.ok) {
       if (response.status === 404) {
-        setShowToastError(true);
-        return;
-      } else if (response.status === 400) {
-        const errorMsg = await response.json();
-        setShowToastError(true);
-        setMsg(errorMsg?.error);
+        setRequestFilm(undefined);
+        window.location.href = "/not-found";
         return;
       }
     }
-    setShowToastTrue(true);
-    setTimeout(() => {
-      window.location.href = "/manage-film/" + id;
-    }, 2000);
+    const data = await response.json();
+    const mappedData = {
+      requestFilm_id: Number(data.data.requestFilm_id),
+      filmName: data.data.filmName,
+      description: data.data.description,
+      film_path: data.data.film_path,
+      film_poster: data.data.film_poster,
+      film_header: data.data.film_header,
+      date_release: new Date(data.data.date_release),
+      duration: data.data.duration,
+      id_user: data.data.id_user,
+      status: { status: data.data.status },
+    };
+    setRequestFilm(mappedData);
   }
 
-
-
-  function labelCheckbox() {
-    const checkboxes = genre.map((genreObj) => (
-      <div
-        key={genreObj.genre_id}
-        className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4"
-      >
-        <CheckBox
-          key={genreObj.genre_id}
-          id={genreObj.genre_id?.toString() ?? ""}
-          label={genreObj.genre_name}
-          htmlFor={genreObj.genre_id?.toString() ?? ""}
-          value={genreObj.genre_name}
-          onChangeHandler={(isChecked) => {
-            if (isChecked) {
-              setGenres((prevGenres) => [...prevGenres, genreObj.genre_id!]);
-            } else {
-              setGenres((prevGenres) =>
-                prevGenres.filter((id) => id !== genreObj.genre_id)
-              );
-            }
-          }}
-        />
-      </div>
-    ));
-
-    return checkboxes;
-  }
+  useEffect(() => {
+    getFilmRequest();
+    if (localStorage.getItem("admin") !== "false") {
+      window.location.href = "/404";
+    }
+  }, [id]);
 
   return (
     <>
@@ -183,11 +88,7 @@ function EditFilm() {
         message="Sucesfully updated film"
         showUseState={showToastTrue}
       />
-      <Toast
-        type="cross"
-        message={msg}
-        showUseState={showToastError}
-      />
+      <Toast type="cross" message={msg} showUseState={showToastError} />
       <Navbar />
       <div className="pt-28 pl-5 sm:pl-10 pr-5 sm:pr-10 lg:pr-28">
         <h1 className="text-center sm:text-left">Edit Film</h1>
@@ -200,7 +101,7 @@ function EditFilm() {
                   label="Film Name"
                   htmlFor="filmName"
                   required={false}
-                  placeholder={film?.title}
+                  placeholder={requestFilm?.filmName}
                   errorMessage=""
                   value={title}
                   onChangeHandler={(event) => setTitle(event.target.value)}
@@ -210,16 +111,12 @@ function EditFilm() {
                   rows={4}
                   required={false}
                   htmlFor="description"
-                  placeholder={film?.description}
+                  placeholder={requestFilm?.description}
                   value={description}
                   onChangeHandler={(event) =>
                     setDescription(event.target.value)
                   }
                 />
-              </div>
-              <div className="w-5/12">
-                <h3 className="text-center sm:text-left">Genre</h3>
-                <div className="flex flex-wrap gap-10">{labelCheckbox()}</div>
               </div>
             </div>
             <div className="pb-10">
@@ -290,12 +187,7 @@ function EditFilm() {
           >
             Cancel
           </button>
-          <button
-            className="button-white font-bold text-button"
-            onClick={updateFilm}
-          >
-            Save
-          </button>
+          <button className="button-white font-bold text-button">Save</button>
         </div>
       </div>
       {isModalOpen && (
@@ -310,4 +202,4 @@ function EditFilm() {
   );
 }
 
-export default EditFilm;
+export default EditSubmission;

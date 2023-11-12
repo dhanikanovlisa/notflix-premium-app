@@ -5,15 +5,17 @@ interface Status {
 }
 
 interface CardProps {
+  id: number;
   image: string | undefined;
   title: string;
   description: string;
   status: Status;
 }
 
-function CardSubmission({ image, title, description, status }: CardProps) {
+function CardSubmission({ id, image, title, description, status }: CardProps) {
   return (
-    <div className="w-52 h-full red-glow p-6 rounded-md justify-center items-center">
+    <a href ={`/submission/film/${id}`}>
+      <div className="w-52 h-full red-glow p-6 rounded-md justify-center items-center">
       <div className="mb-6">
         <img src={image} alt={title} className="rounded-lg" />
       </div>
@@ -27,6 +29,7 @@ function CardSubmission({ image, title, description, status }: CardProps) {
         </div>
       </div>
     </div>
+    </a>
   );
 }
 

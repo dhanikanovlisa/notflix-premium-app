@@ -63,7 +63,7 @@ function Login() {
           if(data.is_admin){
             window.location.href = "/film-request";
           } else {
-            window.location.href = "/submission";
+            window.location.href = `/submission/${data.id}`;
           }
         }, 1600);
       } else {

@@ -4,15 +4,15 @@ interface StatusComponentProps {
 
 function StatusComponent({ status }: StatusComponentProps) {
     return (
-        status === "Pending" ? (
+        status === "PENDING" ? (
             <div className="w-32 justify-center items-center text-center rounded-2xl bg-yellow-500 border-2 border-orange-500">
                 <p className="text-center">{status}</p>
             </div>
-        ) : status === "Accepted" ? (
+        ) : status === "ACCEPTED" ? (
             <div className="w-32 justify-center items-center text-center rounded-2xl bg-green-600 border-2 border-green-900">
                 <p className="text-center">{status}</p>
             </div>
-        ) : status === "Rejected" ? (
+        ) : status === "REJECTED" ? (
             <div className="w-32 justify-center items-center text-center rounded-2xl bg-red-700 border-2 border-red-950">
                 <p className="text-center">{status}</p>
             </div>

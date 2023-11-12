@@ -11,8 +11,9 @@ import PageNotFound from "./pages/notFound/PageNotFound";
 import CreateSubmission from "./pages/user/submission/CreateSubmission";
 import Logout from "./pages/login/Logout";
 import ProtectedRoute from "./components/protectedRoutes/ProtectedRoutes";
-import AdmissionFilm from "./pages/admin/film/AdmissionFIlm";
+import AdmissionFilm from "./pages/admin/film/AdmissionFilm";
 import Subscription from "./pages/admin/subscription/Subscription";
+import DetailSubmission from "./pages/user/submission/DetailSubmission";
 
 function App() {
   return (
@@ -26,12 +27,15 @@ function App() {
 
         {/**User */}
         {/**Submission */}
-        <Route path="/submission" element={<ProtectedRoute type="user"><Submission /></ProtectedRoute>}/>
-        <Route path="/create" element={<ProtectedRoute type="user"><CreateSubmission /></ProtectedRoute>}/>
+        <Route path="/submission/:id" element={<ProtectedRoute type="user"><Submission /></ProtectedRoute>}/>
+        <Route path="/submission/create" element={<ProtectedRoute type="user"><CreateSubmission /></ProtectedRoute>}/>
+        <Route path="/submission/film/:id" element={<ProtectedRoute type="user"><DetailSubmission /></ProtectedRoute>}/>
+        <Route path="/submission/edit/:id" element={<ProtectedRoute type="user"><DetailSubmission /></ProtectedRoute>}/>
+
 
         {/**Manage Film */}
         <Route path="/manage-film/:id" element={<ProtectedRoute type="user"><ManageFilm /></ProtectedRoute>}></Route>
-        <Route path="/edit-film/:id" element={<ProtectedRoute type="user"><EditFilm /></ProtectedRoute>}></Route>
+        <Route path="/manage-film/edit/:id" element={<ProtectedRoute type="user"><EditFilm /></ProtectedRoute>}></Route>
         <Route path="/manage-film/film/:id" element={<ProtectedRoute type="user"><DetailFilm /></ProtectedRoute>}></Route>
 
         {/**Admin */}
@@ -42,7 +46,7 @@ function App() {
 
          {/* Profile*/}
         <Route path="/profile/:id" element= {<ProtectedRoute type="user admin"><Profile /></ProtectedRoute>}/>
-        <Route path="/edit-profile/:id" element= {<ProtectedRoute type="user admin"><EditProfile /></ProtectedRoute>}/>
+        <Route path="/profile/edit/:id" element= {<ProtectedRoute type="user admin"><EditProfile /></ProtectedRoute>}/>
 
         {/**Not Found */}
         <Route path="*" element = {<PageNotFound />}></Route>

@@ -22,6 +22,19 @@ export interface Film {
   id_user: number ;
 }
 
+export interface FilmRequest {
+  requestFilm_id: number;
+  id_user: number ;
+  filmName: string ;
+  description: string ;
+  film_path: string ;
+  film_poster: string ;
+  film_header: string ;
+  date_release: Date ;
+  duration: number ;
+  status: Status;
+}
+
 export interface FilmGenre {
   film_genre?: number;
   film_id: number;
@@ -31,4 +44,8 @@ export interface FilmGenre {
 export interface Genre {
   genre_id?: number;
   genre_name: string;
+}
+
+export interface Status {
+  status: string;
 }

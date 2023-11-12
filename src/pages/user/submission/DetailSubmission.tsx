@@ -1,34 +1,33 @@
-import { useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { useState } from "react";
-import { Film } from "../../../interfaces/interfaces";
+import { useEffect, useState } from "react";
 import Navbar from "../../../components/navbar/Navbar";
-import Modal from "../../../components/modal/Modal";
 import Toast from "../../../components/toast/Toast";
+import Modal from "../../../components/modal/Modal";
+import { useParams } from "react-router-dom";
+import { FilmRequest } from "../../../interfaces/interfaces";
+import StatusComponent from "../../../components/status/StatusComponent";
 
-function DetailFilm() {
+function DetailSubmission() {
   const url = import.meta.env.VITE_REST_URL;
   const { id } = useParams();
-  const [film, setFilm] = useState<Film | undefined>();
-  const [filmGenre, setFilmGenre] = useState([]);
+  const [requestFilm, setRequestFilm] = useState<FilmRequest | undefined>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showToastTrue, setShowToastTrue] = useState(false);
   const [showToastError, setShowToastError] = useState(false);
+  const [user_id, setId] = useState<number>(0);
 
-  async function getFilmById() {
-    const response = await fetch(`${url}/films/film/${Number(id)}`);
+  async function getFilmRequest() {
+    const response = await fetch(`${url}/films/requestFilm/detail/${Number(id)}`);
     if (!response.ok) {
       if (response.status === 404) {
-        setFilm(undefined);
+        setRequestFilm(undefined);
         window.location.href = "/not-found";
         return;
       }
     }
-
     const data = await response.json();
     const mappedData = {
-      film_id: data.data.film_id,
-      title: data.data.title,
+      requestFilm_id: Number(data.data.requestFilm_id),
+      filmName: data.data.filmName,
       description: data.data.description,
       film_path: data.data.film_path,
       film_poster: data.data.film_poster,
@@ -36,14 +35,14 @@ function DetailFilm() {
       date_release: new Date(data.data.date_release),
       duration: data.data.duration,
       id_user: data.data.id_user,
+      status: { status: data.data.status },
     };
-    setFilm(mappedData);
-    setFilmGenre(data.genre);
+    setRequestFilm(mappedData);
   }
 
-  async function deleteFilm() {
+  async function deleteFilmRequest() {
     try {
-      const response = await fetch(`${url}/films/delete/${Number(id)}`, {
+      const response = await fetch(`${url}/requestFilm/delete/${Number(id)}`, {
         method: "DELETE",
       });
 
@@ -54,37 +53,32 @@ function DetailFilm() {
       setIsModalOpen(false);
       setShowToastTrue(true);
       setTimeout(() => {
-        window.location.href = "/manage-film";
+        window.location.href = `{/submission/${user_id}}`;
       }, 2000);
     } catch (error) {
       setIsModalOpen(false);
       setShowToastError(true);
-      console.error("Error deleting film:", error);
     }
   }
 
   useEffect(() => {
-    getFilmById();
-    if(localStorage.getItem("admin") !== "false"){
-      window.location.href = "/404"
-  }
+    getFilmRequest();
+    if (localStorage.getItem("admin") !== "false") {
+      window.location.href = "/404";
+    }
+    setId(Number(localStorage.getItem("id")));
   }, [id]);
-
-  function goToEdit() {
-    window.location.href = `/manage-film/edit/${Number(id)}`;
-  }
 
   const handleModalCancel = () => {
     setIsModalOpen(false);
   };
 
   const handleModalConfirm = () => {
-    deleteFilm();
+    deleteFilmRequest();
   };
-
   return (
     <>
-      {film && (
+      {requestFilm && (
         <>
           <Toast
             type="check"
@@ -98,12 +92,15 @@ function DetailFilm() {
           />
           <Navbar />
           <div className="pt-28 pl-5 sm:pl-10 pr-5 sm:pr-10 lg:pr-28">
-            <h2 className="">{film.title}</h2>
+            <div className="items-center gap-2 flex flex-row">
+              <h2 className="">{requestFilm.filmName}</h2>
+              <StatusComponent status={requestFilm.status.status} />
+            </div>
             <div className="flex flex-col sm:flex-col md:flex-col lg:flex-row xl:flex-row gap-10 pt-5">
               <div className="sm:w-full md:w-full lg:w-48 xl:w-48">
                 <div className="w-48 h-60 red-glow rounded-md overflow-hidden sm:justify-center">
                   <img
-                    src={`/src/assets/storage/poster/${film.film_poster}`}
+                    src={`/src/assets/storage/poster/${requestFilm.film_poster}`}
                     alt="Placeholder"
                     className="w-full h-full object-cover"
                   />
@@ -113,39 +110,34 @@ function DetailFilm() {
                 <div className="">
                   <div>
                     <h3>Description</h3>
-                    <p>{film.description}</p>
-                  </div>
-                  <div>
-                    <h3>Genre</h3>
-                    <p>{[...filmGenre].join(", ")}</p>
+                    <p>{requestFilm.description}</p>
                   </div>
                   <div>
                     <h3>Release Year</h3>
                     <p>
-                      {film.date_release.getDate()}-
-                      {film.date_release.getMonth() + 1}-
-                      {film.date_release.getFullYear()}
+                      {requestFilm.date_release.getDate()}-
+                      {requestFilm.date_release.getMonth() + 1}-
+                      {requestFilm.date_release.getFullYear()}
                     </p>
                   </div>
                   <div>
                     <h3>Duration</h3>
-                    <p>{film.duration} minutes</p>
+                    <p>{requestFilm.duration} minutes</p>
                   </div>
                 </div>
-                <div className="flex flex-row justify-between">
-                  <button
-                    className="button-red font-bold text-button"
-                    onClick={() => setIsModalOpen(true)}
-                  >
-                    Delete
-                  </button>
-                  <button
-                    className="button-white font-bold text-button"
-                    onClick={goToEdit}
-                  >
-                    Edit
-                  </button>
-                </div>
+                {requestFilm.status.status === "PENDING" ? (
+                  <div className="flex flex-row justify-between">
+                    <button
+                      className="button-red font-bold text-button"
+                      onClick={() => setIsModalOpen(true)}
+                    >
+                      Delete
+                    </button>
+                    <button className="button-white font-bold text-button">
+                      Edit
+                    </button>
+                  </div>
+                )  : null}
               </div>
             </div>
           </div>
@@ -164,4 +156,4 @@ function DetailFilm() {
   );
 }
 
-export default DetailFilm;
+export default DetailSubmission;

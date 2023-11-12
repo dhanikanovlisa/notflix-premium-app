@@ -26,7 +26,7 @@ function Profile() {
   }, []);
 
   function editProfile() {
-    window.location.href = "/edit-profile/" + id;
+    window.location.href = "/profile/edit" + id;
   }
 
   return (

@@ -39,7 +39,7 @@ function Navbar() {
                   <a href={`/manage-film/${id}`}>
                     <p className="">Manage Film</p>
                   </a>
-                  <a href="/submission">
+                  <a href={`/submission/${id}`}>
                     <p className="">Submission</p>
                   </a>
                 </>
