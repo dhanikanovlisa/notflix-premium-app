@@ -3,25 +3,32 @@ interface UploadFileProps {
   htmlFor: string;
   description: string;
   file?: File;
+  required?: boolean;
+  errorMessage?: string;
   onChangeHandler?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-function UploadFile({ type, htmlFor, description, file, onChangeHandler }: UploadFileProps) {
+function UploadFile({ type, htmlFor, description, file, required, errorMessage, onChangeHandler }: UploadFileProps) {
   let maxSizeInBytes;
 
   if (type.startsWith('image')) {
-    maxSizeInBytes = 800000;
+    maxSizeInBytes = 800 * 1024 ;
   } else if (type.startsWith('video')) {
-    maxSizeInBytes = 9000000;
+    maxSizeInBytes = 9 * 1024 * 1024 ;
   } else {
     maxSizeInBytes = 0;
   }
 
-  let errorMessage = "";
+  let error = "";
 
   if (file && file.size > maxSizeInBytes) {
-    errorMessage = `File size must be less than ${maxSizeInBytes / 1000000} MB`;
+    if(type.startsWith('image')){
+      error = `File size must be less than 800 KB`;
+    } else {
+      error = `File size must be less than 9 MB`;
+    }
   }
+
 
   return (
     <div className="flex items-center justify-center w-96">
@@ -51,10 +58,10 @@ function UploadFile({ type, htmlFor, description, file, onChangeHandler }: Uploa
             </p>
             <p className="text-xs text-white">{description}</p>
           </div>
-          <input id={htmlFor} type="file" accept={type} className="hidden" onChange={onChangeHandler} />
+          <input id={htmlFor} name={htmlFor} type="file" accept={type} className="hidden" required={required} onChange={onChangeHandler} />
         </label>
         <p className="text-sm">File Name: {file?.name}</p>
-        <div className="text-red text-xs mt-1">{errorMessage}</div>
+        <div className="text-red text-xs mt-1">{error === "" ? (errorMessage) : error}</div>
       </div>
     </div>
   );

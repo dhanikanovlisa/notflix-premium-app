@@ -22,7 +22,7 @@ function CardSubmission({ id, image, title, description, status }: CardProps) {
       <div className="justify-center items-center text-center space-y-2">
         <div>
           <h3>{title}</h3>
-          <p className="text-center text-sm">Created At {description}</p>
+          <p className="text-center text-sm">{description}</p>
         </div>
         <div className="flex justify-center items-center">
           <StatusComponent status={status.status} />

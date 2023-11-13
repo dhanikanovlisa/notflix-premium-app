@@ -8,14 +8,29 @@ import Modal from "../../../components/modal/Modal";
 import Toast from "../../../components/toast/Toast";
 
 function CreateSubmission() {
+  const url = import.meta.env.VITE_REST_URL;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showToastTrue, setShowToastTrue] = useState(false);
   const [showToastError, setShowToastError] = useState(false);
   const [user_id, setId] = useState<number>(0);
 
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [film_path, setFilmPath] = useState<File>();
   const [film_poster, setPosterPath] = useState<File>();
   const [film_header, setHeaderPath] = useState<File>();
+  const [date_release, setReleaseDate] = useState("");
+  const [hour, setHour] = useState(0);
+  const [minute, setMinute] = useState(0);
+  const duration = hour * 60 + minute;
+
+  const [titleMsg, setTitleMsg] = useState("");
+  const [hourMsg, setHourMsg] = useState("");
+  const [minuteMsg, setMinuteMsg] = useState("");
+  const [dateMsg, setDateMsg] = useState("");
+
+
+  const [msg, setMsg] = useState("");
 
   const hoursArray: string[] = Array.from({ length: 24 }, (_, index) =>
     (index + 1).toString()
@@ -36,9 +51,92 @@ function CreateSubmission() {
     window.location.href = "/submission/" + user_id;
   };
 
+  const handleSubmit = async (e: React.ChangeEvent<any>) => {
+    e.preventDefault();
+
+    const filmName = film_path?.name;
+    const posterName = film_poster?.name;
+    const headerName = film_header?.name;
+    const filmPathSize = film_path?.size;
+    const posterPathSize = film_poster?.size;
+    const headerPathSize = film_header?.size;
+    const response = await fetch(`${url}/films/createFilmRequest`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token") || "",
+      },
+      body: JSON.stringify({
+        id: user_id,
+        title,
+        description,
+        film_path: filmName,
+        film_poster: posterName,
+        film_header: headerName,
+        film_path_size: filmPathSize,
+        film_poster_size: posterPathSize,
+        film_header_size: headerPathSize,
+        date_release,
+        duration,
+      }),
+    });
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        setShowToastError(true);
+        return;
+      } else if (response.status === 400) {
+        const errorMsg = await response.json();
+        setShowToastError(true);
+        setMsg(errorMsg?.error);
+        return;
+      }
+    }
+    setShowToastTrue(true);
+    setTimeout(() => {
+      window.location.href = "/submission/" + user_id;
+    }, 2000);
+  };
+
   useEffect(() => {
     setId(Number(localStorage.getItem("id")));
-  }, [user_id])
+  }, [user_id]);
+
+
+  useEffect(() => {
+    const handleKeyUp = () => {
+
+      if(title === ""){
+        setTitleMsg("Title must not be empty");
+      } else {
+        setTitleMsg("");
+      }
+      
+      if(date_release === ""){
+        setDateMsg("Date must not be empty");
+      } else {
+        setDateMsg("");
+      }
+
+      if(hour === 0){
+        setHourMsg("Hour must not be empty");
+      } else {
+        setHourMsg("");
+      }
+
+      if(minute === 0){
+        setMinuteMsg("Minute must not be empty");
+      } else {
+        setMinuteMsg("");
+      }
+    };
+    window.addEventListener("keyup", handleKeyUp);
+    return () => {
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [title, date_release, hour, minute]);
+
+
   return (
     <>
       <Toast
@@ -46,95 +144,116 @@ function CreateSubmission() {
         message="Sucesfully updated film"
         showUseState={showToastTrue}
       />
-      <Toast
-        type="cross"
-        message="Failed to update film"
-        showUseState={showToastError}
-      />
+      <Toast type="cross" message={msg} showUseState={showToastError} />
       <Navbar />
       <div className="pt-32 pl-10 pr-20">
         <h1>Create Submission</h1>
-        <div>
-          <div className="space-y-5">
-            <div className="flex flex-row gap-20">
-              <div className="w-2/6">
-                <Field
-                  type="text"
-                  label="Film Name"
-                  htmlFor="filmName"
+        <form onSubmit={handleSubmit}>
+          <div>
+            <div className="space-y-5">
+              <div className="flex flex-row gap-20">
+                <div className="w-2/6">
+                  <Field
+                    type="text"
+                    label="Film Name"
+                    htmlFor="filmName"
+                    required={true}
+                    placeholder="Add film name here"
+                    errorMessage={titleMsg}
+                    onChangeHandler={(event) => setTitle(event.target.value)}
+                  />
+                  <TextArea
+                    label="Description"
+                    rows={4}
+                    required={true}
+                    htmlFor="description"
+                    placeholder="Add description here..."
+                    onChangeHandler={(event) =>
+                      setDescription(event.target.value)
+                    }
+                  />
+                </div>
+              </div>
+              <Field
+                type="date"
+                label="Release Date"
+                htmlFor="releaseDate"
+                required={true}
+                errorMessage={dateMsg}
+                onChangeHandler={(event) => setReleaseDate(event.target.value)}
+              />
+              <div className="flex flex-row gap-10">
+                <Dropdown
+                  label="Hour"
+                  htmlFor="hour"
                   required={true}
-                  placeholder="Add film name here"
-                  errorMessage=""
+                  options={hoursArray}
+                  errorMessage={hourMsg}
+                  onChangeHandler={(event) =>
+                    setHour(Number(event.target.value))
+                  }
                 />
-                <TextArea
-                  label="Description"
-                  rows={4}
+                <Dropdown
+                  label="Minute"
+                  htmlFor="minute"
                   required={true}
-                  htmlFor="description"
-                  placeholder="Add description here..."
+                  options={minutesArray}
+                  errorMessage={minuteMsg}
+                  onChangeHandler={(event) =>
+                    setMinute(Number(event.target.value))
+                  }
+                />
+              </div>
+              <div className="flex flex-row gap-10 pb-5 sm:flex-col md:flex-col lg:flex-row xl:flex-row">
+                <UploadFile
+                  type="image/*"
+                  htmlFor="poster"
+                  description="Upload Film Poster (max 800KB)"
+                  file={film_poster}
+                  required={true}
+                  onChangeHandler={(event) =>
+                    setPosterPath(event.target.files?.[0])
+                  }
+                />
+                <UploadFile
+                  type="image/*"
+                  htmlFor="header"
+                  description="Upload Film Header (max 800KB)"
+                  file={film_header}
+                  required={true}
+                  onChangeHandler={(event) =>
+                    setHeaderPath(event.target.files?.[0])
+                  }
+                />
+                <UploadFile
+                  type="video/*"
+                  htmlFor="video"
+                  description="Upload Film Poster (max 9 MB)"
+                  file={film_path}
+                  required={true}
+                  onChangeHandler={(event) =>
+                    setFilmPath(event.target.files?.[0])
+                  }
                 />
               </div>
             </div>
-            <Field
-              type="date"
-              label="Release Date"
-              htmlFor="releaseDate"
-              required={true}
-            />
-            <div className="flex flex-row gap-10">
-              <Dropdown
-                label="Hour"
-                htmlFor="hour"
-                required={true}
-                options={hoursArray}
-              />
-              <Dropdown
-                label="Minute"
-                htmlFor="minute"
-                required={true}
-                options={minutesArray}
-              />
-            </div>
-            <div className="flex flex-row gap-10 pb-5 sm:flex-col md:flex-col lg:flex-row xl:flex-row">
-              <UploadFile
-                type="image/*"
-                htmlFor="poster"
-                description="Upload Film Poster (max 800KB)"
-                file={film_poster}
-                onChangeHandler={(event) =>
-                  setPosterPath(event.target.files?.[0])
-                }
-              />
-              <UploadFile
-                type="image/*"
-                htmlFor="header"
-                description="Upload Film Header (max 800KB)"
-                file={film_header}
-                onChangeHandler={(event) =>
-                  setHeaderPath(event.target.files?.[0])
-                }
-              />
-              <UploadFile
-                type="video/*"
-                htmlFor="video"
-                description="Upload Film Poster (max 9 MB)"
-                file={film_path}
-                onChangeHandler={(event) =>
-                  setFilmPath(event.target.files?.[0])
-                }
-              />
-            </div>
           </div>
-        </div>
         <div className="flex flex-wrap justify-between pb-5">
           <button
             className="button-red font-bold text-button"
             onClick={() => setIsModalOpen(true)}
+            type="button"
           >
             Cancel
           </button>
-          <button className="button-white font-bold text-button">Submit</button>
+          <button
+            className="button-white font-bold text-button"
+            type="submit"
+          >
+            Submit
+          </button>
         </div>
+        </form>
       </div>
       {isModalOpen && (
         <Modal

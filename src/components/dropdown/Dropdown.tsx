@@ -3,10 +3,11 @@ interface DropdownProps {
   htmlFor: string;
   required: boolean;
   options: string[] | number[];
+  errorMessage?: string;
   onChangeHandler?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
-function Dropdown({ label, htmlFor, required, options, onChangeHandler }: DropdownProps) {
+function Dropdown({ label, htmlFor, required, options, errorMessage, onChangeHandler }: DropdownProps) {
   return (
     <div className="flex flex-col space-y-1">
       <label
@@ -46,6 +47,7 @@ function Dropdown({ label, htmlFor, required, options, onChangeHandler }: Dropdo
           </svg>
         </div>
       </div>
+      <div className="text-red text-xs mt-1">{errorMessage}</div>
     </div>
   );
 }

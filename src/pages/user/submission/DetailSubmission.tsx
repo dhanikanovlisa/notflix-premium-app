@@ -42,7 +42,7 @@ function DetailSubmission() {
 
   async function deleteFilmRequest() {
     try {
-      const response = await fetch(`${url}/requestFilm/delete/${Number(id)}`, {
+      const response = await fetch(`${url}/films/requestFilm/delete/${Number(id)}`, {
         method: "DELETE",
       });
 
@@ -61,13 +61,14 @@ function DetailSubmission() {
     }
   }
 
+
   useEffect(() => {
     getFilmRequest();
     if (localStorage.getItem("admin") !== "false") {
       window.location.href = "/404";
     }
     setId(Number(localStorage.getItem("id")));
-  }, [id]);
+  }, [id, user_id]);
 
   const handleModalCancel = () => {
     setIsModalOpen(false);
@@ -130,10 +131,11 @@ function DetailSubmission() {
                     <button
                       className="button-red font-bold text-button"
                       onClick={() => setIsModalOpen(true)}
+                      type="button"
                     >
                       Delete
                     </button>
-                    <button className="button-white font-bold text-button">
+                    <button className="button-white font-bold text-button" type="button">
                       Edit
                     </button>
                   </div>
