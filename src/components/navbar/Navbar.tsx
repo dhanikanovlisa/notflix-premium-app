@@ -14,7 +14,7 @@ function Navbar() {
     } else {
       setIsAuth(false);
     }
-  }, [isAuth, admin]);
+  }, []);
 
   return (
     <nav className="fixed w-full z-20 justify-between items-center">

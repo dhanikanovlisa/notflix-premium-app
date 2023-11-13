@@ -65,7 +65,7 @@ function Submission() {
             Create
           </button>
         </div>
-        <div className="pt-5 flex flex-wrap gap-12">{cardRequestFilm()}</div>
+        <div className="pt-5 flex flex-wrap gap-12 pb-5">{cardRequestFilm()}</div>
       </div>
     </>
   );
