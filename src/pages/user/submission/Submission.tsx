@@ -82,7 +82,7 @@ function Submission() {
                 Create
               </button>
             </div>
-            <div className="pt-5 flex flex-wrap gap-12 pb-5">
+            <div className="pt-5 flex flex-wrap gap-12 pb-5 justify-center">
               {cardRequestFilm()}
             </div>
           </div>

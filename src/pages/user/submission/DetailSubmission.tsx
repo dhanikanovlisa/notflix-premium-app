@@ -5,7 +5,7 @@ import Modal from "../../../components/modal/Modal";
 import { useParams } from "react-router-dom";
 import { FilmRequest } from "../../../interfaces/interfaces";
 import StatusComponent from "../../../components/status/StatusComponent";
-
+import Loading from "../../../components/loading/Loading";
 function DetailSubmission() {
   const url = import.meta.env.VITE_REST_URL;
   const { id } = useParams();
@@ -14,37 +14,50 @@ function DetailSubmission() {
   const [showToastTrue, setShowToastTrue] = useState(false);
   const [showToastError, setShowToastError] = useState(false);
   const [user_id, setId] = useState<number>(0);
+  const [loading, setLoading] = useState(true);
 
   async function getFilmRequest() {
-    const response = await fetch(`${url}/films/requestFilm/detail/${Number(id)}`);
-    if (!response.ok) {
-      if (response.status === 404) {
-        setRequestFilm(undefined);
-        window.location.href = "/not-found";
-        return;
+    try {
+      const response = await fetch(
+        `${url}/films/requestFilm/detail/${Number(id)}`
+      );
+      if (!response.ok) {
+        if (response.status === 404) {
+          setRequestFilm(undefined);
+          window.location.href = "/not-found";
+          return;
+        }
       }
+      const data = await response.json();
+      const mappedData = {
+        requestFilm_id: Number(data.data.requestFilm_id),
+        filmName: data.data.filmName,
+        description: data.data.description,
+        film_path: data.data.film_path,
+        film_poster: data.data.film_poster,
+        film_header: data.data.film_header,
+        date_release: new Date(data.data.date_release),
+        duration: data.data.duration,
+        id_user: data.data.id_user,
+        status: { status: data.data.status },
+      };
+      setRequestFilm(mappedData);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-    const data = await response.json();
-    const mappedData = {
-      requestFilm_id: Number(data.data.requestFilm_id),
-      filmName: data.data.filmName,
-      description: data.data.description,
-      film_path: data.data.film_path,
-      film_poster: data.data.film_poster,
-      film_header: data.data.film_header,
-      date_release: new Date(data.data.date_release),
-      duration: data.data.duration,
-      id_user: data.data.id_user,
-      status: { status: data.data.status },
-    };
-    setRequestFilm(mappedData);
   }
 
   async function deleteFilmRequest() {
+    setLoading(true);
     try {
-      const response = await fetch(`${url}/films/requestFilm/delete/${Number(id)}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `${url}/films/requestFilm/delete/${Number(id)}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Failed to delete film. Status: ${response.status}`);
@@ -58,9 +71,10 @@ function DetailSubmission() {
     } catch (error) {
       setIsModalOpen(false);
       setShowToastError(true);
+    } finally {
+      setLoading(false);
     }
   }
-
 
   useEffect(() => {
     getFilmRequest();
@@ -79,6 +93,7 @@ function DetailSubmission() {
   };
   return (
     <>
+      {loading && <Loading />}
       {requestFilm && (
         <>
           <Toast
@@ -135,22 +150,30 @@ function DetailSubmission() {
                     >
                       Delete
                     </button>
-                    <button className="button-white font-bold text-button" type="button">
+                    <button
+                      className="button-white font-bold text-button"
+                      type="button"
+                      onClick={() => {
+                        window.location.href = "/submission/edit/" + id;
+                      }}
+                    >
                       Edit
                     </button>
                   </div>
-                )  : null}
+                ) : null}
               </div>
             </div>
           </div>
           {isModalOpen && (
-            <Modal
-              title="Are you sure?"
-              message="Are you sure you want to cancel?"
-              confirmText="Delete"
-              onCancel={handleModalCancel}
-              onConfirm={handleModalConfirm}
-            />
+            <>
+              <Modal
+                title="Are you sure?"
+                message="Are you sure you want to cancel?"
+                confirmText="Delete"
+                onCancel={handleModalCancel}
+                onConfirm={handleModalConfirm}
+              />
+            </>
           )}
         </>
       )}

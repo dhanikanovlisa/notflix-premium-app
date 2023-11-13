@@ -82,7 +82,7 @@ function CreateSubmission() {
         duration,
       }),
     });
-
+    console.log(response.body);
     if (!response.ok) {
       if (response.status === 404) {
         setShowToastError(true);

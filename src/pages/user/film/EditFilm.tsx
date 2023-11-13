@@ -63,24 +63,31 @@ function EditFilm() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`${url}/films/film/${id}`);
-      const data = await response.json();
-      if (!response.ok) {
-        console.log(data.message);
-        return;
+      setLoading(true);
+      try {
+        const response = await fetch(`${url}/films/film/${id}`);
+        const data = await response.json();
+        if (!response.ok) {
+          console.log(data.message);
+          return;
+        }
+        const mappedData = {
+          film_id: data.data.film_id,
+          title: data.data.title,
+          description: data.data.description,
+          film_path: data.data.film_path,
+          film_poster: data.data.film_poster,
+          film_header: data.data.film_header,
+          date_release: new Date(data.data.date_release),
+          duration: data.data.duration,
+          id_user: data.data.id_user,
+        };
+        setFilm(mappedData);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
-      const mappedData = {
-        film_id: data.data.film_id,
-        title: data.data.title,
-        description: data.data.description,
-        film_path: data.data.film_path,
-        film_poster: data.data.film_poster,
-        film_header: data.data.film_header,
-        date_release: new Date(data.data.date_release),
-        duration: data.data.duration,
-        id_user: data.data.id_user,
-      };
-      setFilm(mappedData);
     };
 
     fetchData();
@@ -108,7 +115,7 @@ function EditFilm() {
     const filmPathSize = film_path?.size;
     const posterPathSize = film_poster?.size;
     const headerPathSize = film_header?.size;
-    const response = await fetch(`${url}/films/edit/${id}`, {
+    const response = await fetch(`${url}/films/film/edit/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

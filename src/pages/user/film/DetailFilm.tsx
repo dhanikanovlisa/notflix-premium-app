@@ -46,7 +46,7 @@ function DetailFilm() {
 
   async function deleteFilm() {
     try {
-      const response = await fetch(`${url}/films/delete/${Number(id)}`, {
+      const response = await fetch(`${url}/films/film/delete/${Number(id)}`, {
         method: "DELETE",
         headers: {
         "Content-Type": "application/json",

@@ -6,6 +6,7 @@ import Field from "../../../components/field/Field";
 import TextArea from "../../../components/textarea/TextArea";
 import UploadFile from "../../../components/uploadFIle/UploadFile";
 import Dropdown from "../../../components/dropdown/Dropdown";
+import Loading from "../../../components/loading/Loading";
 import { useState, useEffect } from "react";
 import { FilmRequest } from "../../../interfaces/interfaces";
 
@@ -17,6 +18,7 @@ function EditSubmission() {
   const [showToastError, setShowToastError] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [msg, setMsg] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -27,6 +29,7 @@ function EditSubmission() {
   const [hour, setHour] = useState(0);
   const [minute, setMinute] = useState(0);
   const duration = hour * 60 + minute;
+  const [id_user, setUserID] = useState(0);
 
   const hoursArray: string[] = Array.from({ length: 24 }, (_, index) =>
     (index + 1).toString()
@@ -37,6 +40,13 @@ function EditSubmission() {
 
   hoursArray.unshift("");
   minutesArray.unshift("");
+  useEffect(() => {
+    document.title = "Edit Request Film";
+    if (localStorage.getItem("admin") !== "false") {
+      window.location.href = "/404";
+    }
+    setUserID(Number(localStorage.getItem("id")));
+  });
 
   const handleModalCancel = () => {
     setIsModalOpen(false);
@@ -76,22 +86,66 @@ function EditSubmission() {
 
   useEffect(() => {
     getFilmRequest();
-    if (localStorage.getItem("admin") !== "false") {
-      window.location.href = "/404";
+  }, []);
+
+  async function updateRequestFilm() {
+    const filmName = film_path?.name;
+    const posterName = film_poster?.name;
+    const headerName = film_header?.name;
+    const filmPathSize = film_path?.size;
+    const posterPathSize = film_poster?.size;
+    const headerPathSize = film_header?.size;
+    const response = await fetch(`${url}/films/requestFilm/edit/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token") || "",
+      },
+      body: JSON.stringify({
+        title,
+        description,
+        film_path: filmName,
+        film_poster: posterName,
+        film_header: headerName,
+        film_path_size: filmPathSize,
+        film_poster_size: posterPathSize,
+        film_header_size: headerPathSize,
+        date_release: date_release,
+        duration: duration,
+        user_id: id_user,
+      }),
+    });
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        setShowToastError(true);
+        setMsg("Fail to update request film");
+        return;
+      } else if (response.status === 400) {
+        setShowToastError(true);
+        setMsg("Fail to update request film");
+        return;
+      }
     }
-  }, [id]);
+    setLoading(true);
+    setShowToastTrue(true);
+    setTimeout(() => {
+      window.location.href = "/submission/film/" + id;
+    }, 2000);
+  }
 
   return (
     <>
       <Toast
         type="check"
-        message="Sucesfully updated film"
+        message="Sucesfully updated request film"
         showUseState={showToastTrue}
       />
       <Toast type="cross" message={msg} showUseState={showToastError} />
       <Navbar />
+      {loading && <Loading />}
       <div className="pt-28 pl-5 sm:pl-10 pr-5 sm:pr-10 lg:pr-28">
-        <h1 className="text-center sm:text-left">Edit Film</h1>
+        <h1 className="text-center sm:text-left">Edit Request Film</h1>
         <div className="flex sm:flex-col lg:flex-row">
           <div className="w-full">
             <div className="flex gap-5 sm:flex-col md:flex-col lg:flex-row xl:flex-row">
@@ -187,7 +241,12 @@ function EditSubmission() {
           >
             Cancel
           </button>
-          <button className="button-white font-bold text-button">Save</button>
+          <button
+            className="button-white font-bold text-button"
+            onClick={updateRequestFilm}
+          >
+            Save
+          </button>
         </div>
       </div>
       {isModalOpen && (

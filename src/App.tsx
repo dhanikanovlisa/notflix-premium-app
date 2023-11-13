@@ -14,6 +14,7 @@ import ProtectedRoute from "./components/protectedRoutes/ProtectedRoutes";
 import AdmissionFilm from "./pages/admin/film/AdmissionFilm";
 import Subscription from "./pages/admin/subscription/Subscription";
 import DetailSubmission from "./pages/user/submission/DetailSubmission";
+import EditSubmission from "./pages/user/submission/EditSubmission";
 
 function App() {
   return (
@@ -30,7 +31,7 @@ function App() {
         <Route path="/submission/:id" element={<ProtectedRoute type="user"><Submission /></ProtectedRoute>}/>
         <Route path="/submission/create" element={<ProtectedRoute type="user"><CreateSubmission /></ProtectedRoute>}/>
         <Route path="/submission/film/:id" element={<ProtectedRoute type="user"><DetailSubmission /></ProtectedRoute>}/>
-        <Route path="/submission/edit/:id" element={<ProtectedRoute type="user"><DetailSubmission /></ProtectedRoute>}/>
+        <Route path="/submission/edit/:id" element={<ProtectedRoute type="user"><EditSubmission /></ProtectedRoute>}/>
 
 
         {/**Manage Film */}

@@ -149,7 +149,7 @@ function Login() {
                 </button>
               </div>
               <div className="small-text text-center">
-                Already have an account? <a href="/registration">Register</a>
+                Already have an account? <a href="/registration"><u>Register</u></a>
               </div>
             </div>
           </div>
