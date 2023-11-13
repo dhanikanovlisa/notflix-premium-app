@@ -3,12 +3,25 @@ import Navbar from "../../../components/navbar/Navbar";
 import CardSubmission from "../../../components/card/CardSubmission";
 import { useState, useEffect } from "react";
 import { FilmRequest } from "../../../interfaces/interfaces";
+import Loading from "../../../components/loading/Loading";
 
 function Submission() {
   const { id } = useParams();
   const url = import.meta.env.VITE_REST_URL;
   const [filmRequest, setFilmRequest] = useState<FilmRequest[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [valid, setValid] = useState(true);
 
+  useEffect(() => {
+    document.title = "Manage Film";
+    if (localStorage.getItem("admin") !== "false") {
+      window.location.href = "/404";
+    }
+    if (id !== localStorage.getItem("id")) {
+      setValid(false);
+      window.location.href = "/404";
+    }
+  }, [id]);
   const fetchRequestFilm = async () => {
     try {
       const response = await fetch(`${url}/films/requestFilm/${id}`);
@@ -32,11 +45,12 @@ function Submission() {
       setFilmRequest(mappedData);
     } catch (error) {
       console.error("Error fetching request film", error);
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
     fetchRequestFilm();
-    
   }, []);
 
   function cardRequestFilm() {
@@ -54,19 +68,26 @@ function Submission() {
 
   return (
     <>
-      <Navbar />
-      <div className="pt-32 pl-10 pr-20">
-        <div className="flex flex-row justify-between">
-          <h3>Request List</h3>
-          <button
-            className="button-white text-button font-bold"
-            onClick={() => (window.location.href = "/submission/create")}
-          >
-            Create
-          </button>
-        </div>
-        <div className="pt-5 flex flex-wrap gap-12 pb-5">{cardRequestFilm()}</div>
-      </div>
+      {valid && (
+        <>
+          <Navbar />
+          {loading && <Loading />}
+          <div className="pt-32 pl-10 pr-20">
+            <div className="flex flex-row justify-between">
+              <h3>Request List</h3>
+              <button
+                className="button-white text-button font-bold"
+                onClick={() => (window.location.href = "/submission/create")}
+              >
+                Create
+              </button>
+            </div>
+            <div className="pt-5 flex flex-wrap gap-12 pb-5">
+              {cardRequestFilm()}
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 }

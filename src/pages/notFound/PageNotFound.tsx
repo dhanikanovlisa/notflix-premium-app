@@ -25,7 +25,7 @@ function PageNotFound() {
           <button
             className="button-red button-text red-glow"
             aria-label="Home"
-            onClick={() => { window.location.href = "/request-film"; }}
+            onClick={() => { window.location.href = "/film-request"; }}
           >
             Home
           </button>

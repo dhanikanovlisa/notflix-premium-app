@@ -9,17 +9,19 @@ import CheckBox from "../../../components/checkbox/Checkbox";
 import TextArea from "../../../components/textarea/TextArea";
 import Toast from "../../../components/toast/Toast";
 import Modal from "../../../components/modal/Modal";
+import Loading from "../../../components/loading/Loading";
 
 function EditFilm() {
   const url = import.meta.env.VITE_REST_URL;
   const { id } = useParams();
-  const id_user = localStorage.getItem("user_id");
   const [genre, setGenre] = useState<Genre[]>([]);
   const [film, setFilm] = useState<Film | undefined>();
   const [showToastTrue, setShowToastTrue] = useState(false);
   const [showToastError, setShowToastError] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
+  const [id_user, setUserID] = useState(0);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -53,14 +55,14 @@ function EditFilm() {
 
   useEffect(() => {
     document.title = "Edit Film";
-    if(localStorage.getItem("admin") !== "false"){
-      window.location.href = "/404"
-  }
+    if (localStorage.getItem("admin") !== "false") {
+      window.location.href = "/404";
+    }
+    setUserID(Number(localStorage.getItem("id")));
   });
 
-
   useEffect(() => {
-    const fetchData = async() => {
+    const fetchData = async () => {
       const response = await fetch(`${url}/films/film/${id}`);
       const data = await response.json();
       if (!response.ok) {
@@ -79,24 +81,23 @@ function EditFilm() {
         id_user: data.data.id_user,
       };
       setFilm(mappedData);
-    }
-  
+    };
+
     fetchData();
   }, [id]);
-  
+
   useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(`${url}/genres`);
+      const data = await response.json();
+      if (!response.ok) {
+        console.log(data.message);
+        return;
+      }
 
-  const fetchData = async () => {
-    const response = await fetch(`${url}/genres`);
-    const data = await response.json();
-    if (!response.ok) {
-      console.log(data.message);
-      return;
-    }
-
-    const mappedGenre = data.data;
-    setGenre(mappedGenre);
-  }
+      const mappedGenre = data.data;
+      setGenre(mappedGenre);
+    };
     fetchData();
   }, []);
 
@@ -111,7 +112,7 @@ function EditFilm() {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: localStorage.getItem('token') || '',
+        Authorization: localStorage.getItem("token") || "",
       },
       body: JSON.stringify({
         title,
@@ -124,7 +125,7 @@ function EditFilm() {
         film_header_size: headerPathSize,
         date_release,
         duration,
-        id_user,
+        id_user: id_user,
         genres,
       }),
     });
@@ -132,21 +133,20 @@ function EditFilm() {
     if (!response.ok) {
       if (response.status === 404) {
         setShowToastError(true);
+        setMsg("Fail to update film");
         return;
       } else if (response.status === 400) {
-        const errorMsg = await response.json();
         setShowToastError(true);
-        setMsg(errorMsg?.error);
+        setMsg("Fail to update film");
         return;
       }
     }
+    setLoading(true);
     setShowToastTrue(true);
     setTimeout(() => {
-      window.location.href = "/manage-film/" + id;
+      window.location.href = "/manage-film/film/" + id;
     }, 2000);
   }
-
-
 
   function labelCheckbox() {
     const checkboxes = genre.map((genreObj) => (
@@ -183,12 +183,9 @@ function EditFilm() {
         message="Sucesfully updated film"
         showUseState={showToastTrue}
       />
-      <Toast
-        type="cross"
-        message={msg}
-        showUseState={showToastError}
-      />
+      <Toast type="cross" message={msg} showUseState={showToastError} />
       <Navbar />
+      {loading && <Loading />}
       <div className="pt-28 pl-5 sm:pl-10 pr-5 sm:pr-10 lg:pr-28">
         <h1 className="text-center sm:text-left">Edit Film</h1>
         <div className="flex sm:flex-col lg:flex-row">

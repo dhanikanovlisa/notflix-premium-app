@@ -1,24 +1,42 @@
 import Navbar from "../../components/navbar/Navbar";
 import { useParams } from "react-router-dom";
 import { User } from "../../interfaces/interfaces";
+import Loading from "../../components/loading/Loading";
 import { useEffect, useState } from "react";
+
 function Profile() {
   const { id } = useParams();
   const url = import.meta.env.VITE_REST_URL;
   const [profile, setProfile] = useState<User | undefined>();
+  const [valid, setValid] = useState(true);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    document.title = "Profile";
+    if (Number(id) !== Number(localStorage.getItem("id"))) {
+      setValid(false);
+      window.location.href = "/not-found";
+    }
+  }, [id]);
 
   async function getProfile() {
-    const response = await fetch(`${url}/profile/${id}`);
-    const data = await response.json();
-    if (!response.ok) {
-      if (response.status === 404) {
-        setProfile(undefined);
-        window.location.href = "/not-found";
-        return;
-      }
+    try {
+      const response = await fetch(`${url}/profile/${Number(id)}`);
+      // if (!response.ok) {
+      //   if (response.status === 404) {
+      //     console.log("masuk 404");
+      //     window.location.href = "/not-found";
+      //     return;
+      //   }
+      // }
+      const data = await response.json();
+      const mappedProfile = data.data;
+      setProfile(mappedProfile);
+    } catch (error) {
+      console.error("Erro fetching profile", error);
+    } finally {
+      setLoading(false);
     }
-    const mappedProfile = data.data;
-    setProfile(mappedProfile);
   }
 
   useEffect(() => {
@@ -26,14 +44,15 @@ function Profile() {
   }, []);
 
   function editProfile() {
-    window.location.href = "/profile/edit" + id;
+    window.location.href = "/profile/edit/" + id;
   }
 
   return (
     <>
-      {profile && (
+      {valid && (
         <>
           <Navbar />
+          {loading && <Loading />}
           <div className="pt-28 pl-10">
             <div className="">
               <h1>Profile Settings</h1>
@@ -42,9 +61,9 @@ function Profile() {
               <div>
                 <div className="w-48 h-48">
                   <img
-                    src={`/src/assets/storage/profile/${profile.photo_profile}`}
+                    src={`/src/assets/storage/profile/${profile?.photo_profile}`}
                     className="rounded-full object-cover w-full h-full"
-                    alt = "Profile picture"
+                    alt="Profile picture"
                   />
                 </div>
               </div>
@@ -55,15 +74,17 @@ function Profile() {
                 </div>
                 <div className="username-container">
                   <h3>Name</h3>
-                  <p>{profile?.first_name} {profile?.last_name} </p>
+                  <p>
+                    {profile?.first_name} {profile?.last_name}{" "}
+                  </p>
                 </div>
                 <div className="username-container">
                   <h3>Email</h3>
-                  <p>{profile.email}</p>
+                  <p>{profile?.email}</p>
                 </div>
                 <div className="username-container">
                   <h3>Phone Number</h3>
-                  <p>{profile.phone_number}</p>
+                  <p>{profile?.phone_number}</p>
                 </div>
                 <button
                   className="font-bold button-white"

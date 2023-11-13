@@ -6,6 +6,7 @@ import TextArea from "../../../components/textarea/TextArea";
 import UploadFile from "../../../components/uploadFIle/UploadFile";
 import Modal from "../../../components/modal/Modal";
 import Toast from "../../../components/toast/Toast";
+import Loading from "../../../components/loading/Loading";
 
 function CreateSubmission() {
   const url = import.meta.env.VITE_REST_URL;
@@ -13,6 +14,7 @@ function CreateSubmission() {
   const [showToastTrue, setShowToastTrue] = useState(false);
   const [showToastError, setShowToastError] = useState(false);
   const [user_id, setId] = useState<number>(0);
+  const [loading, setLoading] = useState(false);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -92,6 +94,7 @@ function CreateSubmission() {
         return;
       }
     }
+    setLoading(true);
     setShowToastTrue(true);
     setTimeout(() => {
       window.location.href = "/submission/" + user_id;
@@ -147,6 +150,7 @@ function CreateSubmission() {
       <Toast type="cross" message={msg} showUseState={showToastError} />
       <Navbar />
       <div className="pt-32 pl-10 pr-20">
+        {loading && <Loading />}
         <h1>Create Submission</h1>
         <form onSubmit={handleSubmit}>
           <div>

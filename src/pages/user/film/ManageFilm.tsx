@@ -4,17 +4,24 @@ import CardFilm from "../../../components/card/CardFilm";
 import { useState } from "react";
 import { Film } from "../../../interfaces/interfaces";
 import { useParams } from "react-router-dom";
+import Loading from "../../../components/loading/Loading";
 
 function ManageFilm() {
   const { id } = useParams();
   const [filmData, setFilmData] = useState<Film[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [valid, setValid] = useState(true);
 
   useEffect(() => {
     document.title = "Manage Film";
-    if(localStorage.getItem("admin") !== "false"){
-      window.location.href = "/404"
-  }
-  });
+    if (localStorage.getItem("admin") !== "false") {
+      window.location.href = "/404";
+    }
+    if (id !== localStorage.getItem("id")) {
+      setValid(false);
+      window.location.href = "/404";
+    }
+  }, [id]);
 
   const url = import.meta.env.VITE_REST_URL;
 
@@ -22,7 +29,7 @@ function ManageFilm() {
     try {
       const response = await fetch(`${url}/films/user/${id}`);
       if (!response.ok) {
-        throw new Error('Something went wrong');
+        throw new Error("Something went wrong");
       }
 
       const data = await response.json();
@@ -35,12 +42,14 @@ function ManageFilm() {
         film_header: film.film_header,
         date_release: new Date(film.date_release),
         duration: film.duration,
-        id_user: film.id_user
+        id_user: film.id_user,
       }));
 
       setFilmData(mappedData);
     } catch (error) {
-      console.error('Error fetching film', error);
+      console.error("Error fetching film", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,11 +57,11 @@ function ManageFilm() {
     fetchFilm();
   }, []);
 
-  function cardFilm(){
+  function cardFilm() {
     return filmData.map((film) => (
       <CardFilm
-        key = {film.film_id}
-        id= {film.film_id}
+        key={film.film_id}
+        id={film.film_id}
         title={film.title}
         image={`/src/assets/storage/poster/${film.film_poster}`}
       />
@@ -60,11 +69,18 @@ function ManageFilm() {
   }
   return (
     <>
-      <Navbar />
-      <div className="pt-28 pl-10 pr-28">
-        <h2>Manage Film</h2>
-        <div className="pt-5 flex flex-wrap gap-12 justify-center">{cardFilm()}</div>
-      </div>
+      {valid && (
+        <>
+          <Navbar />
+          <div className="pt-28 pl-10 pr-28">
+            {loading && <Loading />}
+            <h2>Manage Film</h2>
+            <div className="pt-5 flex flex-wrap gap-12 justify-center">
+              {cardFilm()}
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 }

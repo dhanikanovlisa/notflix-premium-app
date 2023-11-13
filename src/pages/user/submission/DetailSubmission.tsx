@@ -53,7 +53,7 @@ function DetailSubmission() {
       setIsModalOpen(false);
       setShowToastTrue(true);
       setTimeout(() => {
-        window.location.href = `{/submission/${user_id}}`;
+        window.location.href = "/submission/" + user_id;
       }, 2000);
     } catch (error) {
       setIsModalOpen(false);

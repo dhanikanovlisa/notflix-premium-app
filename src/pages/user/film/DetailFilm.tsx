@@ -5,6 +5,7 @@ import { Film } from "../../../interfaces/interfaces";
 import Navbar from "../../../components/navbar/Navbar";
 import Modal from "../../../components/modal/Modal";
 import Toast from "../../../components/toast/Toast";
+import Loading from "../../../components/loading/Loading";
 
 function DetailFilm() {
   const url = import.meta.env.VITE_REST_URL;
@@ -14,6 +15,8 @@ function DetailFilm() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showToastTrue, setShowToastTrue] = useState(false);
   const [showToastError, setShowToastError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [user_id, setUserId] = useState(0);
 
   async function getFilmById() {
     const response = await fetch(`${url}/films/film/${Number(id)}`);
@@ -45,6 +48,10 @@ function DetailFilm() {
     try {
       const response = await fetch(`${url}/films/delete/${Number(id)}`, {
         method: "DELETE",
+        headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem('token') || '',
+      },
       });
 
       if (!response.ok) {
@@ -53,8 +60,9 @@ function DetailFilm() {
 
       setIsModalOpen(false);
       setShowToastTrue(true);
+      setLoading(true);
       setTimeout(() => {
-        window.location.href = "/manage-film";
+        window.location.href = "/manage-film/" + user_id;
       }, 2000);
     } catch (error) {
       setIsModalOpen(false);
@@ -64,6 +72,7 @@ function DetailFilm() {
   }
 
   useEffect(() => {
+    setUserId(Number(localStorage.getItem("id")));
     getFilmById();
     if(localStorage.getItem("admin") !== "false"){
       window.location.href = "/404"
@@ -98,6 +107,7 @@ function DetailFilm() {
           />
           <Navbar />
           <div className="pt-28 pl-5 sm:pl-10 pr-5 sm:pr-10 lg:pr-28">
+            {loading && <Loading />}
             <h2 className="">{film.title}</h2>
             <div className="flex flex-col sm:flex-col md:flex-col lg:flex-row xl:flex-row gap-10 pt-5">
               <div className="sm:w-full md:w-full lg:w-48 xl:w-48">
