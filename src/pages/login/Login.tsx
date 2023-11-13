@@ -2,6 +2,7 @@ import Navbar from "../../components/navbar/Navbar";
 import Toast from "../../components/toast/Toast";
 import Field from "../../components/field/Field";
 import { useEffect, useState } from "react";
+import Loading from "../../components/loading/Loading";
 
 function Login() {
 
@@ -16,6 +17,8 @@ function Login() {
   const [showToastSuccess, setShowToastSuccess] = useState(false);
   const [showToastError, setShowToastError] = useState(false);
   const [toastErrorMsg, setToastErrorMsg] = useState("");
+
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     document.title = "Log In";
@@ -76,6 +79,7 @@ function Login() {
 
       const data = await res.json();
       if (res.ok && res.status == 200) {
+        setLoading(true);
         setShowToastSuccess(true);
         localStorage.setItem("token", data.token);
         localStorage.setItem("admin", data.is_admin);
@@ -114,6 +118,7 @@ function Login() {
           />
           <Navbar />
           <div className="flex justify-center min-h-screen items-center">
+          {loading && <Loading />}
             <div className="flex-row items-center w-64">
               <h1 className="text-center">Log In</h1>
               <Field
