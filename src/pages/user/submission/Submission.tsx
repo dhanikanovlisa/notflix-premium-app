@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import Navbar from "../../../components/navbar/Navbar";
 import CardSubmission from "../../../components/card/CardSubmission";
 import { useState, useEffect } from "react";
-import { FilmRequest } from "../../../interfaces/interfaces";
+import { FilmRequest } from "../../../types/interfaces";
 import Loading from "../../../components/loading/Loading";
 
 function Submission() {

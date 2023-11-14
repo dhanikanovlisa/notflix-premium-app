@@ -8,7 +8,7 @@ import UploadFile from "../../../components/uploadFIle/UploadFile";
 import Dropdown from "../../../components/dropdown/Dropdown";
 import Loading from "../../../components/loading/Loading";
 import { useState, useEffect } from "react";
-import { FilmRequest } from "../../../interfaces/interfaces";
+import { FilmRequest } from "../../../types/interfaces";
 
 function EditSubmission() {
   const url = import.meta.env.VITE_REST_URL;

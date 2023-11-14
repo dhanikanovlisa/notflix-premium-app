@@ -3,7 +3,7 @@ import Navbar from "../../../components/navbar/Navbar";
 import Toast from "../../../components/toast/Toast";
 import Modal from "../../../components/modal/Modal";
 import { useParams } from "react-router-dom";
-import { FilmRequest } from "../../../interfaces/interfaces";
+import { FilmRequest } from "../../../types/interfaces";
 import StatusComponent from "../../../components/status/StatusComponent";
 import Loading from "../../../components/loading/Loading";
 function DetailSubmission() {

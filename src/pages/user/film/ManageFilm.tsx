@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import Navbar from "../../../components/navbar/Navbar";
 import CardFilm from "../../../components/card/CardFilm";
 import { useState } from "react";
-import { Film } from "../../../interfaces/interfaces";
+import { Film } from "../../../types/interfaces";
 import { useParams } from "react-router-dom";
 import Loading from "../../../components/loading/Loading";
 

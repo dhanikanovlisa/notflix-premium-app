@@ -10,13 +10,14 @@ import DetailFilm from "./pages/user/film/DetailFilm";
 import PageNotFound from "./pages/notFound/PageNotFound";
 import CreateSubmission from "./pages/user/submission/CreateSubmission";
 import Logout from "./pages/login/Logout";
-import ProtectedRoute from "./components/protectedRoutes/ProtectedRoutes";
+import ProtectedRoute from "./common/protectedRoutes/ProtectedRoutes";
 import AdmissionFilm from "./pages/admin/film/AdmissionFilm";
 import Subscription from "./pages/admin/subscription/Subscription";
 import DetailSubmission from "./pages/user/submission/DetailSubmission";
 import EditSubmission from "./pages/user/submission/EditSubmission";
 
 function App() {
+  
   return (
     <BrowserRouter>
       <Routes>

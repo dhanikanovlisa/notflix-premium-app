@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { User } from "../../interfaces/interfaces";
+import { User } from "../../types/interfaces";
 
 function Navbar() {
   const url = import.meta.env.VITE_REST_URL;

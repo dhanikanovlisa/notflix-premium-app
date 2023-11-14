@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Film, Genre } from "../../../interfaces/interfaces";
+import { Film, Genre } from "../../../types/interfaces";
 import Navbar from "../../../components/navbar/Navbar";
 import Field from "../../../components/field/Field";
 import Dropdown from "../../../components/dropdown/Dropdown";

@@ -6,7 +6,7 @@ import UploadFile from "../../components/uploadFIle/UploadFile";
 import Loading from "../../components/loading/Loading";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { User } from "../../interfaces/interfaces";
+import { User } from "../../types/interfaces";
 import Toast from "../../components/toast/Toast";
 
 function EditProfile() {

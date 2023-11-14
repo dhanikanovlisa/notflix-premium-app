@@ -6,31 +6,23 @@ type ProtectedRouteProps = {
   children: JSX.Element;
 };
 
-const url = import.meta.env.VITE_REST_URL;
-
 const ProtectedRoute = ({ type, children }: ProtectedRouteProps) => {
+  const url = import.meta.env.VITE_REST_URL;
   const navigate = useNavigate();
   const [id, setId] = useState<number>(0);
   
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`${url}/check/current-user`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + localStorage.getItem("token") || "",
-          },
-        });
-
-        const data = await res.json();
-        if (data.user) {
+        const data = localStorage.getItem("token");
+        if (data) {
           setId(Number(localStorage.getItem("id")));
+
           console.log("dari protexted route", data);
 
-          if (!data.isAuth) {
-            navigate("/login");
-          }
+          // if () {
+          //   navigate("/login");
+          // }
           
 
           if(type && type.includes("user admin")){
@@ -42,7 +34,7 @@ const ProtectedRoute = ({ type, children }: ProtectedRouteProps) => {
             console.log("dari protected route user admin edit");
             navigate('/profile/edit/' + id);
           } 
-          if (type && type.includes("home") && !data.user.is_admin) {
+          if (type && type.includes("home")) {
             navigate("/submission/" + id);
           }
           

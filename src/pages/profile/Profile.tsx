@@ -1,6 +1,6 @@
 import Navbar from "../../components/navbar/Navbar";
 import { useParams } from "react-router-dom";
-import { User } from "../../interfaces/interfaces";
+import { User } from "../../types/interfaces";
 import Loading from "../../components/loading/Loading";
 import { useEffect, useState } from "react";
 
