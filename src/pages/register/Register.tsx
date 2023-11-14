@@ -17,8 +17,16 @@ function Register() {
 
   useEffect(() => {
     document.title = "Register";
+
     if (localStorage.getItem("token")) {
       setIsAuth(true);
+      if (isAuth) {
+        if (admin) {
+          navigate("/film-request");
+        } else {
+          navigate("/submission/" + id);
+        }
+      }
       setId(Number(localStorage.getItem("id")));
       setAdmin(localStorage.getItem("admin") === "true");
     } else {

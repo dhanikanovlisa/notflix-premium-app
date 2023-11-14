@@ -47,7 +47,7 @@ function App() {
 
          {/* Profile*/}
         <Route path="/profile/:id" element= {<ProtectedRoute type="user admin"><Profile /></ProtectedRoute>}/>
-        <Route path="/profile/edit/:id" element= {<ProtectedRoute type="user admin"><EditProfile /></ProtectedRoute>}/>
+        <Route path="/profile/edit/:id" element= {<ProtectedRoute type="edit user admin"><EditProfile /></ProtectedRoute>}/>
 
         {/**Not Found */}
         <Route path="*" element = {<PageNotFound />}></Route>

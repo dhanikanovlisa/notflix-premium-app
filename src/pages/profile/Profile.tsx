@@ -17,7 +17,7 @@ function Profile() {
       setValid(false);
       window.location.href = "/not-found";
     }
-  }, [id]);
+  }, []);
 
   async function getProfile() {
     try {
@@ -44,7 +44,7 @@ function Profile() {
   }, []);
 
   function editProfile() {
-    window.location.href = "/profile/edit/" + id;
+    window.location.href = "/profile/edit/" + Number(id);
   }
 
   return (

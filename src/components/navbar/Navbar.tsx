@@ -1,21 +1,47 @@
 import { useEffect, useState } from "react";
+import { User } from "../../interfaces/interfaces";
 
 function Navbar() {
+  const url = import.meta.env.VITE_REST_URL;
   const [open, setOpen] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
   const [admin, setAdmin] = useState(false);
-  const [id, setId] = useState<number>(0);
+  const [id, setId] = useState<number>(0); 
+  const [profile, setProfile] = useState<User | null>();
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
       setIsAuth(true);
-      setId(Number(localStorage.getItem("id")));
       setAdmin(localStorage.getItem("admin") === "true");
+      setId(Number(localStorage.getItem("id")));
     } else {
       setIsAuth(false);
     }
-  }, [id]);
+  }, []);
 
+  async function getProfile() {
+    try {
+      const response = await fetch(`${url}/profile/${Number(id)}`);
+      // if (!response.ok) {
+      //   if (response.status === 404) {
+      //     console.log("masuk 404");
+      //     window.location.href = "/not-found";
+      //     return;
+      //   }
+      // }
+      const data = await response.json();
+      const mappedProfile = data.data;
+      setProfile(mappedProfile);
+    } catch (error) {
+      console.error("Erro fetching profile", error);
+    } 
+  }
+
+  useEffect(() => {
+    if (id !== 0) {
+      getProfile();
+    }
+  }, []);
 
   return (
     <nav className="fixed w-full z-20 justify-between items-center">
@@ -47,9 +73,10 @@ function Navbar() {
               )}
               <button onClick={() => setOpen(!open)}>
                 <img
-                  src="/src/assets/profile-placeholder.png"
+                  src={`/src/assets/storage/profile/${profile?.photo_profile}`}
                   className="rounded-full shadow-md red-glow"
                   alt="Profile"
+                  style={{ height: '60px', width: '100%' }}
                 />
               </button>
               {open && (

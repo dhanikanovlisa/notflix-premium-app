@@ -26,24 +26,26 @@ const ProtectedRoute = ({ type, children }: ProtectedRouteProps) => {
         const data = await res.json();
         if (data.user) {
           setId(Number(localStorage.getItem("id")));
-          console.log(data);
+          console.log("dari protexted route", data);
 
           if (!data.isAuth) {
             navigate("/login");
           }
-
-          if (type && type.includes("admin") && !data.user.is_admin) {
-            navigate("/not-found");
-          }
-
-          if (type && type.includes("user") && data.user.is_admin) {
-            navigate("/not-found");
-          }
           
+
+          if(type && type.includes("user admin")){
+            console.log("dari protected route user admin");
+            navigate('/profile/' + id);
+          } 
+          
+          if(type && type.includes("edit user admin")){
+            console.log("dari protected route user admin edit");
+            navigate('/profile/edit/' + id);
+          } 
           if (type && type.includes("home") && !data.user.is_admin) {
             navigate("/submission/" + id);
           }
-
+          
           if (type && type.includes("admin") && type.includes("home")) {
             navigate("/substription");
           }
