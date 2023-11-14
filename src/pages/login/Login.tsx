@@ -54,13 +54,14 @@ function Login() {
 
   const handleSubmit = async (e: React.ChangeEvent<any>) => {
     e.preventDefault();
-
     const url = import.meta.env.VITE_REST_URL;
-
+    
     try {
+      setLoading(true);
       const res = await fetch(`${url}/check/username/${username}`);
       const data = await res.json();
       if (res.ok && data.code == 0) {
+        setLoading(false);
         setUsernameErrorMsg(data.message);
         return;
       }
@@ -69,6 +70,7 @@ function Login() {
     }
 
     try {
+      setLoading(true);
       const res = await fetch(`${url}/auth/login`, {
         method: "POST",
         headers: {
@@ -79,7 +81,6 @@ function Login() {
 
       const data = await res.json();
       if (res.ok && res.status == 200) {
-        setLoading(true);
         setShowToastSuccess(true);
         localStorage.setItem("token", data.token);
         localStorage.setItem("admin", data.is_admin);
@@ -92,6 +93,7 @@ function Login() {
           }
         }, 1600);
       } else {
+        setLoading(false);
         setShowToastError(true);
         setToastErrorMsg("Log In Failed");
         setPasswordErrorMsg(data.message);
