@@ -21,7 +21,12 @@ function Profile() {
 
   async function getProfile() {
     try {
-      const response = await fetch(`${url}/profile/${Number(id)}`);
+      const response = await fetch(`${url}/profile/${Number(id)}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token") || "",
+        }});
       // if (!response.ok) {
       //   if (response.status === 404) {
       //     console.log("masuk 404");

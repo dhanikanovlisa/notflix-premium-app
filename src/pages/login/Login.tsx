@@ -58,7 +58,12 @@ function Login() {
     
     try {
       setLoading(true);
-      const res = await fetch(`${url}/check/username/${username}`);
+      const res = await fetch(`${url}/check/username/${username}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token") || "",
+        }});
       const data = await res.json();
       if (res.ok && data.code == 0) {
         setLoading(false);
@@ -75,6 +80,7 @@ function Login() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token") || "",
         },
         body: JSON.stringify({ username, password }),
       });

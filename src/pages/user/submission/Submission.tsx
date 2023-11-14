@@ -24,7 +24,12 @@ function Submission() {
   }, [id]);
   const fetchRequestFilm = async () => {
     try {
-      const response = await fetch(`${url}/films/requestFilm/${id}`);
+      const response = await fetch(`${url}/films/requestFilm/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token") || "",
+        }});
       if (!response.ok) {
         throw new Error("Something went wrong");
       }

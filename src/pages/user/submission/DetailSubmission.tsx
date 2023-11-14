@@ -19,7 +19,12 @@ function DetailSubmission() {
   async function getFilmRequest() {
     try {
       const response = await fetch(
-        `${url}/films/requestFilm/detail/${Number(id)}`
+        `${url}/films/requestFilm/detail/${Number(id)}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token") || "",
+          }}
       );
       if (!response.ok) {
         if (response.status === 404) {
@@ -56,7 +61,10 @@ function DetailSubmission() {
         `${url}/films/requestFilm/delete/${Number(id)}`,
         {
           method: "DELETE",
-        }
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token") || "",
+          }}
       );
 
       if (!response.ok) {

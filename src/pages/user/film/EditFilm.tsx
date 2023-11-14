@@ -65,7 +65,12 @@ function EditFilm() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`${url}/films/film/${id}`);
+        const response = await fetch(`${url}/films/film/${id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token") || "",
+          }});
         const data = await response.json();
         if (!response.ok) {
           console.log(data.message);
@@ -95,7 +100,12 @@ function EditFilm() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`${url}/genres`);
+      const response = await fetch(`${url}/genres`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token") || "",
+        }});
       const data = await response.json();
       if (!response.ok) {
         console.log(data.message);

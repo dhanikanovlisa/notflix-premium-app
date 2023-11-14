@@ -19,7 +19,12 @@ function DetailFilm() {
   const [user_id, setUserId] = useState(0);
 
   async function getFilmById() {
-    const response = await fetch(`${url}/films/film/${Number(id)}`);
+    const response = await fetch(`${url}/films/film/${Number(id)}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: localStorage.getItem("token") || "",
+      }});
     if (!response.ok) {
       if (response.status === 404) {
         setFilm(undefined);

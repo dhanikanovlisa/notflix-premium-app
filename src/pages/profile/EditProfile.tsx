@@ -44,7 +44,12 @@ function EditProfile() {
 
   async function getProfile() {
     try {
-      const response = await fetch(`${url}/profile/${Number(id)}`);
+      const response = await fetch(`${url}/profile/${Number(id)}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token") || "",
+        }});
       // if (!response.ok) {
       //   if (response.status === 404) {
       //     console.log("masuk 404");
@@ -67,7 +72,12 @@ function EditProfile() {
       if (username === profile?.username) {
         return;
       } else {
-        const res = await fetch(`${url}/check/username/${username}`);
+        const res = await fetch(`${url}/check/username/${username}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token") || "",
+          }});
         const data = await res.json();
         if (res.ok && data.code === 1) {
           setIsUsernameValid(false);
@@ -87,7 +97,12 @@ function EditProfile() {
       if (email == profile?.email) {
         return;
       } else {
-        const res = await fetch(`${url}/check/email/${email}`);
+        const res = await fetch(`${url}/check/email/${email}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: localStorage.getItem("token") || "",
+          }});
         const data = await res.json();
         if (res.ok && data.code === 1) {
           setIsEmailValid(false);
@@ -114,6 +129,7 @@ function EditProfile() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token") || "",
         },
         body: JSON.stringify({
           username,

@@ -27,7 +27,12 @@ function ManageFilm() {
 
   const fetchFilm = async () => {
     try {
-      const response = await fetch(`${url}/films/user/${id}`);
+      const response = await fetch(`${url}/films/user/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token") || "",
+        }});
       if (!response.ok) {
         throw new Error("Something went wrong");
       }
