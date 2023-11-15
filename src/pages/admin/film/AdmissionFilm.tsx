@@ -13,8 +13,15 @@ function AdmissionFilm() {
     return (
         <>
         <Navbar />
-        <div className="pt-28 pl-10">
+        <div className="pt-28 pl-10 pr-28 ">
+            <div className="pt-5 flex flex-wrap gap-12 justify-between">
             <CardApproval title="Tes" description="Tes" />
+            <CardApproval title="Tes" description="Tes" />
+            <CardApproval title="Tes" description="Tes" />
+            <CardApproval title="Tes" description="Tes" />
+            <CardApproval title="Tes" description="Tes" />
+            <CardApproval title="Tes" description="Tes" />
+            </div>
         </div>
       </>
     )
