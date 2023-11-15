@@ -78,7 +78,7 @@ function Navbar() {
                 />
               </button>
               {open && (
-                <div className="absolute top-24 right-12 w-36 h-24 bg-white rounded-lg shadow-lg">
+                <div className="absolute top-24 right-12 space-y-4 w-36 h-24 bg-white rounded-lg shadow-lg">
                   <ul className="flex flex-col p-4">
                     <li>
                       <a href={`/profile/${id}`}>
@@ -86,7 +86,7 @@ function Navbar() {
                       </a>
                     </li>
                     <li>
-                      \
+                      
                       <p className="text-black font-bold" onClick={logout}>
                         Log Out
                       </p>
@@ -138,11 +138,9 @@ function Navbar() {
                       </a>
                     </li>
                     <li>
-                      <a href="/logout">
                         <p className="text-black font-bold" onClick={logout}>
                           Log Out
                         </p>
-                      </a>
                     </li>
                   </ul>
                 </div>

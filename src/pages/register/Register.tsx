@@ -194,7 +194,7 @@ function Register() {
         <>
           <Toast
             type="check"
-            message="Sucesfully updated film"
+            message="Sucesfully registered account"
             showUseState={showToastTrue}
           />
           <Toast type="cross" message={msg} showUseState={showToastError} />

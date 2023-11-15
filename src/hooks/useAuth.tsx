@@ -6,28 +6,21 @@ export const useAuth = () => {
 
   const login = async (username: string, password: string) => {
     try {
-      const data = { username, password };
-      const response = await postAPI("auth/login", data);
-      const res = await response.json();
+      const res = await postAPI("auth/login", { username, password });
+      const data = await res.json();
 
-      if(!res.ok){
-        return false;
+      if (res.ok && res.status === 200) {
+        setItem("token", data.token);
+        setItem("admin", data.is_admin);
+        setItem("id", data.id);
+
+        return { success: true, isAdmin: data.is_admin, id: data.id };
+      } else {
+        return { success: false, message: data.message };
       }
-
-      setItem("token", res.token);
-      setItem("admin", res.is_admin);
-      setItem("id", res.id);
-
-      setTimeout(() => {
-        if (res.is_admin) {
-          window.location.href = "/film-request";
-        } else {
-          window.location.href = `/submission/${res.id}`;
-        }
-      }, 1600);
-      return true;
     } catch (error) {
-      console.error("Login failed:", error);
+      console.error("Error logging in", error);
+      return { success: false, message: "Login failed. Please check your credentials." };
     }
   };
 

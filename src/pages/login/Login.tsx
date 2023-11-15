@@ -73,26 +73,30 @@ function Login() {
     }
 
     try {
-      setLoading(true);
-      const res = await login(username, password);
-      setShowToastSuccess(true);
-      if(res){
-        setLoading(false);
-        setUsernameErrorMsg("");
-        setPasswordErrorMsg("");
-        return;
+      const loginResult = await login(username, password);
+      if (loginResult.success) {
+        setShowToastSuccess(true);
+        setToastErrorMsg("Succes");
+        setTimeout(() => {
+          if (loginResult.isAdmin) {
+            window.location.href = "/film-request";
+          } else {
+            window.location.href = `/submission/${loginResult.id}`;
+          }
+        }, 1600);
+        
       } else {
         setLoading(false);
         setShowToastError(true);
-        setToastErrorMsg("Login failed. Please check your credentials.");
+        setToastErrorMsg(loginResult.message);
       }
-
     } catch (error) {
       console.error("Error logging in", error);
       setLoading(false);
       setShowToastError(true);
       setToastErrorMsg("Login failed. Please check your credentials.");
     }
+
   };
 
   return (
@@ -101,7 +105,7 @@ function Login() {
         <>
           <Toast
             showUseState={showToastSuccess}
-            message="Login successful"
+            message={toastErrorMsg}
             type="check"
           />
           <Toast
