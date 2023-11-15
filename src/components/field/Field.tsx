@@ -28,7 +28,7 @@ function Field({
   return (
     <div className={`${half && "w-1/2"}`}>
       <label
-        className="md:flex md:items-center mb-1 font-bold"
+        className="flex flex-row mb-1 font-bold"
         htmlFor={htmlFor}
       >
         {label}

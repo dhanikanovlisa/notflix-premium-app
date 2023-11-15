@@ -50,7 +50,7 @@ function Profile() {
             <div className="">
               <h1>Profile Settings</h1>
             </div>
-            <div className="flex flex-row gap-36 pt-8">
+            <div className="flex flex-col gap-36 pt-8 lg:flex-row items-center lg:items-start">
               <div>
                 <div className="w-48 h-48">
                   <img

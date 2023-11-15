@@ -111,7 +111,7 @@ function DetailFilm() {
             <h2 className="">{film.title}</h2>
             <div className="flex flex-col sm:flex-col md:flex-col lg:flex-row xl:flex-row gap-10 pt-5">
               <div className="sm:w-full md:w-full lg:w-48 xl:w-48">
-                <div className="w-48 h-60 red-glow rounded-md overflow-hidden sm:justify-center">
+                <div className="w-48 h-60 red-glow rounded-md overflow-hidden justify-center lg:justify-start">
                   <img
                     src={`/src/assets/storage/poster/${film.film_poster}`}
                     alt="Placeholder"

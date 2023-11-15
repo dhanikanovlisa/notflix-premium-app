@@ -8,7 +8,7 @@ function Navbar() {
   const [open, setOpen] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
   const [admin, setAdmin] = useState(false);
-  const [id, setId] = useState<number>(0); 
+  const [id, setId] = useState<number>(0);
   const [profile, setProfile] = useState<User | null>();
   const { logout } = useAuth();
   const { getItem } = useLocalStorage();
@@ -25,12 +25,13 @@ function Navbar() {
 
   async function getProfile() {
     try {
-      const data = await getAPI(`profile/${Number(id)}`)
+      const response = await getAPI(`profile/${Number(id)}`);
+      const data = await response.json();
       const mappedProfile = data.data;
       setProfile(mappedProfile);
     } catch (error) {
-      console.error("Erro fetching profile", error);
-    } 
+      console.error("Error fetching profile", error);
+    }
   }
 
   useEffect(() => {
@@ -45,9 +46,10 @@ function Navbar() {
         <a href="/">
           <img src="/src/assets/notflix-premium-logo.svg" alt="Logo" />
         </a>
-        <div className="flex flex-row space-x-9 items-center">
-          {isAuth ? (
-            <>
+
+        {isAuth ? (
+          <>
+            <div className="hidden lg:flex flex-row space-x-9 items-center">
               {admin ? (
                 <>
                   <a href="/film-request">
@@ -72,12 +74,64 @@ function Navbar() {
                   src={`/src/assets/storage/profile/${profile?.photo_profile}`}
                   className="rounded-full shadow-md red-glow"
                   alt="Profile"
-                  style={{ height: '60px', width: '100%' }}
+                  style={{ height: "40px", width: "40px" }}
                 />
               </button>
               {open && (
                 <div className="absolute top-24 right-12 w-36 h-24 bg-white rounded-lg shadow-lg">
+                  <ul className="flex flex-col p-4">
+                    <li>
+                      <a href={`/profile/${id}`}>
+                        <p className="text-black font-bold">Profile</p>
+                      </a>
+                    </li>
+                    <li>
+                      \
+                      <p className="text-black font-bold" onClick={logout}>
+                        Log Out
+                      </p>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            <div className="lg:hidden">
+              <button onClick={() => setOpen(!open)}>
+                <img src="/src/assets/Burger bar.svg" alt="Burger Bar" />
+              </button>
+              {open && (
+                <div className="absolute top-24 right-12 w-48 h-40 bg-white rounded-lg shadow-lg">
                   <ul className="flex flex-col space-y-3 p-4">
+                    {admin ? (
+                      <>
+                        <li>
+                          <a href="/film-request">
+                            <p className="text-black font-bold">
+                              Film Submission
+                            </p>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="/subscription">
+                            <p className="text-black font-bold">Subscription</p>
+                          </a>
+                        </li>
+                      </>
+                    ) : (
+                      <>
+                        <li>
+                          <a href={`/manage-film/${id}`}>
+                            <p className="text-black font-bold">Manage Film</p>
+                          </a>
+                        </li>
+                        <li>
+                          <a href={`/submission/${id}`}>
+                            <p className="text-black font-bold">Submission</p>
+                          </a>
+                        </li>
+                      </>
+                    )}
                     <li>
                       <a href={`/profile/${id}`}>
                         <p className="text-black font-bold">Profile</p>
@@ -85,33 +139,34 @@ function Navbar() {
                     </li>
                     <li>
                       <a href="/logout">
-                        <p className="text-black font-bold" onClick={logout}>Log Out</p>
+                        <p className="text-black font-bold" onClick={logout}>
+                          Log Out
+                        </p>
                       </a>
                     </li>
                   </ul>
                 </div>
               )}
-            </>
-          ) : (
-            <>
-              <a href="/login">
-                <button
-                  className="button-red button-text red-glow"
-                  aria-label="Home"
-                  onClick={() => {
-                    window.location.href = "/";
-                  }}
-                >
-                  Log In
-                </button>
-              </a>
-            </>
-          )}
-        </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <a href="/login">
+              <button
+                className="button-red button-text red-glow"
+                aria-label="Home"
+                onClick={() => {
+                  window.location.href = "/";
+                }}
+              >
+                Log In
+              </button>
+            </a>
+          </>
+        )}
       </div>
     </nav>
   );
-
 }
 
 export default Navbar;

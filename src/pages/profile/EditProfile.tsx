@@ -175,7 +175,7 @@ function EditProfile() {
                   onChangeHandler={(event) => setUsername(event.target.value)}
                   onKeyUp={handleUsernameKeyUp}
                 />
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-col lg:flex-row">
                   <Field
                     type="text"
                     label="First Name"
@@ -234,7 +234,7 @@ function EditProfile() {
                   }
                 />
 
-                <div className="button-container space-x-5">
+                <div className="flex flex-wrap justify-between">
                   <button
                     className="text-button button-red font-bold"
                     type="button"

@@ -5,7 +5,7 @@ import { useAuth } from "../../../hooks/useAuth";
 function Subscription() {
   const {isAuth, isAdmin } = useAuth();
   useEffect(() => {
-    if (isAuth() || !isAdmin()) {
+    if (!isAuth() || !isAdmin()) {
       window.location.href = "/404";
     }
   });

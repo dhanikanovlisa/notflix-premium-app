@@ -76,10 +76,10 @@ function Submission() {
           <Navbar />
           {loading && <Loading />}
           <div className="pt-32 pl-10 pr-20">
-            <div className="flex flex-row justify-between">
+            <div className="flex flex-row space-x-4 justify-between">
               <h3>Request List</h3>
               <button
-                className="button-white text-button font-bold"
+                className="button-white text-button font-bold h-full"
                 onClick={() => (window.location.href = "/submission/create")}
               >
                 Create

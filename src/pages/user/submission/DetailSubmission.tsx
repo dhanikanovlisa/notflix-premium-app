@@ -29,7 +29,7 @@ function DetailSubmission() {
         film_poster: data.data.film_poster,
         film_header: data.data.film_header,
         date_release: new Date(data.data.date_release),
-        duration: data.data.duration,
+        duration:Number(data.data.duration),
         id_user: data.data.id_user,
         status: { status: data.data.status },
       };

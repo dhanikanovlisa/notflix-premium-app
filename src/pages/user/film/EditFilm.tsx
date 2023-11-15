@@ -187,10 +187,10 @@ function EditFilm() {
       <Navbar />
       {loading && <Loading />}
       <div className="pt-28 pl-5 sm:pl-10 pr-5 sm:pr-10 lg:pr-28">
-        <h1 className="text-center sm:text-left">Edit Film</h1>
+        <h1 className="text-left">Edit Film</h1>
         <div className="flex sm:flex-col lg:flex-row">
           <div className="w-full">
-            <div className="flex gap-5 sm:flex-col md:flex-col lg:flex-row xl:flex-row">
+            <div className="flex gap-5 flex-col lg:flex-row">
               <div className="w-1/3">
                 <Field
                   type="text"
@@ -215,8 +215,8 @@ function EditFilm() {
                 />
               </div>
               <div className="w-5/12">
-                <h3 className="text-center sm:text-left">Genre</h3>
-                <div className="flex flex-wrap gap-10">{labelCheckbox()}</div>
+                <h3 className="text-left">Genre</h3>
+                <div className="flex flex-wrap gap-7">{labelCheckbox()}</div>
               </div>
             </div>
             <div className="pb-10">
@@ -249,7 +249,7 @@ function EditFilm() {
                 />
               </div>
             </div>
-            <div className="flex flex-row gap-10 pb-5 sm:flex-col md:flex-col lg:flex-row xl:flex-row">
+            <div className="flex flex-col gap-10 pb-5 lg:flex-row">
               <UploadFile
                 type="image/*"
                 htmlFor="poster"
@@ -280,7 +280,7 @@ function EditFilm() {
             </div>
           </div>
         </div>
-        <div className="flex flex-wrap justify-center sm:justify-between md:justify-between pb-5">
+        <div className="flex flex-wrap justify-between ">
           <button
             className="button-red font-bold text-button"
             onClick={() => setIsModalOpen(true)}
