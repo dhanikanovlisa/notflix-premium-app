@@ -43,8 +43,6 @@ function Login() {
     setPasswordErrorMsg("");
   }, [password]);
 
-
-
   const handleSubmit = async (e: React.ChangeEvent<any>) => {
     e.preventDefault();    
     if(username === "") {
@@ -56,6 +54,12 @@ function Login() {
     if(password === "") {
       setToastErrorMsg("Password cannot be empty");
       setPasswordErrorMsg("Password cannot be empty");
+      return;
+    }
+    if(password.length < 6) {
+      setLoading(false);
+      setShowToastError(true);
+      setPasswordErrorMsg("Password must be at least 6 characters");
       return;
     }
 
