@@ -14,8 +14,10 @@ function EditProfile() {
   const { id } = useParams();
   const [profile, setProfile] = useState<User | undefined>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showToastTrue, setShowToastTrue] = useState(false);
-  const [showToastError, setShowToastError] = useState(false);
+  const toastTrueUseState = useState(false);
+  const toastErrorUseState = useState(false);
+  const [showToastTrue, setShowToastTrue] = toastTrueUseState;
+  const [showToastError, setShowToastError] = toastErrorUseState;
   const [msg, setMsg] = useState("");
   const [valid, setValid] = useState(true);
 
@@ -153,9 +155,9 @@ function EditProfile() {
           <Toast
             type="check"
             message="Sucesfully updated profile"
-            showUseState={showToastTrue}
+            showUseState={toastTrueUseState}
           />
-          <Toast type="cross" message={msg} showUseState={showToastError} />
+          <Toast type="cross" message={msg} showUseState={toastErrorUseState} />
           <Navbar />
           {loading && <Loading />}
           <div className="pt-28 pl-10 pb-10">

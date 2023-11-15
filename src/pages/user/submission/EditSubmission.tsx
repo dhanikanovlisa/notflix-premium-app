@@ -15,8 +15,10 @@ import { useAuth } from "../../../hooks/useAuth";
 function EditSubmission() {
   const { id } = useParams();
   const [requestFilm, setRequestFilm] = useState<FilmRequest | undefined>();
-  const [showToastTrue, setShowToastTrue] = useState(false);
-  const [showToastError, setShowToastError] = useState(false);
+  const toastTrueUseState = useState(false);
+  const toastErrorUseState = useState(false);
+  const [showToastTrue, setShowToastTrue] = toastTrueUseState;
+  const [showToastError, setShowToastError] = toastErrorUseState;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(false);
@@ -139,9 +141,9 @@ function EditSubmission() {
       <Toast
         type="check"
         message="Sucesfully updated request film"
-        showUseState={showToastTrue}
+        showUseState={toastTrueUseState}
       />
-      <Toast type="cross" message={msg} showUseState={showToastError} />
+      <Toast type="cross" message={msg} showUseState={toastErrorUseState} />
       <Navbar />
       {loading && <Loading />}
       <div className="pt-28 pl-5 sm:pl-10 pr-5 sm:pr-10 lg:pr-28">

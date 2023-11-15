@@ -11,8 +11,10 @@ import { postAPI } from "../../../utils/api";
 
 function CreateSubmission() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showToastTrue, setShowToastTrue] = useState(false);
-  const [showToastError, setShowToastError] = useState(false);
+  const toastTrueUseState = useState(false);
+  const toastErrorUseState = useState(false);
+  const [showToastTrue, setShowToastTrue] = toastTrueUseState;
+  const [showToastError, setShowToastError] = toastErrorUseState;
   const [user_id, setId] = useState<number>(0);
   const [loading, setLoading] = useState(false);
 
@@ -139,9 +141,9 @@ function CreateSubmission() {
       <Toast
         type="check"
         message="Sucesfully updated film"
-        showUseState={showToastTrue}
+        showUseState={toastTrueUseState}
       />
-      <Toast type="cross" message={msg} showUseState={showToastError} />
+      <Toast type="cross" message={msg} showUseState={toastErrorUseState} />
       <Navbar />
       <div className="pt-32 pl-10 pr-20">
         {loading && <Loading />}

@@ -36,8 +36,10 @@ function Register() {
   }, [isAuth, admin]);
 
   const [loading, setLoading] = useState(false);
-  const [showToastTrue, setShowToastTrue] = useState(false);
-  const [showToastError, setShowToastError] = useState(false);
+  const toastTrueUseState = useState(false);
+  const toastErrorUseState = useState(false);
+  const [showToastTrue, setShowToastTrue] = toastTrueUseState;
+  const [showToastError, setShowToastError] = toastErrorUseState;
   const [msg, setMsg] = useState("");
 
   const [username, setUsername] = useState<string>("");
@@ -195,9 +197,9 @@ function Register() {
           <Toast
             type="check"
             message="Sucesfully registered account"
-            showUseState={showToastTrue}
+            showUseState={toastTrueUseState}
           />
-          <Toast type="cross" message={msg} showUseState={showToastError} />
+          <Toast type="cross" message={msg} showUseState={toastErrorUseState} />
           <Navbar />
           {loading && <Loading />}
           <div className="flex justify-center min-h-screen items-center pt-12">

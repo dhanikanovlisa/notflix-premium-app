@@ -14,8 +14,10 @@ function DetailFilm() {
   const [film, setFilm] = useState<Film | undefined>();
   const [filmGenre, setFilmGenre] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showToastTrue, setShowToastTrue] = useState(false);
-  const [showToastError, setShowToastError] = useState(false);
+  const toastTrueUseState = useState(false);
+  const toastErrorUseState = useState(false);
+  const [showToastTrue, setShowToastTrue] = toastTrueUseState;
+  const [showToastError, setShowToastError] = toastErrorUseState;
   const [loading, setLoading] = useState(false);
   const [user_id, setUserId] = useState(0);
   const {isAuth, isAdmin} = useAuth();
@@ -100,12 +102,12 @@ function DetailFilm() {
           <Toast
             type="check"
             message="Sucesfully deleted film"
-            showUseState={showToastTrue}
+            showUseState={toastTrueUseState}
           />
           <Toast
             type="cross"
             message="Failed deleted film"
-            showUseState={showToastError}
+            showUseState={toastErrorUseState}
           />
           <Navbar />
           <div className="pt-28 pl-5 sm:pl-10 pr-5 sm:pr-10 lg:pr-28">

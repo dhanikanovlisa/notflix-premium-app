@@ -14,8 +14,10 @@ function Login() {
 
   const [usernameErrorMsg, setUsernameErrorMsg] = useState<string>("");
   const [passwordErrorMsg, setPasswordErrorMsg] = useState<string>("");
-  const [showToastSuccess, setShowToastSuccess] = useState(false);
-  const [showToastError, setShowToastError] = useState(false);
+  const toastSuccessUseState = useState(false);
+  const [showToastSuccess, setShowToastSuccess] = toastSuccessUseState;
+  const toastErrorUseState = useState(false);
+  const [showToastError, setShowToastError] = toastErrorUseState;
   const [toastErrorMsg, setToastErrorMsg] = useState("");
 
   const [loading, setLoading] = useState(false);
@@ -57,8 +59,7 @@ function Login() {
       return;
     }
     if(password.length < 6) {
-      setLoading(false);
-      setShowToastError(true);
+      setToastErrorMsg("Password must be at least 6 characters");
       setPasswordErrorMsg("Password must be at least 6 characters");
       return;
     }
@@ -108,12 +109,12 @@ function Login() {
       {!authenticate && (
         <>
           <Toast
-            showUseState={showToastSuccess}
+            showUseState={toastSuccessUseState}
             message={toastErrorMsg}
             type="check"
           />
           <Toast
-            showUseState={showToastError}
+            showUseState={toastErrorUseState}
             message={toastErrorMsg}
             type="cross"
           />

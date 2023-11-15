@@ -13,8 +13,10 @@ function DetailSubmission() {
   const { id } = useParams();
   const [requestFilm, setRequestFilm] = useState<FilmRequest | undefined>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showToastTrue, setShowToastTrue] = useState(false);
-  const [showToastError, setShowToastError] = useState(false);
+  const toastTrueUseState = useState(false);
+  const toastErrorUseState = useState(false);
+  const [showToastTrue, setShowToastTrue] = toastTrueUseState;
+  const [showToastError, setShowToastError] = toastErrorUseState;
   const [user_id, setId] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const {isAuth, isAdmin} = useAuth();
@@ -91,12 +93,12 @@ function DetailSubmission() {
           <Toast
             type="check"
             message="Sucesfully deleted submission film"
-            showUseState={showToastTrue}
+            showUseState={toastTrueUseState}
           />
           <Toast
             type="cross"
             message="Failed deleted submission film"
-            showUseState={showToastError}
+            showUseState={toastErrorUseState}
           />
           <Navbar />
           <div className="pt-28 pl-5 sm:pl-10 pr-5 sm:pr-10 lg:pr-28">
