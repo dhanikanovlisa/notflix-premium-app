@@ -9,7 +9,7 @@ import EditFilm from "./pages/user/film/EditFilm";
 import DetailFilm from "./pages/user/film/DetailFilm";
 import PageNotFound from "./pages/notFound/PageNotFound";
 import CreateSubmission from "./pages/user/submission/CreateSubmission";
-import ProtectedRoute from "./common/protectedRoutes/ProtectedRoutes";
+import ProtectedRoute from "./routes/ProtectedRoutes";
 import AdmissionFilm from "./pages/admin/film/AdmissionFilm";
 import Subscription from "./pages/admin/subscription/Subscription";
 import DetailSubmission from "./pages/user/submission/DetailSubmission";
