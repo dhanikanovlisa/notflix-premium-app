@@ -7,6 +7,7 @@ import { FilmRequest } from "../../../types/interfaces";
 import StatusComponent from "../../../components/status/StatusComponent";
 import Loading from "../../../components/loading/Loading";
 import { deleteAPI, getAPI } from "../../../utils/api";
+import { useAuth } from "../../../hooks/useAuth";
 
 function DetailSubmission() {
   const { id } = useParams();
@@ -16,6 +17,14 @@ function DetailSubmission() {
   const [showToastError, setShowToastError] = useState(false);
   const [user_id, setId] = useState<number>(0);
   const [loading, setLoading] = useState(true);
+  const {isAuth, isAdmin} = useAuth();
+  useEffect(() => {
+    document.title = "Detail Film";
+    if (!isAuth() || isAdmin()) {
+      window.location.href = "/404";
+    }
+
+  }, [id]);
 
   async function getFilmRequest() {
     try {

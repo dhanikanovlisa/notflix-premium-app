@@ -11,6 +11,7 @@ import Toast from "../../../components/toast/Toast";
 import Modal from "../../../components/modal/Modal";
 import Loading from "../../../components/loading/Loading";
 import { getAPI, putAPI } from "../../../utils/api";
+import { useAuth } from "../../../hooks/useAuth";
 
 function EditFilm() {
   const { id } = useParams();
@@ -55,9 +56,14 @@ function EditFilm() {
 
   useEffect(() => {
     document.title = "Edit Film";
-    if (localStorage.getItem("admin") !== "false") {
-      window.location.href = "/404";
-    }
+    const {isAuth, isAdmin} = useAuth();
+    useEffect(() => {
+      document.title = "Detail Film";
+      if (!isAuth() || isAdmin()) {
+        window.location.href = "/404";
+      }
+  
+    }, [id]);
     setUserID(Number(localStorage.getItem("id")));
   });
 

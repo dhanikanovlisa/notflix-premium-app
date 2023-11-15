@@ -6,10 +6,10 @@ import Navbar from "../../../components/navbar/Navbar";
 import Modal from "../../../components/modal/Modal";
 import Toast from "../../../components/toast/Toast";
 import Loading from "../../../components/loading/Loading";
-import { deleteAPI } from "../../../utils/api";
+import { deleteAPI, getAPI } from "../../../utils/api";
+import { useAuth } from "../../../hooks/useAuth";
 
 function DetailFilm() {
-  const url = import.meta.env.VITE_REST_URL;
   const { id } = useParams();
   const [film, setFilm] = useState<Film | undefined>();
   const [filmGenre, setFilmGenre] = useState([]);
@@ -18,19 +18,22 @@ function DetailFilm() {
   const [showToastError, setShowToastError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [user_id, setUserId] = useState(0);
+  const {isAuth, isAdmin} = useAuth();
+  
+  useEffect(() => {
+    document.title = "Detail Film";
+    if (!isAuth() || isAdmin()) {
+      window.location.href = "/404";
+    }
+
+  }, [id]);
 
   async function getFilmById() {
-    const response = await fetch(`${url}/films/film/${Number(id)}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.getItem("token") || "",
-      },
-    });
+    const response = await getAPI(`films/film/${Number(id)}`);
     if (!response.ok) {
       if (response.status === 404) {
         setFilm(undefined);
-        window.location.href = "/not-found";
+        window.location.href = "/404";
         return;
       }
     }

@@ -37,7 +37,7 @@ function EditProfile() {
     document.title = "Edit Profile";
     if (Number(id) !== Number(localStorage.getItem("id"))) {
       setValid(false);
-      window.location.href = "/not-found";
+      window.location.href = "/404";
     }
   }, []);
 

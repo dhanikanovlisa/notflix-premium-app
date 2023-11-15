@@ -10,6 +10,7 @@ import Loading from "../../../components/loading/Loading";
 import { useState, useEffect } from "react";
 import { FilmRequest } from "../../../types/interfaces";
 import { getAPI, putAPI } from "../../../utils/api";
+import { useAuth } from "../../../hooks/useAuth";
 
 function EditSubmission() {
   const { id } = useParams();
@@ -30,6 +31,14 @@ function EditSubmission() {
   const [minute, setMinute] = useState(0);
   const duration = hour * 60 + minute;
   const [id_user, setUserID] = useState(0);
+
+  const { isAuth, isAdmin } = useAuth();
+  useEffect(() => {
+    document.title = "Detail Film";
+    if (!isAuth() || isAdmin()) {
+      window.location.href = "/404";
+    }
+  }, [id]);
 
   const hoursArray: string[] = Array.from({ length: 24 }, (_, index) =>
     (index + 1).toString()
@@ -62,7 +71,7 @@ function EditSubmission() {
     if (!response.ok) {
       if (response.status === 404) {
         setRequestFilm(undefined);
-        window.location.href = "/not-found";
+        window.location.href = "/404";
         return;
       }
     }
