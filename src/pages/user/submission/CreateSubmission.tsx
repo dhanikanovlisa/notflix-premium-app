@@ -7,9 +7,9 @@ import UploadFile from "../../../components/uploadFIle/UploadFile";
 import Modal from "../../../components/modal/Modal";
 import Toast from "../../../components/toast/Toast";
 import Loading from "../../../components/loading/Loading";
+import { postAPI } from "../../../utils/api";
 
 function CreateSubmission() {
-  const url = import.meta.env.VITE_REST_URL;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showToastTrue, setShowToastTrue] = useState(false);
   const [showToastError, setShowToastError] = useState(false);
@@ -62,26 +62,20 @@ function CreateSubmission() {
     const filmPathSize = film_path?.size;
     const posterPathSize = film_poster?.size;
     const headerPathSize = film_header?.size;
-    const response = await fetch(`${url}/films/createFilmRequest`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.getItem("token") || "",
-      },
-      body: JSON.stringify({
-        id: user_id,
-        title,
-        description,
-        film_path: filmName,
-        film_poster: posterName,
-        film_header: headerName,
-        film_path_size: filmPathSize,
-        film_poster_size: posterPathSize,
-        film_header_size: headerPathSize,
-        date_release,
-        duration,
-      }),
-    });
+    const response = await postAPI(`createFilmRequest`, {
+      id: user_id,
+      title,
+      description,
+      film_path: filmName,
+      film_poster: posterName,
+      film_header: headerName,
+      film_path_size: filmPathSize,
+      film_poster_size: posterPathSize,
+      film_header_size: headerPathSize,
+      date_release,
+      duration,
+    })
+
     console.log(response.body);
     if (!response.ok) {
       if (response.status === 404) {

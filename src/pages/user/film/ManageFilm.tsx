@@ -5,16 +5,19 @@ import { useState } from "react";
 import { Film } from "../../../types/interfaces";
 import { useParams } from "react-router-dom";
 import Loading from "../../../components/loading/Loading";
+import { getAPI } from "../../../utils/api";
+import { useAuth } from "../../../hooks/useAuth";
 
 function ManageFilm() {
   const { id } = useParams();
   const [filmData, setFilmData] = useState<Film[]>([]);
   const [loading, setLoading] = useState(true);
   const [valid, setValid] = useState(true);
+  const {isAuth, isAdmin} = useAuth();
 
   useEffect(() => {
     document.title = "Manage Film";
-    if (localStorage.getItem("admin") !== "false") {
+    if (!isAuth() || isAdmin()) {
       window.location.href = "/404";
     }
     if (id !== localStorage.getItem("id")) {
@@ -23,16 +26,10 @@ function ManageFilm() {
     }
   }, [id]);
 
-  const url = import.meta.env.VITE_REST_URL;
 
   const fetchFilm = async () => {
     try {
-      const response = await fetch(`${url}/films/user/${id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token") || "",
-        }});
+      const response = await getAPI(`films/user/${id}`);
       if (!response.ok) {
         throw new Error("Something went wrong");
       }

@@ -1,3 +1,4 @@
+import { getAPI } from "../../utils/api";
 import Navbar from "../../components/navbar/Navbar";
 import { useParams } from "react-router-dom";
 import { User } from "../../types/interfaces";
@@ -6,7 +7,6 @@ import { useEffect, useState } from "react";
 
 function Profile() {
   const { id } = useParams();
-  const url = import.meta.env.VITE_REST_URL;
   const [profile, setProfile] = useState<User | undefined>();
   const [valid, setValid] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -21,19 +21,7 @@ function Profile() {
 
   async function getProfile() {
     try {
-      const response = await fetch(`${url}/profile/${Number(id)}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token") || "",
-        }});
-      // if (!response.ok) {
-      //   if (response.status === 404) {
-      //     console.log("masuk 404");
-      //     window.location.href = "/not-found";
-      //     return;
-      //   }
-      // }
+      const response = await getAPI(`profile/${Number(id)}`) ;
       const data = await response.json();
       const mappedProfile = data.data;
       setProfile(mappedProfile);

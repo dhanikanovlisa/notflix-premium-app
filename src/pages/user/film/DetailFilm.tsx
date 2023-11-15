@@ -6,6 +6,7 @@ import Navbar from "../../../components/navbar/Navbar";
 import Modal from "../../../components/modal/Modal";
 import Toast from "../../../components/toast/Toast";
 import Loading from "../../../components/loading/Loading";
+import { deleteAPI } from "../../../utils/api";
 
 function DetailFilm() {
   const url = import.meta.env.VITE_REST_URL;
@@ -24,7 +25,8 @@ function DetailFilm() {
       headers: {
         "Content-Type": "application/json",
         Authorization: localStorage.getItem("token") || "",
-      }});
+      },
+    });
     if (!response.ok) {
       if (response.status === 404) {
         setFilm(undefined);
@@ -51,14 +53,7 @@ function DetailFilm() {
 
   async function deleteFilm() {
     try {
-      const response = await fetch(`${url}/films/film/delete/${Number(id)}`, {
-        method: "DELETE",
-        headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.getItem('token') || '',
-      },
-      });
-
+      const response = await deleteAPI(`films/film/delete/${Number(id)}`);
       if (!response.ok) {
         throw new Error(`Failed to delete film. Status: ${response.status}`);
       }
@@ -79,9 +74,9 @@ function DetailFilm() {
   useEffect(() => {
     setUserId(Number(localStorage.getItem("id")));
     getFilmById();
-    if(localStorage.getItem("admin") !== "false"){
-      window.location.href = "/404"
-  }
+    if (localStorage.getItem("admin") !== "false") {
+      window.location.href = "/404";
+    }
   }, [id]);
 
   function goToEdit() {

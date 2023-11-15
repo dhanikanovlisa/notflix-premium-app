@@ -4,17 +4,23 @@ import CardSubmission from "../../../components/card/CardSubmission";
 import { useState, useEffect } from "react";
 import { FilmRequest } from "../../../types/interfaces";
 import Loading from "../../../components/loading/Loading";
+import { getAPI } from "../../../utils/api";
+import { useAuth } from "../../../hooks/useAuth";
 
 function Submission() {
   const { id } = useParams();
-  const url = import.meta.env.VITE_REST_URL;
   const [filmRequest, setFilmRequest] = useState<FilmRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [valid, setValid] = useState(true);
+  const { isAuth, isAdmin } = useAuth();
 
   useEffect(() => {
     document.title = "Manage Film";
-    if (localStorage.getItem("admin") !== "false") {
+    if (!isAuth()) {
+      window.location.href = "/404";
+    }
+
+    if(isAdmin()){
       window.location.href = "/404";
     }
     if (id !== localStorage.getItem("id")) {
@@ -22,17 +28,10 @@ function Submission() {
       window.location.href = "/404";
     }
   }, [id]);
+
   const fetchRequestFilm = async () => {
     try {
-      const response = await fetch(`${url}/films/requestFilm/${id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token") || "",
-        }});
-      if (!response.ok) {
-        throw new Error("Something went wrong");
-      }
+      const response = await getAPI(`films/requestFilm/${id}`);
       const data = await response.json();
       const mappedData = data.data.map((filmRequest: FilmRequest) => ({
         requestFilm_id: filmRequest.requestFilm_id,
@@ -46,7 +45,6 @@ function Submission() {
         id_user: filmRequest.id_user,
         status: { status: filmRequest.status },
       }));
-
       setFilmRequest(mappedData);
     } catch (error) {
       console.error("Error fetching request film", error);

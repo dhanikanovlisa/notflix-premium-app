@@ -6,8 +6,9 @@ import { useParams } from "react-router-dom";
 import { FilmRequest } from "../../../types/interfaces";
 import StatusComponent from "../../../components/status/StatusComponent";
 import Loading from "../../../components/loading/Loading";
+import { deleteAPI, getAPI } from "../../../utils/api";
+
 function DetailSubmission() {
-  const url = import.meta.env.VITE_REST_URL;
   const { id } = useParams();
   const [requestFilm, setRequestFilm] = useState<FilmRequest | undefined>();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -18,21 +19,7 @@ function DetailSubmission() {
 
   async function getFilmRequest() {
     try {
-      const response = await fetch(
-        `${url}/films/requestFilm/detail/${Number(id)}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: localStorage.getItem("token") || "",
-          }}
-      );
-      if (!response.ok) {
-        if (response.status === 404) {
-          setRequestFilm(undefined);
-          window.location.href = "/not-found";
-          return;
-        }
-      }
+      const response = await getAPI(`films/requestFilm/detail/${Number(id)}`);
       const data = await response.json();
       const mappedData = {
         requestFilm_id: Number(data.data.requestFilm_id),
@@ -57,20 +44,10 @@ function DetailSubmission() {
   async function deleteFilmRequest() {
     setLoading(true);
     try {
-      const response = await fetch(
-        `${url}/films/requestFilm/delete/${Number(id)}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: localStorage.getItem("token") || "",
-          }}
-      );
-
+      const response = await deleteAPI(`films/requestFilm/delete/${id}`);
       if (!response.ok) {
         throw new Error(`Failed to delete film. Status: ${response.status}`);
       }
-
       setIsModalOpen(false);
       setShowToastTrue(true);
       setTimeout(() => {
@@ -79,8 +56,6 @@ function DetailSubmission() {
     } catch (error) {
       setIsModalOpen(false);
       setShowToastError(true);
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -106,12 +81,12 @@ function DetailSubmission() {
         <>
           <Toast
             type="check"
-            message="Sucesfully deleted film"
+            message="Sucesfully deleted submission film"
             showUseState={showToastTrue}
           />
           <Toast
             type="cross"
-            message="Failed deleted film"
+            message="Failed deleted submission film"
             showUseState={showToastError}
           />
           <Navbar />

@@ -9,9 +9,9 @@ import Dropdown from "../../../components/dropdown/Dropdown";
 import Loading from "../../../components/loading/Loading";
 import { useState, useEffect } from "react";
 import { FilmRequest } from "../../../types/interfaces";
+import { getAPI, putAPI } from "../../../utils/api";
 
 function EditSubmission() {
-  const url = import.meta.env.VITE_REST_URL;
   const { id } = useParams();
   const [requestFilm, setRequestFilm] = useState<FilmRequest | undefined>();
   const [showToastTrue, setShowToastTrue] = useState(false);
@@ -58,14 +58,7 @@ function EditSubmission() {
   };
 
   async function getFilmRequest() {
-    const response = await fetch(
-      `${url}/films/requestFilm/detail/${Number(id)}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token") || "",
-        }}
-    );
+    const response = await getAPI(`films/requestFilm/${id}`);
     if (!response.ok) {
       if (response.status === 404) {
         setRequestFilm(undefined);
@@ -100,25 +93,18 @@ function EditSubmission() {
     const filmPathSize = film_path?.size;
     const posterPathSize = film_poster?.size;
     const headerPathSize = film_header?.size;
-    const response = await fetch(`${url}/films/requestFilm/edit/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.getItem("token") || "",
-      },
-      body: JSON.stringify({
-        title,
-        description,
-        film_path: filmName,
-        film_poster: posterName,
-        film_header: headerName,
-        film_path_size: filmPathSize,
-        film_poster_size: posterPathSize,
-        film_header_size: headerPathSize,
-        date_release: date_release,
-        duration: duration,
-        user_id: id_user,
-      }),
+    const response = await putAPI(`films/requestFilm/edit/${id}`, {
+      title,
+      description,
+      film_path: filmName,
+      film_poster: posterName,
+      film_header: headerName,
+      film_path_size: filmPathSize,
+      film_poster_size: posterPathSize,
+      film_header_size: headerPathSize,
+      date_release: date_release,
+      duration: duration,
+      user_id: id_user,
     });
 
     if (!response.ok) {

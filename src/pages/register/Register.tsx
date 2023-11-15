@@ -4,6 +4,7 @@ import Toast from "../../components/toast/Toast";
 import Loading from "../../components/loading/Loading";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getAPI, postAPI } from "../../utils/api";
 
 const usernameRegex = /^[a-z0-9_\.]+$/;
 const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
@@ -58,7 +59,7 @@ function Register() {
   const [emailErrorMsg, setEmailErrorMsg] = useState<string>("");
   const [confirmPasswordErrorMsg, setConfirmPasswordErrorMsg] =
     useState<string>("");
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   useEffect(() => {
     if (username == "" || usernameRegex.test(username)) {
       setIsUsernameValid(true);
@@ -130,10 +131,8 @@ function Register() {
       setConfirmPasswordErrorMsg("");
     }
 
-    const url = import.meta.env.VITE_REST_URL;
-
     try {
-      const res = await fetch(`${url}/check/username/${username}`);
+      const res = await getAPI(`check/username/${username}`);
       const data = await res.json();
       if (res.ok && data.code == 1) {
         setIsUsernameValid(false);
@@ -145,7 +144,7 @@ function Register() {
     }
 
     try {
-      const res = await fetch(`${url}/check/email/${email}`);
+      const res = await getAPI(`check/email/${email}`);
       const data = await res.json();
       if (res.ok && data.code == 1) {
         setIsEmailValid(false);
@@ -157,19 +156,13 @@ function Register() {
     }
 
     try {
-      const res = await fetch(`${url}/auth/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: username,
-          email: email,
-          phone: phone,
-          password: password,
-          firstName: firstName,
-          lastName: lastName,
-        }),
+      const res = await postAPI(`auth/register`, {
+        username: username,
+        email: email,
+        phone: phone,
+        password: password,
+        firstName: firstName,
+        lastName: lastName,
       });
 
       if (res.status == 201) {
@@ -188,11 +181,11 @@ function Register() {
   };
 
   function gotoAdmin() {
-   navigate("/film-request") 
+    navigate("/film-request");
   }
 
   function gotoUser() {
-    navigate("/submission/" + id)
+    navigate("/submission/" + id);
   }
 
   return (
@@ -306,7 +299,7 @@ function Register() {
       ) : admin ? (
         gotoAdmin()
       ) : (
-       gotoUser()
+        gotoUser()
       )}
     </>
   );

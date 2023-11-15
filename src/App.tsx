@@ -9,24 +9,25 @@ import EditFilm from "./pages/user/film/EditFilm";
 import DetailFilm from "./pages/user/film/DetailFilm";
 import PageNotFound from "./pages/notFound/PageNotFound";
 import CreateSubmission from "./pages/user/submission/CreateSubmission";
-import Logout from "./pages/login/Logout";
 import ProtectedRoute from "./common/protectedRoutes/ProtectedRoutes";
 import AdmissionFilm from "./pages/admin/film/AdmissionFilm";
 import Subscription from "./pages/admin/subscription/Subscription";
 import DetailSubmission from "./pages/user/submission/DetailSubmission";
 import EditSubmission from "./pages/user/submission/EditSubmission";
-
+import { AuthContext } from "./context/AuthContext";
+import { useState } from "react";
+import { User } from "./types/interfaces";
 function App() {
-  
+  const [user, setUser] = useState<User | null>(null);
+
   return (
     <BrowserRouter>
+    <AuthContext.Provider value={{user, setUser}}>
       <Routes>
       <Route path="/" element= {<ProtectedRoute type="home"><Login /></ProtectedRoute>}/>
         {/* Auth */}
         <Route path="/login" element= {<Login />}/>
         <Route path="/registration" element= {<Register />}/>
-        <Route path="/logout" element= {<Logout />}/>
-
         {/**User */}
         {/**Submission */}
         <Route path="/submission/:id" element={<ProtectedRoute type="user"><Submission /></ProtectedRoute>}/>
@@ -53,6 +54,7 @@ function App() {
         {/**Not Found */}
         <Route path="*" element = {<PageNotFound />}></Route>
       </Routes>
+      </AuthContext.Provider>
     </BrowserRouter>
   )
 }

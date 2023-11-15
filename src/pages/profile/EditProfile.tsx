@@ -8,11 +8,10 @@ import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { User } from "../../types/interfaces";
 import Toast from "../../components/toast/Toast";
+import { getAPI, putAPI } from "../../utils/api";
 
 function EditProfile() {
   const { id } = useParams();
-  console.log(id);
-  const url = import.meta.env.VITE_REST_URL;
   const [profile, setProfile] = useState<User | undefined>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showToastTrue, setShowToastTrue] = useState(false);
@@ -44,19 +43,7 @@ function EditProfile() {
 
   async function getProfile() {
     try {
-      const response = await fetch(`${url}/profile/${Number(id)}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token") || "",
-        }});
-      // if (!response.ok) {
-      //   if (response.status === 404) {
-      //     console.log("masuk 404");
-      //     window.location.href = "/not-found";
-      //     return;
-      //   }
-      // }
+      const response = await getAPI(`profile/${Number(id)}`);
       const data = await response.json();
       const mappedProfile = data.data;
       setProfile(mappedProfile);
@@ -72,12 +59,7 @@ function EditProfile() {
       if (username === profile?.username) {
         return;
       } else {
-        const res = await fetch(`${url}/check/username/${username}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: localStorage.getItem("token") || "",
-          }});
+        const res = await getAPI(`check/username/${username}`);
         const data = await res.json();
         if (res.ok && data.code === 1) {
           setIsUsernameValid(false);
@@ -97,12 +79,7 @@ function EditProfile() {
       if (email == profile?.email) {
         return;
       } else {
-        const res = await fetch(`${url}/check/email/${email}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: localStorage.getItem("token") || "",
-          }});
+        const res = await getAPI(`check/email/${email}`);
         const data = await res.json();
         if (res.ok && data.code === 1) {
           setIsEmailValid(false);
@@ -125,21 +102,14 @@ function EditProfile() {
     try {
       const profileName = photo_profile?.name;
       const profileSize = photo_profile?.size;
-      const response = await fetch(`${url}/profile/edit/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token") || "",
-        },
-        body: JSON.stringify({
-          username,
-          last_name,
-          first_name,
-          email,
-          phone_number,
-          profileName,
-          profileSize,
-        }),
+      const response = await putAPI(`profile/edit/${id}`, {
+        username,
+        last_name,
+        first_name,
+        email,
+        phone_number,
+        profileName,
+        profileSize,
       });
 
       if (!response.ok) {

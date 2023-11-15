@@ -3,14 +3,14 @@ import Toast from "../../components/toast/Toast";
 import Field from "../../components/field/Field";
 import { useEffect, useState } from "react";
 import Loading from "../../components/loading/Loading";
+import { useAuth } from "../../hooks/useAuth";
+import { getAPI } from "../../utils/api";
 
 function Login() {
-
-  const [isAuth, setIsAuth] = useState(false);
-  const [admin, setAdmin] = useState(false);
   const [id, setId] = useState<number>(0);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [authenticate, isAuthenticated] = useState(false);
 
   const [usernameErrorMsg, setUsernameErrorMsg] = useState<string>("");
   const [passwordErrorMsg, setPasswordErrorMsg] = useState<string>("");
@@ -20,28 +20,19 @@ function Login() {
 
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    document.title = "Log In";
-    if (localStorage.getItem("token")) {
-      setShowToastError(true);
-      setToastErrorMsg("You've already logged in");
-      setIsAuth(true);
-      setId(Number(localStorage.getItem("id")));
-      setAdmin(localStorage.getItem("admin") === "true");
-    } else {
-      setIsAuth(false);
-    }
-  }, [isAuth]);
+  const {isAuth, isAdmin, login } = useAuth();
 
   useEffect(() => {
-    if (isAuth) {
-      if (admin) {
+    setId(Number(localStorage.getItem("id")));
+    if (isAuth()) {
+      isAuthenticated(true);
+      if (isAdmin()) {
         window.location.href = "/film-request";
       } else {
         window.location.href = `/submission/${id}`;
       }
     }
-  }, [isAuth]);
+  }, [isAuth, isAdmin]);
 
 
   useEffect(() => {
@@ -53,17 +44,10 @@ function Login() {
   }, [password]);
 
   const handleSubmit = async (e: React.ChangeEvent<any>) => {
-    e.preventDefault();
-    const url = import.meta.env.VITE_REST_URL;
-    
+    e.preventDefault();    
     try {
       setLoading(true);
-      const res = await fetch(`${url}/check/username/${username}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token") || "",
-        }});
+      const res =  await getAPI(`{/check/username/${username}}`);
       const data = await res.json();
       if (res.ok && data.code == 0) {
         setLoading(false);
@@ -73,46 +57,21 @@ function Login() {
     } catch (error) {
       console.error("Error fetching username", error);
     }
-
     try {
       setLoading(true);
-      const res = await fetch(`${url}/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token") || "",
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      const data = await res.json();
-      if (res.ok && res.status == 200) {
-        setShowToastSuccess(true);
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("admin", data.is_admin);
-        localStorage.setItem("id", data.id);
-        setTimeout(() => {
-          if (data.is_admin) {
-            window.location.href = "/film-request";
-          } else {
-            window.location.href = `/submission/${data.id}`;
-          }
-        }, 1600);
-      } else {
-        setLoading(false);
-        setShowToastError(true);
-        setToastErrorMsg("Log In Failed");
-        setPasswordErrorMsg(data.message);
-        return;
-      }
+      await login(username, password);
+      setShowToastSuccess(true);
     } catch (error) {
       console.error("Error logging in", error);
+      setLoading(false);
+      setShowToastError(true);
+      setToastErrorMsg("Login failed. Please check your credentials.");
     }
   };
 
   return (
     <>
-      {!isAuth && (
+      {!authenticate && (
         <>
           <Toast
             showUseState={showToastSuccess}

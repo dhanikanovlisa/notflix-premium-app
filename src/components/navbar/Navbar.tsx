@@ -1,19 +1,23 @@
 import { useEffect, useState } from "react";
 import { User } from "../../types/interfaces";
+import { useAuth } from "../../hooks/useAuth";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { getAPI } from "../../utils/api";
 
 function Navbar() {
-  const url = import.meta.env.VITE_REST_URL;
   const [open, setOpen] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
   const [admin, setAdmin] = useState(false);
   const [id, setId] = useState<number>(0); 
   const [profile, setProfile] = useState<User | null>();
+  const { logout } = useAuth();
+  const { getItem } = useLocalStorage();
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
+    if (getItem("token")) {
       setIsAuth(true);
-      setAdmin(localStorage.getItem("admin") === "true");
-      setId(Number(localStorage.getItem("id")));
+      setAdmin(getItem("admin") === "true");
+      setId(Number(getItem("id")));
     } else {
       setIsAuth(false);
     }
@@ -21,15 +25,7 @@ function Navbar() {
 
   async function getProfile() {
     try {
-      const response = await fetch(`${url}/profile/${Number(id)}`);
-      // if (!response.ok) {
-      //   if (response.status === 404) {
-      //     console.log("masuk 404");
-      //     window.location.href = "/not-found";
-      //     return;
-      //   }
-      // }
-      const data = await response.json();
+      const data = await getAPI(`profile/${Number(id)}`)
       const mappedProfile = data.data;
       setProfile(mappedProfile);
     } catch (error) {
@@ -89,7 +85,7 @@ function Navbar() {
                     </li>
                     <li>
                       <a href="/logout">
-                        <p className="text-black font-bold">Log Out</p>
+                        <p className="text-black font-bold" onClick={logout}>Log Out</p>
                       </a>
                     </li>
                   </ul>
@@ -115,6 +111,7 @@ function Navbar() {
       </div>
     </nav>
   );
+
 }
 
 export default Navbar;

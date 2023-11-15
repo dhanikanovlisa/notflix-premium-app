@@ -1,9 +1,11 @@
 import CardApproval from "../../../components/card/CardApproval";
 import Navbar from "../../../components/navbar/Navbar";
 import { useEffect } from "react";
+import { useAuth } from "../../../hooks/useAuth";
 function Subscription() {
+  const {isAuth, isAdmin } = useAuth();
   useEffect(() => {
-    if (localStorage.getItem("admin") !== "true") {
+    if (isAuth() || !isAdmin()) {
       window.location.href = "/404";
     }
   });

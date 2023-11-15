@@ -10,9 +10,9 @@ import TextArea from "../../../components/textarea/TextArea";
 import Toast from "../../../components/toast/Toast";
 import Modal from "../../../components/modal/Modal";
 import Loading from "../../../components/loading/Loading";
+import { getAPI, putAPI } from "../../../utils/api";
 
 function EditFilm() {
-  const url = import.meta.env.VITE_REST_URL;
   const { id } = useParams();
   const [genre, setGenre] = useState<Genre[]>([]);
   const [film, setFilm] = useState<Film | undefined>();
@@ -65,12 +65,7 @@ function EditFilm() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`${url}/films/film/${id}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: localStorage.getItem("token") || "",
-          }});
+        const response = await getAPI(`films/film/${id}`);
         const data = await response.json();
         if (!response.ok) {
           console.log(data.message);
@@ -100,12 +95,7 @@ function EditFilm() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`${url}/genres`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token") || "",
-        }});
+      const response = await getAPI(`genres`);
       const data = await response.json();
       if (!response.ok) {
         console.log(data.message);
@@ -125,27 +115,20 @@ function EditFilm() {
     const filmPathSize = film_path?.size;
     const posterPathSize = film_poster?.size;
     const headerPathSize = film_header?.size;
-    const response = await fetch(`${url}/films/film/edit/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: localStorage.getItem("token") || "",
-      },
-      body: JSON.stringify({
-        title,
-        description,
-        film_path: filmName,
-        film_poster: posterName,
-        film_header: headerName,
-        film_path_size: filmPathSize,
-        film_poster_size: posterPathSize,
-        film_header_size: headerPathSize,
-        date_release,
-        duration,
-        id_user: id_user,
-        genres,
-      }),
-    });
+    const response = await putAPI(`films/film/edit/${id}`,{
+      title,
+      description,
+      film_path: filmName,
+      film_poster: posterName,
+      film_header: headerName,
+      film_path_size: filmPathSize,
+      film_poster_size: posterPathSize,
+      film_header_size: headerPathSize,
+      date_release,
+      duration,
+      id_user: id_user,
+      genres,
+    })
 
     if (!response.ok) {
       if (response.status === 404) {
