@@ -13,7 +13,8 @@ function ManageFilm() {
   const [filmData, setFilmData] = useState<Film[]>([]);
   const [loading, setLoading] = useState(true);
   const [valid, setValid] = useState(true);
-  const {isAuth, isAdmin} = useAuth();
+  const { isAuth, isAdmin } = useAuth();
+  const [empty, isEmpty] = useState(false);
 
   useEffect(() => {
     document.title = "Manage Film";
@@ -25,7 +26,6 @@ function ManageFilm() {
       window.location.href = "/404";
     }
   }, [id]);
-
 
   const fetchFilm = async () => {
     try {
@@ -57,17 +57,26 @@ function ManageFilm() {
 
   useEffect(() => {
     fetchFilm();
+    if (filmData.length === 0) {
+      isEmpty(true);
+    }
   }, []);
 
   function cardFilm() {
-    return filmData.map((film) => (
-      <CardFilm
-        key={film.film_id}
-        id={film.film_id}
-        title={film.title}
-        image={`/src/assets/storage/poster/${film.film_poster}`}
-      />
-    ));
+    return empty ? (
+      <>
+        <p>Empty film</p>
+      </>
+    ) : (
+      filmData.map((film) => (
+        <CardFilm
+          key={film.film_id}
+          id={film.film_id}
+          title={film.title}
+          image={`/src/assets/storage/poster/${film.film_poster}`}
+        />
+      ))
+    );
   }
   return (
     <>

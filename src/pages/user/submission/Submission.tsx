@@ -13,14 +13,14 @@ function Submission() {
   const [loading, setLoading] = useState(true);
   const [valid, setValid] = useState(true);
   const { isAuth, isAdmin } = useAuth();
-
+  const [empty, isEmpty] = useState(false);
   useEffect(() => {
     document.title = "Manage Film";
     if (!isAuth()) {
       window.location.href = "/404";
     }
 
-    if(isAdmin()){
+    if (isAdmin()) {
       window.location.href = "/404";
     }
     if (id !== localStorage.getItem("id")) {
@@ -32,20 +32,22 @@ function Submission() {
   const fetchRequestFilm = async () => {
     try {
       const response = await getAPI(`films/requestFilm/${id}`);
-      const data = await response.json();
-      const mappedData = data.data.map((filmRequest: FilmRequest) => ({
-        requestFilm_id: filmRequest.requestFilm_id,
-        filmName: filmRequest.filmName,
-        description: filmRequest.description,
-        film_path: filmRequest.film_path,
-        film_poster: filmRequest.film_poster,
-        film_header: filmRequest.film_header,
-        date_release: new Date(filmRequest.date_release),
-        duration: filmRequest.duration,
-        id_user: filmRequest.id_user,
-        status: { status: filmRequest.status },
-      }));
-      setFilmRequest(mappedData);
+      if (response.ok && response.status === 200) {
+        const data = await response.json();
+        const mappedData = data.data.map((filmRequest: FilmRequest) => ({
+          requestFilm_id: filmRequest.requestFilm_id,
+          filmName: filmRequest.filmName,
+          description: filmRequest.description,
+          film_path: filmRequest.film_path,
+          film_poster: filmRequest.film_poster,
+          film_header: filmRequest.film_header,
+          date_release: new Date(filmRequest.date_release),
+          duration: filmRequest.duration,
+          id_user: filmRequest.id_user,
+          status: { status: filmRequest.status },
+        }));
+        setFilmRequest(mappedData);
+      }
     } catch (error) {
       console.error("Error fetching request film", error);
     } finally {
@@ -54,20 +56,33 @@ function Submission() {
   };
   useEffect(() => {
     fetchRequestFilm();
+    if(filmRequest.length === 0){
+      isEmpty(true);
+    } else{
+      isEmpty(false);
+    }
   }, []);
-
+  
   function cardRequestFilm() {
-    return filmRequest.map((filmRequest) => (
-      <CardSubmission
-        key={filmRequest.requestFilm_id}
-        id={filmRequest.requestFilm_id}
-        image={`/src/assets/storage/poster/${filmRequest.film_poster}`}
-        title={filmRequest.filmName}
-        description={filmRequest.description}
-        status={filmRequest.status}
-      />
-    ));
+    return empty ? (
+      <>
+        <p>Empty submission</p>
+      </>
+    ) : (
+      filmRequest.map((filmRequest) => (
+        <CardSubmission
+          key={filmRequest.requestFilm_id}
+          id={filmRequest.requestFilm_id}
+          image={`/src/assets/storage/poster/${filmRequest.film_poster}`}
+          title={filmRequest.filmName}
+          description={filmRequest.description}
+          status={filmRequest.status}
+        />
+      ))
+    );
   }
+  
+  
 
   return (
     <>
