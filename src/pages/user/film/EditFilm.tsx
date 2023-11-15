@@ -56,13 +56,12 @@ function EditFilm() {
 
   useEffect(() => {
     document.title = "Edit Film";
-    const {isAuth, isAdmin} = useAuth();
+    const { isAuth, isAdmin } = useAuth();
     useEffect(() => {
       document.title = "Detail Film";
       if (!isAuth() || isAdmin()) {
         window.location.href = "/404";
       }
-  
     }, [id]);
     setUserID(Number(localStorage.getItem("id")));
   });
@@ -72,11 +71,18 @@ function EditFilm() {
       setLoading(true);
       try {
         const response = await getAPI(`films/film/${id}`);
-        const data = await response.json();
         if (!response.ok) {
-          console.log(data.message);
-          return;
+          if (response.status === 404) {
+            setFilm(undefined);
+            window.location.href = "/404";
+            return;
+          }
+          if (response.status === 401) {
+            setFilm(undefined);
+          }
         }
+
+        const data = await response.json();
         const mappedData = {
           film_id: data.data.film_id,
           title: data.data.title,
@@ -121,7 +127,7 @@ function EditFilm() {
     const filmPathSize = film_path?.size;
     const posterPathSize = film_poster?.size;
     const headerPathSize = film_header?.size;
-    const response = await putAPI(`films/film/edit/${id}`,{
+    const response = await putAPI(`films/film/edit/${id}`, {
       title,
       description,
       film_path: filmName,
@@ -134,7 +140,7 @@ function EditFilm() {
       duration,
       id_user: id_user,
       genres,
-    })
+    });
 
     if (!response.ok) {
       if (response.status === 404) {
@@ -184,130 +190,140 @@ function EditFilm() {
 
   return (
     <>
-      <Toast
-        type="check"
-        message="Sucesfully updated film"
-        showUseState={showToastTrue}
-      />
-      <Toast type="cross" message={msg} showUseState={showToastError} />
-      <Navbar />
-      {loading && <Loading />}
-      <div className="pt-28 pl-5 sm:pl-10 pr-5 sm:pr-10 lg:pr-28">
-        <h1 className="text-left">Edit Film</h1>
-        <div className="flex sm:flex-col lg:flex-row">
-          <div className="w-full">
-            <div className="flex gap-5 flex-col lg:flex-row">
-              <div className="w-1/3">
-                <Field
-                  type="text"
-                  label="Film Name"
-                  htmlFor="filmName"
-                  required={false}
-                  placeholder={film?.title}
-                  errorMessage=""
-                  value={title}
-                  onChangeHandler={(event) => setTitle(event.target.value)}
-                />
-                <TextArea
-                  label="Description"
-                  rows={4}
-                  required={false}
-                  htmlFor="description"
-                  placeholder={film?.description}
-                  value={description}
-                  onChangeHandler={(event) =>
-                    setDescription(event.target.value)
-                  }
-                />
-              </div>
-              <div className="w-5/12">
-                <h3 className="text-left">Genre</h3>
-                <div className="flex flex-wrap gap-7">{labelCheckbox()}</div>
+      {film ? (
+        <>
+          <Toast
+            type="check"
+            message="Sucesfully updated film"
+            showUseState={showToastTrue}
+          />
+          <Toast type="cross" message={msg} showUseState={showToastError} />
+          <Navbar />
+          {loading && <Loading />}
+          <div className="pt-28 pl-5 sm:pl-10 pr-5 sm:pr-10 lg:pr-28">
+            <h1 className="text-left">Edit Film</h1>
+            <div className="flex sm:flex-col lg:flex-row">
+              <div className="w-full">
+                <div className="flex gap-5 flex-col lg:flex-row">
+                  <div className="w-1/3">
+                    <Field
+                      type="text"
+                      label="Film Name"
+                      htmlFor="filmName"
+                      required={false}
+                      placeholder={film?.title}
+                      errorMessage=""
+                      value={title}
+                      onChangeHandler={(event) => setTitle(event.target.value)}
+                    />
+                    <TextArea
+                      label="Description"
+                      rows={4}
+                      required={false}
+                      htmlFor="description"
+                      placeholder={film?.description}
+                      value={description}
+                      onChangeHandler={(event) =>
+                        setDescription(event.target.value)
+                      }
+                    />
+                  </div>
+                  <div className="w-5/12">
+                    <h3 className="text-left">Genre</h3>
+                    <div className="flex flex-wrap gap-7">
+                      {labelCheckbox()}
+                    </div>
+                  </div>
+                </div>
+                <div className="pb-10">
+                  <Field
+                    type="date"
+                    label="Release Date"
+                    htmlFor="releaseDate"
+                    required={false}
+                    value={date_release}
+                    onChangeHandler={(event) =>
+                      setReleaseDate(event.target.value)
+                    }
+                  />
+                  <div className="flex flex-row gap-10">
+                    <Dropdown
+                      label="Hour"
+                      htmlFor="hour"
+                      required={false}
+                      options={hoursArray}
+                      onChangeHandler={(event) =>
+                        setHour(Number(event.target.value))
+                      }
+                    />
+                    <Dropdown
+                      label="Minute"
+                      htmlFor="minute"
+                      required={false}
+                      options={minutesArray}
+                      onChangeHandler={(event) =>
+                        setMinute(Number(event.target.value))
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col gap-10 pb-5 lg:flex-row">
+                  <UploadFile
+                    type="image/*"
+                    htmlFor="poster"
+                    description="Upload Film Poster (max 800KB)"
+                    file={film_poster}
+                    onChangeHandler={(event) =>
+                      setPosterPath(event.target.files?.[0])
+                    }
+                  />
+                  <UploadFile
+                    type="image/*"
+                    htmlFor="header"
+                    description="Upload Film Header (max 800KB)"
+                    file={film_header}
+                    onChangeHandler={(event) =>
+                      setHeaderPath(event.target.files?.[0])
+                    }
+                  />
+                  <UploadFile
+                    type="video/*"
+                    htmlFor="video"
+                    description="Upload Film Poster (max 9 MB)"
+                    file={film_path}
+                    onChangeHandler={(event) =>
+                      setFilmPath(event.target.files?.[0])
+                    }
+                  />
+                </div>
               </div>
             </div>
-            <div className="pb-10">
-              <Field
-                type="date"
-                label="Release Date"
-                htmlFor="releaseDate"
-                required={false}
-                value={date_release}
-                onChangeHandler={(event) => setReleaseDate(event.target.value)}
-              />
-              <div className="flex flex-row gap-10">
-                <Dropdown
-                  label="Hour"
-                  htmlFor="hour"
-                  required={false}
-                  options={hoursArray}
-                  onChangeHandler={(event) =>
-                    setHour(Number(event.target.value))
-                  }
-                />
-                <Dropdown
-                  label="Minute"
-                  htmlFor="minute"
-                  required={false}
-                  options={minutesArray}
-                  onChangeHandler={(event) =>
-                    setMinute(Number(event.target.value))
-                  }
-                />
-              </div>
-            </div>
-            <div className="flex flex-col gap-10 pb-5 lg:flex-row">
-              <UploadFile
-                type="image/*"
-                htmlFor="poster"
-                description="Upload Film Poster (max 800KB)"
-                file={film_poster}
-                onChangeHandler={(event) =>
-                  setPosterPath(event.target.files?.[0])
-                }
-              />
-              <UploadFile
-                type="image/*"
-                htmlFor="header"
-                description="Upload Film Header (max 800KB)"
-                file={film_header}
-                onChangeHandler={(event) =>
-                  setHeaderPath(event.target.files?.[0])
-                }
-              />
-              <UploadFile
-                type="video/*"
-                htmlFor="video"
-                description="Upload Film Poster (max 9 MB)"
-                file={film_path}
-                onChangeHandler={(event) =>
-                  setFilmPath(event.target.files?.[0])
-                }
-              />
+            <div className="flex flex-wrap justify-between ">
+              <button
+                className="button-red font-bold text-button"
+                onClick={() => setIsModalOpen(true)}
+              >
+                Cancel
+              </button>
+              <button
+                className="button-white font-bold text-button"
+                onClick={updateFilm}
+              >
+                Save
+              </button>
             </div>
           </div>
-        </div>
-        <div className="flex flex-wrap justify-between ">
-          <button
-            className="button-red font-bold text-button"
-            onClick={() => setIsModalOpen(true)}
-          >
-            Cancel
-          </button>
-          <button
-            className="button-white font-bold text-button"
-            onClick={updateFilm}
-          >
-            Save
-          </button>
-        </div>
-      </div>
-      {isModalOpen && (
-        <Modal
-          title="Are you sure?"
-          message="Are you sure you want to cancel?"
-          onCancel={handleModalCancel}
-          onConfirm={handleModalConfirm}
-        />
+          {isModalOpen && (
+            <Modal
+              title="Are you sure?"
+              message="Are you sure you want to cancel?"
+              onCancel={handleModalCancel}
+              onConfirm={handleModalConfirm}
+            />
+          )}
+        </>
+      ) : (
+        <p>Unauthorized Access</p>
       )}
     </>
   );

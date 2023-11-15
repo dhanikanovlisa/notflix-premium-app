@@ -19,22 +19,25 @@ function DetailFilm() {
   const [loading, setLoading] = useState(false);
   const [user_id, setUserId] = useState(0);
   const {isAuth, isAdmin} = useAuth();
-  
+
   useEffect(() => {
     document.title = "Detail Film";
     if (!isAuth() || isAdmin()) {
       window.location.href = "/404";
     }
+    setUserId(Number(localStorage.getItem("id")));
 
   }, [id]);
 
   async function getFilmById() {
-    const response = await getAPI(`films/film/${Number(id)}`);
+    const response = await getAPI(`/film/${Number(id)}/user/${user_id}`);
     if (!response.ok) {
       if (response.status === 404) {
         setFilm(undefined);
         window.location.href = "/404";
         return;
+      } if(response.status === 401){
+        setFilm(undefined);
       }
     }
 
@@ -75,12 +78,8 @@ function DetailFilm() {
   }
 
   useEffect(() => {
-    setUserId(Number(localStorage.getItem("id")));
     getFilmById();
-    if (localStorage.getItem("admin") !== "false") {
-      window.location.href = "/404";
-    }
-  }, [id]);
+  });
 
   function goToEdit() {
     window.location.href = `/manage-film/edit/${Number(id)}`;
@@ -96,7 +95,7 @@ function DetailFilm() {
 
   return (
     <>
-      {film && (
+      {film ? (
         <>
           <Toast
             type="check"
@@ -172,7 +171,9 @@ function DetailFilm() {
             />
           )}
         </>
-      )}
+      ) : (<p>
+        Unauthorized Access
+      </p>)}
     </>
   );
 }
