@@ -10,6 +10,10 @@ export const useAuth = () => {
       const response = await postAPI("auth/login", data);
       const res = await response.json();
 
+      if(!res.ok){
+        return false;
+      }
+
       setItem("token", res.token);
       setItem("admin", res.is_admin);
       setItem("id", res.id);
@@ -21,10 +25,12 @@ export const useAuth = () => {
           window.location.href = `/submission/${res.id}`;
         }
       }, 1600);
+      return true;
     } catch (error) {
       console.error("Login failed:", error);
     }
   };
+
   const isAdmin = () => {
     return getItem("admin") === "true";
   };

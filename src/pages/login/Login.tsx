@@ -43,11 +43,25 @@ function Login() {
     setPasswordErrorMsg("");
   }, [password]);
 
+
+
   const handleSubmit = async (e: React.ChangeEvent<any>) => {
     e.preventDefault();    
+    if(username === "") {
+      setLoading(false);
+      setShowToastError(true);
+      setUsernameErrorMsg("Username cannot be empty");
+      return;
+    }
+    if(password === "") {
+      setToastErrorMsg("Password cannot be empty");
+      setPasswordErrorMsg("Password cannot be empty");
+      return;
+    }
+
     try {
       setLoading(true);
-      const res =  await getAPI(`{/check/username/${username}}`);
+      const res =  await getAPI(`check/username/${username}`);
       const data = await res.json();
       if (res.ok && data.code == 0) {
         setLoading(false);
@@ -57,10 +71,22 @@ function Login() {
     } catch (error) {
       console.error("Error fetching username", error);
     }
+
     try {
       setLoading(true);
-      await login(username, password);
+      const res = await login(username, password);
       setShowToastSuccess(true);
+      if(res){
+        setLoading(false);
+        setUsernameErrorMsg("");
+        setPasswordErrorMsg("");
+        return;
+      } else {
+        setLoading(false);
+        setShowToastError(true);
+        setToastErrorMsg("Login failed. Please check your credentials.");
+      }
+
     } catch (error) {
       console.error("Error logging in", error);
       setLoading(false);
