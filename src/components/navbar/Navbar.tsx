@@ -78,18 +78,15 @@ function Navbar() {
                 />
               </button>
               {open && (
-                <div className="absolute top-24 right-12 space-y-4 w-36 h-24 bg-white rounded-lg shadow-lg">
-                  <ul className="flex flex-col p-4">
-                    <li>
+                <div className="absolute top-24 right-12  w-36 h-32 bg-white rounded-lg shadow-lg">
+                  <ul className="flex flex-col p-4 space-y-4">
+                    <li className="p-1 text-black font-bold hover:bg-red-600  hover:text-white hover:font-bold hover:pl-1 hover:pr-1 hover:pt-2 hover:pb-2 hover:rounded-md">
                       <a href={`/profile/${id}`}>
-                        <p className="text-black font-bold">Profile</p>
+                        Profile
                       </a>
                     </li>
-                    <li>
-                      
-                      <p className="text-black font-bold" onClick={logout}>
+                    <li className="p-1 text-black hover:bg-red-600 font-bold hover:text-white hover:font-bold hover:pl-1 hover:pr-1 hover:pt-2 hover:pb-2 hover:rounded-md" onClick={logout}>
                         Log Out
-                      </p>
                     </li>
                   </ul>
                 </div>
@@ -101,46 +98,40 @@ function Navbar() {
                 <img src="/src/assets/Burger bar.svg" alt="Burger Bar" />
               </button>
               {open && (
-                <div className="absolute top-24 right-12 w-48 h-40 bg-white rounded-lg shadow-lg">
+                <div className="absolute top-24 right-12 w-48 h-56 bg-white rounded-lg shadow-lg">
                   <ul className="flex flex-col space-y-3 p-4">
                     {admin ? (
                       <>
-                        <li>
+                        <li className="p-1 text-black font-bold hover:bg-red-600  hover:text-white hover:font-bold hover:pl-1 hover:pr-1 hover:pt-2 hover:pb-2 hover:rounded-md">
                           <a href="/film-request">
-                            <p className="text-black font-bold">
                               Film Submission
-                            </p>
                           </a>
                         </li>
-                        <li>
-                          <a href="/subscription">
+                        <li className="p-1 text-black font-bold hover:bg-red-600  hover:text-white hover:font-bold hover:pl-1 hover:pr-1 hover:pt-2 hover:pb-2 hover:rounded-md">
                             <p className="text-black font-bold">Subscription</p>
-                          </a>
                         </li>
                       </>
                     ) : (
                       <>
-                        <li>
+                        <li className="p-1 text-black font-bold hover:bg-red-600  hover:text-white hover:font-bold hover:pl-1 hover:pr-1 hover:pt-2 hover:pb-2 hover:rounded-md">
                           <a href={`/manage-film/${id}`}>
-                            <p className="text-black font-bold">Manage Film</p>
+                            Manage Film
                           </a>
                         </li>
                         <li>
                           <a href={`/submission/${id}`}>
-                            <p className="text-black font-bold">Submission</p>
+                            Submission
                           </a>
                         </li>
                       </>
                     )}
-                    <li>
+                    <li className="p-1 text-black font-bold hover:bg-red-600  hover:text-white hover:font-bold hover:pl-1 hover:pr-1 hover:pt-2 hover:pb-2 hover:rounded-md">
                       <a href={`/profile/${id}`}>
-                        <p className="text-black font-bold">Profile</p>
+                        Profile
                       </a>
                     </li>
-                    <li>
-                        <p className="text-black font-bold" onClick={logout}>
+                    <li className="p-1 text-black font-bold hover:bg-red-600  hover:text-white hover:font-bold hover:pl-1 hover:pr-1 hover:pt-2 hover:pb-2 hover:rounded-md"  onClick={logout}>
                           Log Out
-                        </p>
                     </li>
                   </ul>
                 </div>
