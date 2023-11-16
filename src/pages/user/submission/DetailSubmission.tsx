@@ -19,13 +19,12 @@ function DetailSubmission() {
   const [showToastError, setShowToastError] = toastErrorUseState;
   const [user_id, setId] = useState<number>(0);
   const [loading, setLoading] = useState(true);
-  const {isAuth, isAdmin} = useAuth();
+  const { isAuth, isAdmin } = useAuth();
   useEffect(() => {
     document.title = "Detail Film";
     if (!isAuth() || isAdmin()) {
       window.location.href = "/404";
     }
-
   }, [id]);
 
   async function getFilmRequest() {
@@ -40,7 +39,7 @@ function DetailSubmission() {
         film_poster: data.data.film_poster,
         film_header: data.data.film_header,
         date_release: new Date(data.data.date_release),
-        duration:Number(data.data.duration),
+        duration: Number(data.data.duration),
         id_user: data.data.id_user,
         status: { status: data.data.status },
       };
@@ -144,15 +143,19 @@ function DetailSubmission() {
                     >
                       Delete
                     </button>
-                    <button
-                      className="button-white font-bold text-button"
-                      type="button"
-                      onClick={() => {
-                        window.location.href = "/submission/edit/" + id;
-                      }}
-                    >
-                      Edit
-                    </button>
+                    {requestFilm.status.status === "PENDING" ? (
+                      <button
+                        className="button-white font-bold text-button"
+                        type="button"
+                        onClick={() => {
+                          window.location.href = "/submission/edit/" + id;
+                        }}
+                      >
+                        Edit
+                      </button>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 ) : null}
               </div>
