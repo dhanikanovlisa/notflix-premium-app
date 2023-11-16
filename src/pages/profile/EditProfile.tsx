@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { User } from "../../types/interfaces";
 import Toast from "../../components/toast/Toast";
 import { getAPI, putAPI } from "../../utils/api";
+import { useAuth } from "../../hooks/useAuth";
 
 function EditProfile() {
   const { id } = useParams();
@@ -34,10 +35,15 @@ function EditProfile() {
   const [emailErrorMsg, setEmailErrorMsg] = useState<string>("");
 
   const [loading, setLoading] = useState(true);
+  const {isAuth} = useAuth();
 
   useEffect(() => {
     document.title = "Edit Profile";
-    if (Number(id) !== Number(localStorage.getItem("id"))) {
+    if (!isAuth()) {
+      window.location.href = "/404";
+    }
+
+    if (id !== localStorage.getItem("id")) {
       setValid(false);
       window.location.href = "/404";
     }
@@ -102,6 +108,7 @@ function EditProfile() {
 
   async function saveProfile() {
     try {
+      setLoading(true);
       const profileName = photo_profile?.name;
       const profileSize = photo_profile?.size;
       const response = await putAPI(`profile/edit/${id}`, {
@@ -116,17 +123,18 @@ function EditProfile() {
 
       if (!response.ok) {
         if (response.status === 404) {
+          setLoading(false);
           setShowToastError(true);
           setMsg("Profile not found");
           return;
         } else if (response.status === 400) {
+          setLoading(false);
           const errorMsg = await response.json();
           setShowToastError(true);
           setMsg(errorMsg?.error);
           return;
         }
       }
-      setLoading(true);
       setShowToastTrue(true);
       setTimeout(() => {
         window.location.href = "/profile/" + id;
@@ -134,8 +142,6 @@ function EditProfile() {
     } catch (error) {
       setShowToastError(true);
       console.error("Error registering", error);
-    } finally {
-      setLoading(false);
     }
   }
 

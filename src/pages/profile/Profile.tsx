@@ -4,16 +4,22 @@ import { useParams } from "react-router-dom";
 import { User } from "../../types/interfaces";
 import Loading from "../../components/loading/Loading";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../hooks/useAuth";
 
 function Profile() {
   const { id } = useParams();
   const [profile, setProfile] = useState<User | undefined>();
   const [valid, setValid] = useState(true);
   const [loading, setLoading] = useState(true);
+  const {isAuth} = useAuth();
 
   useEffect(() => {
     document.title = "Profile";
-    if (Number(id) !== Number(localStorage.getItem("id"))) {
+    if (!isAuth()) {
+      window.location.href = "/404";
+    }
+
+    if (id !== localStorage.getItem("id")) {
       setValid(false);
       window.location.href = "/404";
     }
@@ -26,7 +32,7 @@ function Profile() {
       const mappedProfile = data.data;
       setProfile(mappedProfile);
     } catch (error) {
-      console.error("Erro fetching profile", error);
+      console.error("Error fetching profile", error);
     } finally {
       setLoading(false);
     }
