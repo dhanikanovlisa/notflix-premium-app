@@ -64,8 +64,13 @@ function ManageFilm() {
   };
 
   useEffect(()=> {
-    fetchFilm();
-  })
+    const intervalId = setInterval(() => {
+      fetchFilm();
+      console.log("fetching");
+    }, 5000);
+
+    return () => {clearInterval(intervalId);}
+  }, []);
 
   useEffect(() => {
     setEmpty(filmData.length === 0);
