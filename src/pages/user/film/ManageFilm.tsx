@@ -64,8 +64,8 @@ function ManageFilm() {
   };
 
   useEffect(()=> {
+    fetchFilm();
     const intervalId = setInterval(() => {
-      fetchFilm();
       console.log("fetching");
     }, 5000);
 
