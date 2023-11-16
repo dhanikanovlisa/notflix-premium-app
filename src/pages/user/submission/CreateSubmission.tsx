@@ -103,7 +103,7 @@ function CreateSubmission() {
     const filmPathSize = film_path?.size;
     const posterPathSize = film_poster?.size;
     const headerPathSize = film_header?.size;
-    const response = await postAPI(`films/createFilmRequest`, {
+    const response = await postAPI(`films/requestFilm/create`, {
       id: user_id,
       title,
       description,
