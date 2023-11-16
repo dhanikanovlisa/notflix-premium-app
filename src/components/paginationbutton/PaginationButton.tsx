@@ -26,7 +26,7 @@ function PaginationButton({target}: PaginationButtonProps){
     const classes: string = `${styles.button_pagination} ${(currentPage===goto) ? styles.button_pagination_active : 'button-white'}`;
 
     return (
-        <a href = {url+'?'+urlSearchParams.toString()}>
+        <a href = {'?'+urlSearchParams.toString()}>
             <div className={classes}>
                 {target}
             </div>
