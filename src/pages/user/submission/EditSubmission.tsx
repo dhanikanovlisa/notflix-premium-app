@@ -105,17 +105,17 @@ function EditSubmission() {
     const posterPathSize = film_poster?.size;
     const headerPathSize = film_header?.size;
     const response = await putAPI(`films/requestFilm/edit/${id}`, {
-      title,
-      description,
+      title:title,
+      description:description,
       film_path: filmName,
       film_poster: posterName,
       film_header: headerName,
-      film_path_size: filmPathSize,
-      film_poster_size: posterPathSize,
-      film_header_size: headerPathSize,
       date_release: date_release,
       duration: duration,
       user_id: id_user,
+      film_path_size: filmPathSize,
+      film_poster_size: posterPathSize,
+      film_header_size: headerPathSize,
     });
 
     if (!response.ok) {

@@ -63,6 +63,7 @@ function CreateSubmission() {
     if (!isAuth() || isAdmin()) {
       window.location.href = "/404";
     }
+    setId(Number(localStorage.getItem("id")));
   });
 
   const handleSubmit = async (e: React.ChangeEvent<any>) => {
@@ -104,7 +105,7 @@ function CreateSubmission() {
     const posterPathSize = film_poster?.size;
     const headerPathSize = film_header?.size;
     const response = await postAPI(`films/requestFilm/create`, {
-      id: user_id,
+      user_id: user_id,
       title,
       description,
       film_path: filmName,
@@ -116,7 +117,6 @@ function CreateSubmission() {
       date_release,
       duration,
     })
-
     console.log(response.body);
     if (!response.ok) {
       if (response.status === 404) {
@@ -137,9 +137,7 @@ function CreateSubmission() {
     }, 2000);
   };
 
-  useEffect(() => {
-    setId(Number(localStorage.getItem("id")));
-  }, [user_id]);
+
 
 
 
@@ -148,7 +146,7 @@ function CreateSubmission() {
     <>
       <Toast
         type="check"
-        message="Sucesfully updated film"
+        message="Sucesfully created film request"
         showUseState={toastTrueUseState}
       />
       <Toast type="cross" message={msg} showUseState={toastErrorUseState} />
