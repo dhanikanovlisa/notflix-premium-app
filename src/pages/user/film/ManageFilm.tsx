@@ -14,7 +14,7 @@ function ManageFilm() {
   const [loading, setLoading] = useState(true);
   const [valid, setValid] = useState(true);
   const { isAuth, isAdmin } = useAuth();
-  const [empty, isEmpty] = useState(false);
+  const [empty, setEmpty] = useState(false);
 
   useEffect(() => {
     document.title = "Manage Film";
@@ -64,11 +64,8 @@ function ManageFilm() {
   };
 
   useEffect(() => {
-    fetchFilm();
-    if (filmData.length === 0) {
-      isEmpty(true);
-    }
-  }, []);
+    setEmpty(filmData.length === 0);
+  }, [filmData]);
 
   function cardFilm() {
     return empty ? (

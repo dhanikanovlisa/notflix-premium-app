@@ -13,7 +13,8 @@ function Submission() {
   const [loading, setLoading] = useState(true);
   const [valid, setValid] = useState(true);
   const { isAuth, isAdmin } = useAuth();
-  const [empty, isEmpty] = useState(false);
+  const [empty, setEmpty] = useState(false);
+
   useEffect(() => {
     document.title = "Manage Film";
     if (!isAuth()) {
@@ -61,15 +62,15 @@ function Submission() {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchRequestFilm();
-    if(filmRequest.length === 0){
-      isEmpty(true);
-    } else{
-      isEmpty(false);
-    }
-  }, []);
-  
+  }, [id]);
+
+  useEffect(() => {
+    setEmpty(filmRequest.length === 0);
+  }, [filmRequest]);
+
   function cardRequestFilm() {
     return empty ? (
       <>
@@ -88,8 +89,6 @@ function Submission() {
       ))
     );
   }
-  
-  
 
   return (
     <>
