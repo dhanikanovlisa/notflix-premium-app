@@ -35,19 +35,27 @@ function ManageFilm() {
       }
 
       const data = await response.json();
-      const mappedData = data.data.map((film: Film) => ({
-        film_id: film.film_id,
-        title: film.title,
-        description: film.description,
-        film_path: film.film_path,
-        film_poster: film.film_poster,
-        film_header: film.film_header,
-        date_release: new Date(film.date_release),
-        duration: film.duration,
-        id_user: film.id_user,
-      }));
-
-      setFilmData(mappedData);
+      if(Array.isArray(data.data)){
+        const mappedData = data.data.map((film: Film) => ({
+          film_id: film.film_id,
+          title: film.title,
+          description: film.description,
+          film_path: film.film_path,
+          film_poster: film.film_poster,
+          film_header: film.film_header,
+          date_release: new Date(film.date_release),
+          duration: film.duration,
+          id_user: film.id_user,
+        }));
+  
+        setFilmData(mappedData);
+      } else if (typeof data.data === 'object'){
+        const mappedData: Film = data.data;
+        setFilmData([mappedData]);
+      } else {
+        console.error("Data is not an array or object:", data.data);
+      }
+      
     } catch (error) {
       console.error("Error fetching film", error);
     } finally {

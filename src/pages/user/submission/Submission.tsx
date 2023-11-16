@@ -34,19 +34,26 @@ function Submission() {
       const response = await getAPI(`films/requestFilm/${id}`);
       if (response.ok && response.status === 200) {
         const data = await response.json();
-        const mappedData = data.data.map((filmRequest: FilmRequest) => ({
-          requestFilm_id: filmRequest.requestFilm_id,
-          filmName: filmRequest.filmName,
-          description: filmRequest.description,
-          film_path: filmRequest.film_path,
-          film_poster: filmRequest.film_poster,
-          film_header: filmRequest.film_header,
-          date_release: new Date(filmRequest.date_release),
-          duration: filmRequest.duration,
-          id_user: filmRequest.id_user,
-          status: { status: filmRequest.status },
-        }));
-        setFilmRequest(mappedData);
+        if (Array.isArray(data.data)) {
+          const mappedData = data.data.map((filmRequest: FilmRequest) => ({
+            requestFilm_id: filmRequest.requestFilm_id,
+            filmName: filmRequest.filmName,
+            description: filmRequest.description,
+            film_path: filmRequest.film_path,
+            film_poster: filmRequest.film_poster,
+            film_header: filmRequest.film_header,
+            date_release: new Date(filmRequest.date_release),
+            duration: filmRequest.duration,
+            id_user: filmRequest.id_user,
+            status: { status: filmRequest.status },
+          }));
+          setFilmRequest(mappedData);
+        } else if (typeof data.data === 'object') {
+          const mappedData: FilmRequest = data.data;
+          setFilmRequest([mappedData]);
+        } else {
+          console.error("Data is not an array or object:", data.data);
+        }
       }
     } catch (error) {
       console.error("Error fetching request film", error);
