@@ -1,16 +1,15 @@
 import { useParams } from "react-router-dom";
-import { URLSearchParams } from "url";
+import styles from './PaginationButton.module.css';
 
 interface PaginationButtonProps {
     target: string;
 }
 
 function PaginationButton({target}: PaginationButtonProps){
-    const { page } = useParams();
-    const currentPage: number = Number(page) ? Number(page) : 1;
-
-    const url = window.location.hostname + window.location.pathname;
     const urlSearchParams = new URLSearchParams(window.location.search);
+    const currentPage: number = Number(urlSearchParams.get('page')) ? Number(urlSearchParams.get('page')) : 1;
+    const url = window.location.hostname + window.location.pathname;
+
     let goto: number;
 
     if(target === '<'){
@@ -24,10 +23,11 @@ function PaginationButton({target}: PaginationButtonProps){
     }
 
     urlSearchParams.set('page', goto.toString());
+    const classes: string = `${styles.button_pagination} ${(currentPage===goto) ? styles.button_pagination_active : 'button-white'}`;
 
     return (
         <a href = {url+'?'+urlSearchParams.toString()}>
-            <div className=''>
+            <div className={classes}>
                 {target}
             </div>
         </a>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import styles from './Pagination.module.css';
 import PaginationButton from '../paginationbutton/PaginationButton';
 
 interface PaginationProps {
@@ -8,37 +9,31 @@ interface PaginationProps {
 }
 
 function Pagination({totalRecords, itemsPerPage}: PaginationProps){
-    const { page } = useParams();
-    const currentPage: number = Number(page) ? Number(page) : 1;
-    const [totalPages, setTotalPages] = useState(0);
-    const [limitPage, setLimitPage] = useState(0);
-    const [start, setStart] = useState(0);
-    const [bound, setBound] = useState(0);
-    const [pages, setPages] = useState([currentPage]);
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const currentPage: number = Number(urlSearchParams.get('page')) ? Number(urlSearchParams.get('page')) : 1;
+    const [totalPages, setTotalPages] = useState(Math.ceil(totalRecords/itemsPerPage));
+    const [limitPage, setLimitPage] = useState(totalPages<5 ? totalPages : 5);
+    const [start, setStart] = useState(currentPage===1 ? 1 : currentPage-1);
     
-    useEffect(() => {
-        setTotalPages(Math.ceil(totalRecords/itemsPerPage));
-        setLimitPage(totalPages<5 ? totalPages : 5);
-        setStart(currentPage===1 ? 1 : currentPage-1);
-        setBound(start+limitPage-1);
-        setPages(Array.from({ length: bound - start + 1 }, (_, index) => start + index));
-    }, [totalRecords, itemsPerPage]);
+    let bound = start+limitPage-1;
+    if(bound > totalPages){
+        setStart(totalPages-limitPage+1);
+        bound = limitPage;
+    }else{
+        bound = start+limitPage-1;
+    }
+    const pages = Array.from({ length: bound - start + 1 }, (_, index) => start + index)
 
-    useEffect(() => {
-        if(bound > totalPages){
-            setStart(totalPages-limitPage+1);
-            setBound(totalPages);
-        }
-    }, [totalPages]);
-    
     return (
-        <>
-            {currentPage!==1 && <PaginationButton target='<' />}
-            {pages.map((item) => {
-                <PaginationButton target={item.toString()} />
-            })}
-            {currentPage!==totalPages && totalRecords>0 && <PaginationButton target='>' />}
-        </>
+        <div id='pagination-container' className={styles.pagination}>
+            <>
+                {currentPage!==1 && <PaginationButton target='<' />}
+                {pages.map((item) => (
+                    (<PaginationButton target={item.toString()} />)
+                ))}
+                {currentPage!==totalPages && totalRecords>0 && <PaginationButton target='>' />}
+            </>
+        </div>
     );
 
 }
