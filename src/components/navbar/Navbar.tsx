@@ -132,7 +132,7 @@ function Navbar() {
                         Profile
                       </a>
                     </li>
-                    <li className="p-1 text-black font-bold hover:bg-red-600  hover:text-white hover:font-bold hover:pl-1 hover:pr-1 hover:pt-2 hover:pb-2 hover:rounded-md">
+                    <li className="p-1 text-black font-bold hover:bg-red-600  hover:text-white hover:font-bold hover:pl-1 hover:pr-1 hover:pt-2 hover:pb-2 hover:rounded-md" onClick={logout}>
                           Log Out
                     </li>
                   </ul>
