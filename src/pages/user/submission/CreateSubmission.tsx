@@ -8,6 +8,7 @@ import Modal from "../../../components/modal/Modal";
 import Toast from "../../../components/toast/Toast";
 import Loading from "../../../components/loading/Loading";
 import { postAPI } from "../../../utils/api";
+import { useAuth } from "../../../hooks/useAuth";
 
 function CreateSubmission() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,6 +34,8 @@ function CreateSubmission() {
   const [minuteMsg, setMinuteMsg] = useState("");
   const [dateMsg, setDateMsg] = useState("");
 
+  const {isAuth, isAdmin} = useAuth();
+
 
   const [msg, setMsg] = useState("");
 
@@ -55,8 +58,44 @@ function CreateSubmission() {
     window.location.href = "/submission/" + user_id;
   };
 
+  useEffect(() => {
+    document.title = "Manage Film";
+    if (!isAuth() || isAdmin()) {
+      window.location.href = "/404";
+    }
+  });
+
   const handleSubmit = async (e: React.ChangeEvent<any>) => {
     e.preventDefault();
+    if(title === ""){
+      setTitleMsg("Title must not be empty");
+    } else {
+      setTitleMsg("");
+    }
+    
+    if(date_release === ""){
+      setDateMsg("Date must not be empty");
+    } else {
+      setDateMsg("");
+    }
+
+    if(hour === 0){
+      setHourMsg("Hour must not be empty");
+    } else {
+      setHourMsg("");
+    }
+
+    if(minute === 0){
+      setMinuteMsg("Minute must not be empty");
+    } else {
+      setMinuteMsg("");
+    }
+    setLoading(true);
+
+    if(film_poster?.name === null){
+      setMsg("Film poster is empty");
+      setShowToastError(true);
+    }
 
     const filmName = film_path?.name;
     const posterName = film_poster?.name;
@@ -64,7 +103,7 @@ function CreateSubmission() {
     const filmPathSize = film_path?.size;
     const posterPathSize = film_poster?.size;
     const headerPathSize = film_header?.size;
-    const response = await postAPI(`createFilmRequest`, {
+    const response = await postAPI(`films/createFilmRequest`, {
       id: user_id,
       title,
       description,
@@ -81,16 +120,17 @@ function CreateSubmission() {
     console.log(response.body);
     if (!response.ok) {
       if (response.status === 404) {
+        setLoading(false);
         setShowToastError(true);
         return;
       } else if (response.status === 400) {
+        setLoading(false);
         const errorMsg = await response.json();
         setShowToastError(true);
         setMsg(errorMsg?.error);
         return;
       }
     }
-    setLoading(true);
     setShowToastTrue(true);
     setTimeout(() => {
       window.location.href = "/submission/" + user_id;
@@ -102,38 +142,6 @@ function CreateSubmission() {
   }, [user_id]);
 
 
-  useEffect(() => {
-    const handleKeyUp = () => {
-
-      if(title === ""){
-        setTitleMsg("Title must not be empty");
-      } else {
-        setTitleMsg("");
-      }
-      
-      if(date_release === ""){
-        setDateMsg("Date must not be empty");
-      } else {
-        setDateMsg("");
-      }
-
-      if(hour === 0){
-        setHourMsg("Hour must not be empty");
-      } else {
-        setHourMsg("");
-      }
-
-      if(minute === 0){
-        setMinuteMsg("Minute must not be empty");
-      } else {
-        setMinuteMsg("");
-      }
-    };
-    window.addEventListener("keyup", handleKeyUp);
-    return () => {
-      window.removeEventListener("keyup", handleKeyUp);
-    };
-  }, [title, date_release, hour, minute]);
 
 
   return (
@@ -160,6 +168,7 @@ function CreateSubmission() {
                     required={true}
                     placeholder="Add film name here"
                     errorMessage={titleMsg}
+                    value={title}
                     onChangeHandler={(event) => setTitle(event.target.value)}
                   />
                   <TextArea
@@ -168,6 +177,7 @@ function CreateSubmission() {
                     required={true}
                     htmlFor="description"
                     placeholder="Add description here..."
+                    value={description}
                     onChangeHandler={(event) =>
                       setDescription(event.target.value)
                     }
@@ -180,6 +190,7 @@ function CreateSubmission() {
                 htmlFor="releaseDate"
                 required={true}
                 errorMessage={dateMsg}
+                value={date_release}
                 onChangeHandler={(event) => setReleaseDate(event.target.value)}
               />
               <div className="flex flex-row gap-10">
@@ -204,7 +215,7 @@ function CreateSubmission() {
                   }
                 />
               </div>
-              <div className="flex flex-row gap-10 pb-5 sm:flex-col md:flex-col lg:flex-row xl:flex-row">
+              <div className="flex flex-col gap-10 pb-5 lg:flex-row ">
                 <UploadFile
                   type="image/*"
                   htmlFor="poster"
