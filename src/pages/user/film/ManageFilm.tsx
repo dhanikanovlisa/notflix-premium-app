@@ -63,6 +63,10 @@ function ManageFilm() {
     }
   };
 
+  useEffect(()=> {
+    fetchFilm();
+  })
+
   useEffect(() => {
     setEmpty(filmData.length === 0);
   }, [filmData]);
