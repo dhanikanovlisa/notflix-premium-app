@@ -17,7 +17,17 @@ This is a Notflix Premium App created with ReactTS, Vite and Tailwind.
 This will start the Notflix REST Service application using Docker containers.
 
 ## Screenshots
-
+![image](screenshots/login.jpg)
+![image](screenshots/register.jpg)
+![image](screenshots/submission.jpg)
+![image](screenshots/request_detail.jpg)
+![image](screenshots/manage_film.jpg)
+![image](screenshots/edit_request_film.jpg)
+![image](screenshots/film_detail.jpg)
+![image](screenshots/delete_reques_film.jpg)
+![image](screenshots/edit_film.jpg)
+![image](screenshots/profile_settings.jpg)
+![image](screenshots/edit_profile_settings.jpg)
 
 ## Task Division
 | Page            | NIM          |
