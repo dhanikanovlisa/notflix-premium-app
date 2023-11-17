@@ -21,6 +21,7 @@ function DetailFilm() {
   const [loading, setLoading] = useState(false);
   const [user_id, setUserId] = useState(0);
   const {isAuth, isAdmin} = useAuth();
+  const [user, isUser] = useState(false);
 
   useEffect(() => {
     document.title = "Detail Film";
@@ -28,11 +29,11 @@ function DetailFilm() {
       window.location.href = "/404";
     }
     setUserId(Number(localStorage.getItem("id")));
-
-  }, [id]);
+    isUser(true);
+  }, []);
 
   async function getFilmById() {
-    const response = await getAPI(`/film/${Number(id)}/user/${user_id}`);
+    const response = await getAPI(`films/film/${Number(id)}/user/${user_id}`);
     if (!response.ok) {
       if (response.status === 404) {
         setFilm(undefined);
@@ -97,7 +98,7 @@ function DetailFilm() {
 
   return (
     <>
-      {film ? (
+      {film && (
         <>
           <Toast
             type="check"
@@ -166,16 +167,14 @@ function DetailFilm() {
           {isModalOpen && (
             <Modal
               title="Are you sure?"
-              message="Are you sure you want to cancel?"
+              message="Are you sure you want to delete?"
               confirmText="Delete"
               onCancel={handleModalCancel}
               onConfirm={handleModalConfirm}
             />
           )}
         </>
-      ) : (<p>
-        Unauthorized Access
-      </p>)}
+      )}
     </>
   );
 }

@@ -165,7 +165,7 @@ function DetailSubmission() {
             <>
               <Modal
                 title="Are you sure?"
-                message="Are you sure you want to cancel?"
+                message="Are you sure you want to delete?"
                 confirmText="Delete"
                 onCancel={handleModalCancel}
                 onConfirm={handleModalConfirm}

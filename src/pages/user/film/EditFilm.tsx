@@ -56,56 +56,46 @@ function EditFilm() {
     window.location.href = "/manage-film/" + id;
   };
 
+  const { isAuth, isAdmin } = useAuth();
   useEffect(() => {
     document.title = "Edit Film";
-    const { isAuth, isAdmin } = useAuth();
-    useEffect(() => {
-      document.title = "Detail Film";
-      if (!isAuth() || isAdmin()) {
-        window.location.href = "/404";
-      }
-    }, [id]);
+    if (!isAuth() || isAdmin()) {
+      window.location.href = "/404";
+    }
     setUserID(Number(localStorage.getItem("id")));
-  });
+  }, []);
+
+  async function getFilmById() {
+    console.log(id_user);
+    const response = await getAPI(`films/film/film/${Number(id)}`);
+    if (!response.ok) {
+      if (response.status === 404) {
+        setFilm(undefined);
+        window.location.href = "/404";
+        return;
+      } if(response.status === 401){
+        setFilm(undefined);
+      }
+    }
+
+    const data = await response.json();
+    const mappedData = {
+      film_id: data.data.film_id,
+      title: data.data.title,
+      description: data.data.description,
+      film_path: data.data.film_path,
+      film_poster: data.data.film_poster,
+      film_header: data.data.film_header,
+      date_release: new Date(data.data.date_release),
+      duration: data.data.duration,
+      id_user: data.data.id_user,
+    };
+    setFilm(mappedData);
+  }
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await getAPI(`films/film/${id}`);
-        if (!response.ok) {
-          if (response.status === 404) {
-            setFilm(undefined);
-            window.location.href = "/404";
-            return;
-          }
-          if (response.status === 401) {
-            setFilm(undefined);
-          }
-        }
-
-        const data = await response.json();
-        const mappedData = {
-          film_id: data.data.film_id,
-          title: data.data.title,
-          description: data.data.description,
-          film_path: data.data.film_path,
-          film_poster: data.data.film_poster,
-          film_header: data.data.film_header,
-          date_release: new Date(data.data.date_release),
-          duration: data.data.duration,
-          id_user: data.data.id_user,
-        };
-        setFilm(mappedData);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [id]);
+    getFilmById();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -192,11 +182,11 @@ function EditFilm() {
 
   return (
     <>
-      {film ? (
+      {film && (
         <>
           <Toast
             type="check"
-            message="Sucesfully updated film"
+            message="Successfully updated film"
             showUseState={toastTrueUseState}
           />
           <Toast type="cross" message={msg} showUseState={toastErrorUseState} />
@@ -324,8 +314,6 @@ function EditFilm() {
             />
           )}
         </>
-      ) : (
-        <p>Unauthorized Access</p>
       )}
     </>
   );
