@@ -1,27 +1,46 @@
-# React + TypeScript + Vite
+# Notflix Premium App
+This is a Notflix Premium App created with ReactTS, Vite and Tailwind.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+## Prerequisites
+1. Make sure your machine has Docker and Docker Compose installed.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Expanding the ESLint configuration
+## How To Run
+1. Make an .env file based of .env.example
+2. Navigate to the root directory of the project.
+3. Run the following command:
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+    ```
+    docker-compose up -d
+    ```
+This will start the Notflix REST Service application using Docker containers.
 
-- Configure the top-level `parserOptions` property like this:
+## Screenshots
+![image](screenshots/login.jpg)
+![image](screenshots/register.jpg)
+![image](screenshots/submission.jpg)
+![image](screenshots/request_detail.jpg)
+![image](screenshots/manage_film.jpg)
+![image](screenshots/edit_request_film.jpg)
+![image](screenshots/film_detail.jpg)
+![image](screenshots/delete_reques_film.jpg)
+![image](screenshots/edit_film.jpg)
+![image](screenshots/profile_settings.jpg)
+![image](screenshots/edit_profile_settings.jpg)
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Task Division
+| Page            | NIM          |
+|---------------------|--------------|
+| **Login**           | 13521130     |
+| **Registration**    | 13521130     |
+| **Manage Film**    | 13521132     |
+| **Detail Film**    | 13521132     |
+| **Edit Film**    | 13521132     |
+| **Submission**    | 13521132     |
+| **Edit Submission**    | 13521132     |
+| **Create Submission**    | 13521132     |
+| **Manage Subscription**    | 13521165     |
+| **Film Request**    | 13521165     |
+| **Profile**    | 13521132     |
+| **Edit Profile**    | 13521132     |

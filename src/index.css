@@ -3,17 +3,137 @@
 @tailwind utilities;
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+    /*Color*/
+    --black: #000000;
+    --black-red: #3E0001;
+    --maroon: #7C0000;
+    --red: #F80000;
+    --blue: #0090F8;
+    --green: #33BF30;
+    --white: #FFFFFF;
+    --grey: #D9D9D9;
+    --yellow: #FFDA18;
+    /*Font*/
+    font-family: 'Inter', sans-serif;
+    /*Text Styles*/
+    --heading1: 3rem;
+    --heading2: 2.25rem;
+    --heading3: 1.5rem;
+    --heading4: 1rem;
+    --paragraph: 1rem;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+    background-color: var(--black);
+}
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
+* {
+  padding: 0;
+  margin: 0;
+  color: var(--white);
+}
+
+p,
+a,
+button {
+  letter-spacing: 0.05rem;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.label-font {
+  font-size: 0.5rem;
+}
+
+.text {
+  font-size: var(--paragraph);
+  letter-spacing: 0.01rem;
+}
+
+h1 {
+  font-size: var(--heading1);
+  font-weight: bold;
+}
+
+h2 {
+  font-size: var(--heading2);
+  font-weight: bold;
+}
+
+h3 {
+  font-size: var(--heading3);
+  font-weight: bold;
+}
+
+h4 {
+  font-size: var(--heading4);
+  font-weight: bold;
+}
+
+.text-white {
+  color: var(--white);
+}
+
+.text-black {
+  color: var(--black);
+}
+
+.text-red {
+  color: var(--red);
+}
+
+.text-gray {
+  color: var(--grey);
+}
+
+.button-text {
+  font-size: var(--paragraph);
+  font-weight: bold;
+}
+
+.field-text {
+  font-size: var(--paragraph);
+  font-weight: bold;
+}
+
+button {
+  border: none;
+  outline: none;
+  padding: 0.425rem 2rem;
+  align-items: center;
+  border-radius: 0.625rem;
+}
+
+.button-red {
+  background-color: var(--red);
+  color: var(--white);
+}
+
+.button-white {
+  background-color: var(--white);
+  color: var(--black);
+}
+
+.button-blue {
+  background-color: var(--blue);
+  color: var(--white);
+}
+
+.button-green {
+  background-color: var(--green);
+  color: var(--white);
+}
+
+.red-glow {
+  box-shadow: 2px 2px 20px 5px rgba(248, 0, 0, 0.75);
+}
+
+.red-extra-glow {
+  box-shadow: 0px 0px 50px 20px rgba(248, 0, 0, 0.75);
+}
+
+.white-dim-glow {
+  box-shadow: 0px 3px 10px 0px rgba(255, 255, 255, 0.50);
+}
+
+.white-glow {
+  box-shadow: 0px 0px 50px 10px rgba(255, 255, 255, 0.75);
 }

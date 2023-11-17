@@ -20,6 +20,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", "public/logo.svg", "public/icon.svg"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -1,0 +1,12 @@
+version: "3.7"
+services:
+  notflix-premium:
+    image: notflix-premium-app:latest
+    build: .
+    volumes:
+      - '.:/app'
+      - '/app/node_modules'
+    ports:
+      - 3000:3000
+    environment:
+      - CHOKIDAR_USEPOLLING=true
