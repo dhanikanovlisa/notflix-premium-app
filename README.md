@@ -28,6 +28,8 @@ This will start the Notflix REST Service application using Docker containers.
 ![image](screenshots/edit_film.jpg)
 ![image](screenshots/profile_settings.jpg)
 ![image](screenshots/edit_profile_settings.jpg)
+![image](screenshots/film_submission_admission.jpg)
+![image](screenshots/subscription_admission.jpg)
 
 ## Task Division
 | Page            | NIM          |
