@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import CardApproval from "../../../components/card/CardApproval";
 import Navbar from "../../../components/navbar/Navbar";
 import Loading from "../../../components/loading/Loading";
-import { deleteAPI, getAPI, putAPI } from "../../../utils/api";
+import { getAPI, putAPI } from "../../../utils/api";
 import { useAuth } from "../../../hooks/useAuth";
 import { FilmRequest } from "../../../types/interfaces";
 
@@ -19,9 +19,9 @@ function AdmissionFilm() {
     })
 
     useEffect(()=> {
-        fetchRequestFilms();
         const intervalId = setInterval(() => {
-          console.log("fetching");
+            fetchRequestFilms();
+            console.log("fetching");
         }, 5000);
     
         return () => {clearInterval(intervalId);}
