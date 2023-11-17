@@ -49,6 +49,7 @@ function Submission() {
             status: { status: filmRequest.status },
           }));
           setFilmRequest(mappedData);
+          setLoading(false);
         } else if (typeof data.data === 'object') {
           const mappedData: FilmRequest = data.data;
           setFilmRequest([mappedData]);
