@@ -41,7 +41,7 @@ function ManageFilm() {
 
   const fetchFilm = async () => {
     try {
-      console.log(currentPage);
+      console.log(currentPage)
       const response = await getAPI(`films/user/${id}?page=${currentPage}&limit=10`);
       if (!response.ok) {
         throw new Error("Something went wrong");
