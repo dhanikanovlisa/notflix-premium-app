@@ -1,11 +1,12 @@
 interface CardProps {
+  obj: object;
   title: string;
   description: string;
-  onAccept?: () => void;
-  onReject?: () => void;
+  onAccept?: (obj:object) => void;
+  onReject?: (obj:object) => void;
 }
 
-function CardApproval({ title, description, onAccept, onReject }: CardProps) {
+function CardApproval({ title, description, obj, onAccept, onReject }: CardProps) {
   return (
       <div className="w-full sm:w-full md:w-10/12 lg:w-96 red-glow p-6 rounded-md flex flex-wrap flex-col justify-between">
         <div className="mb-4">
@@ -16,14 +17,22 @@ function CardApproval({ title, description, onAccept, onReject }: CardProps) {
           <button
             type="button"
             className="text-white h-10 font-bold button-red hover:bg-red-800"
-            onClick={onReject}
+            onClick={() => {
+              if(onReject){
+                onReject(obj);
+              }
+            }}
           >
             Reject
           </button>
           <button
             type="button"
             className="text-white h-10 font-bold bg-green-600 hover:bg-green-800 "
-            onClick={onAccept}
+            onClick={() => {
+              if(onAccept){
+                onAccept(obj);
+              }
+            }}
           >
             Accept
           </button>

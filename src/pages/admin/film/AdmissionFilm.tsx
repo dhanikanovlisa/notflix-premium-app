@@ -33,7 +33,7 @@ function AdmissionFilm() {
 
     const fetchRequestFilms = async () => {
         try {
-            const response = await getAPI(`films/requestFilm`);
+            const response = await getAPI(`films/requestFilm/status/pending`);
             if (!response.ok) {
                 throw new Error("Something went wrong");
             }
@@ -67,14 +67,20 @@ function AdmissionFilm() {
             }
     }
     
-    const accept = async (film: FilmRequest) => {
+    const accept = async (obj: object) => {
+        console.log(obj)
+        const film = obj as FilmRequest;
+        console.log(film);
         await putAPI(`films/requestFilm/accept/${film.requestFilm_id}`, {});
         console.log("accept");
+        fetchRequestFilms();
     }
 
-    const reject = async (film: FilmRequest) => {
+    const reject = async (obj: object) => {
+        const film = obj as FilmRequest;
         await putAPI(`films/requestFilm/reject/${film.requestFilm_id}`, {});
         console.log("reject");
+        fetchRequestFilms();
     }
 
     function generateRequestFilmCards() {
@@ -88,6 +94,7 @@ function AdmissionFilm() {
                     key={film.requestFilm_id}
                     title={film.filmName}
                     description={film.description}
+                    obj={film}
                     onAccept={accept}
                     onReject={reject}
                 />
