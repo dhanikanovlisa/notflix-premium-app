@@ -10,6 +10,13 @@ export interface User {
   is_admin?: boolean;
 }
 
+export interface Subscriber {
+  creator_id: number;
+  username: string;
+  subscriber_id: number;
+  status: Status;
+}
+
 export interface Film {
   film_id: number;
   title: string ;
