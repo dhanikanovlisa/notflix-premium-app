@@ -1,20 +1,22 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../../../components/navbar/Navbar";
 import CardFilm from "../../../components/card/CardFilm";
-import { useState } from "react";
 import { Film } from "../../../types/interfaces";
 import { useParams } from "react-router-dom";
 import Loading from "../../../components/loading/Loading";
 import { getAPI } from "../../../utils/api";
 import { useAuth } from "../../../hooks/useAuth";
+import Pagination from "../../../components/pagination/Pagination";
 
 function ManageFilm() {
-  const { id } = useParams();
+  const { id,page } = useParams();
   const [filmData, setFilmData] = useState<Film[]>([]);
   const [loading, setLoading] = useState(true);
   const [valid, setValid] = useState(true);
   const { isAuth, isAdmin } = useAuth();
   const [empty, setEmpty] = useState(false);
+  const [lengthFilm, setLengthFilm] = useState(0);
+  const [currentPage, setCurrentPage] = useState(page ? parseInt(page) : 1);
 
   useEffect(() => {
     document.title = "Manage Film";
@@ -27,15 +29,26 @@ function ManageFilm() {
     }
   }, [id]);
 
+  const fetchLength = async () => {
+    try {
+      const response = await getAPI(`films/count`);
+      const data = await response.json();
+      setLengthFilm(data.film_count);
+    } catch (error) {
+      console.error("Error fetching film", error);
+    }
+  };
+
   const fetchFilm = async () => {
     try {
-      const response = await getAPI(`films/user/${id}`);
+      console.log(currentPage);
+      const response = await getAPI(`films/user/${id}?page=${currentPage}&limit=10`);
       if (!response.ok) {
         throw new Error("Something went wrong");
       }
 
       const data = await response.json();
-      if(Array.isArray(data.data)){
+      if (Array.isArray(data.data)) {
         const mappedData = data.data.map((film: Film) => ({
           film_id: film.film_id,
           title: film.title,
@@ -47,15 +60,14 @@ function ManageFilm() {
           duration: film.duration,
           id_user: film.id_user,
         }));
-  
+
         setFilmData(mappedData);
-      } else if (typeof data.data === 'object'){
+      } else if (typeof data.data === 'object') {
         const mappedData: Film = data.data;
         setFilmData([mappedData]);
       } else {
         console.error("Data is not an array or object:", data.data);
       }
-      
     } catch (error) {
       console.error("Error fetching film", error);
     } finally {
@@ -63,14 +75,20 @@ function ManageFilm() {
     }
   };
 
-  useEffect(()=> {
+  useEffect(() => {
+    fetchLength();
+  }, [id, page]);
+
+  useEffect(() => {
     fetchFilm();
     const intervalId = setInterval(() => {
       console.log("fetching");
     }, 5000);
 
-    return () => {clearInterval(intervalId);}
-  }, []);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [id, page, currentPage]);
 
   useEffect(() => {
     setEmpty(filmData.length === 0);
@@ -78,9 +96,7 @@ function ManageFilm() {
 
   function cardFilm() {
     return empty ? (
-      <>
-        <p>Empty film</p>
-      </>
+      <p>Empty film</p>
     ) : (
       filmData.map((film) => (
         <CardFilm
@@ -92,6 +108,7 @@ function ManageFilm() {
       ))
     );
   }
+
   return (
     <>
       {valid && (
@@ -103,6 +120,12 @@ function ManageFilm() {
             <div className="pt-5 flex flex-wrap gap-12 justify-center">
               {cardFilm()}
             </div>
+            <Pagination
+              totalRecords={lengthFilm}
+              itemsPerPage={10}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+            />
           </div>
         </>
       )}
